@@ -1,0 +1,7 @@
+args<-commandArgs(FALSE);script<-sub('^--file=','',args[grepl('^--file=',args)])
+app<-normalizePath(dirname(script),winslash='/',mustWork=TRUE)
+options(repeatscope.app=app)
+source(file.path(app,'R/bootstrap.R'))
+require_dependencies()
+port<-as.integer(Sys.getenv('REPEATSCOPE_PORT','3838'))
+shiny::runApp(app,host='127.0.0.1',port=port,launch.browser=FALSE)

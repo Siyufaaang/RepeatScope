@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');
+const {completeLayoutApply}=require('../www/layout.js');
+assert.equal(typeof completeLayoutApply,'function','independent apply completion must retain unrelated drafts');
+const draft=new Map([['A01',{Well:'A01',Group:'staged'}]]);
+const before={draft,editorDirty:true};
+const bulk=completeLayoutApply(before,'bulk');
+assert.equal(bulk.draft,draft);assert.equal(bulk.editorDirty,false);
+const table=completeLayoutApply(before,'table');
+assert.equal(table.draft.size,0);assert.equal(table.editorDirty,true);
+assert.equal(before.draft.size,1);
+console.log('LAYOUT INDEPENDENT DRAFTS PASS');

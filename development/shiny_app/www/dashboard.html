@@ -1,0 +1,53 @@
+<section id="rs-plate-report-sketch" aria-label="RepeatScope plate report">
+  
+  <div class="report">
+    <header class="overview">
+      <div class="heading"><small><span data-gene></span> · RESEARCH PREVIEW</small><h2>Plate report</h2></div>
+      <div class="stat"><small>Plate layout</small><strong><span data-well-count></span> wells</strong><span><span data-role-count></span></span></div>
+      <div class="stat"><small>Peak height filter</small><strong data-threshold></strong><span data-window></span></div>
+      <button type="button" class="stat flag-card" data-differences aria-pressed="false"><small>EI differs</small><strong data-pair-count></strong><span>Highlight these wells →</span></button>
+    </header>
+    <p data-report-note role="status" hidden></p>
+    <div class="body">
+      <aside class="sidebar">
+        <section class="panel">
+          <h3>Adaptive vs Bayesian</h3>
+          <div data-scatter></div>
+          <div class="pair-key"><span>● Same EI</span><span class="delta">● Different EI</span></div>
+        </section>
+        <section class="panel">
+          <h3>EI by group</h3>
+          <small>Paired preview mean ± SD · n = records with both methods, not patient count</small>
+          <div data-groups></div>
+        </section>
+      </aside>
+      <section class="board-area" aria-label="96-well plate">
+        <div class="toolbar">
+          <div class="seg" role="group" aria-label="Peak display">
+            <button type="button" data-view="tail" aria-pressed="true">EI support</button>
+            <button type="button" data-view="all" aria-pressed="false">All sizing peaks</button>
+          </div>
+          <button type="button" class="fold" data-fold aria-pressed="false">Fold empty rows / columns</button>
+        </div>
+        <div class="scrollboard"><div class="board" data-board></div></div>
+        <div class="board-key">
+          <span data-group-key></span><span><i class="swatch ce"></i>CE Fill</span>
+          <span class="delta">Δ Different EI</span>
+          <span class="plot-key"><i class="ink-a"></i>A only <i class="ink-b"></i>B only <i class="ink-both"></i>Both</span>
+        </div>
+      </section>
+    </div>
+  </div>
+  <dialog data-detail aria-labelledby="rs-plate-detail-heading">
+    <div class="detail-top"><div><small data-detail-group></small><h3 id="rs-plate-detail-heading"></h3></div><button type="button" data-close aria-label="Close well detail">Close</button></div>
+    <select data-record-select aria-label="Acquisition and allele"></select>
+    <p data-target-note></p><p data-scope-note></p>
+    <div class="target-choice"><label for="dashboard-candidate">Candidate modal · Size / RFU</label>
+      <select id="dashboard-candidate" data-candidate-select></select>
+      <button type="button" data-apply-target>Use candidate for preview</button></div>
+    <p data-formal-note></p>
+    <div class="detail-plots" data-detail-plots></div>
+    <small>Purple = modal · method colour = included in this EI · grey = not included. Imported peaks are retained even when EI is unavailable.</small>
+  </dialog>
+  
+</section>

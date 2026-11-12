@@ -1,0 +1,7 @@
+source('R/bootstrap.R',local=TRUE)
+require_dependencies()
+library(shiny)
+options(shiny.maxRequestSize=100*1024^2,repeatscope.root=rs_root)
+source('R/ui.R',local=TRUE)
+source('R/server.R',local=TRUE)
+shinyApp(ui=rs_ui(),server=rs_server)

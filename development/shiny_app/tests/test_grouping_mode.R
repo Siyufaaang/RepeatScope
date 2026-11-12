@@ -1,0 +1,16 @@
+source('development/shiny_app/R/bootstrap.R');require_dependencies();library(shiny)
+source(file.path(rs_app_dir,'R/server.R'))
+check<-function(ok,msg){if(!isTRUE(ok))stop('FAIL: ',msg);cat('PASS:',msg,'\n')}
+testServer(rs_server,{
+  session$setInputs(plate_selection=c('A01','A02','B01','B02'))
+  check(!any(nzchar(rv$p$plate$Group)),'selection leaves assignments untouched')
+  session$setInputs(open_group=1,group_name='Case_1',active_group='Group 1')
+  session$setInputs(confirm_group=list(name='Case_1',group='Group 1'))
+  check(identical(rv$p$plate$Well[rv$p$plate$Group=='Case_1'],c('A01','A02','B01','B02')),'Apply assigns only the selected wells')
+  session$setInputs(plate_selection=c('A02','B01','B02'))
+  check(rv$p$plate$Group[1]=='Case_1','deselecting a well preserves its assignment')
+  session$setInputs(plate_selection=character())
+  check(!length(rv$selected) && sum(rv$p$plate$Group=='Case_1')==4,'Clear selection leaves assignments intact')
+  session$setInputs(undo_plate=1)
+  check(!any(nzchar(rv$p$plate$Group)),'Undo restores the preceding assignments')
+})
