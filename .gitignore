@@ -93,3 +93,4 @@
 !/development/shiny_app/profiles/diseases.json
 !/development/shiny_app/tests/test_disease_profiles.R
 !/development/shiny_app/tests/test_profile_server.R
+!/development/shiny_app/tests/test_dashboard_compact.cjs

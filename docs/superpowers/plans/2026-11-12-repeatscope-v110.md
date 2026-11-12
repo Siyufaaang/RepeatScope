@@ -41,3 +41,5 @@ Ruling: managed worktree is outside sandbox writable roots; use scoped escalated
 Task 1: complete. Synthetic intermediate suite RED then 11 PASS; existing shareable suite PASS; real Group 1 has 34 calculated method rows (17 wells), H06 Extended remains 3.52898696088 / 3.16422831238. Ruling: child sandbox could not restore cwd during ZIP regression; scoped elevated tests use the existing original app library, no packages installed.
 
 Task 2: complete. Profile data tests RED then 35 PASS; server gene/change/unknown/restore/reset tests RED then 5 PASS. Ruling: initial catalog covers nine CAG/polyglutamine loci with explicit conditional ranges, not an unsupported claim of universal repeat-disease coverage. Unknown CE precision allows provisional calculations and never formal clearance.
+
+Task 3: compact tile tests RED then PASS; existing JavaScript identity/paste/draft suites PASS. Main plate uses a selectable method; normal and numeric zero remain different, separate targets never average into one number. Final regressions and browser verification in progress.
