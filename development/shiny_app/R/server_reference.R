@@ -45,9 +45,10 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
     } else rv$candidates<-NULL
     p<-rv$p;p['structure']<-list(NULL);p$reference_draft<-list(amplicon=rv$amplicon,suggestions=rv$candidates,
       start=if(nrow(rv$candidates%||%data.frame()))rv$candidates$Start[1] else NULL,
-      end=if(nrow(rv$candidates%||%data.frame()))rv$candidates$End[1] else NULL,counting_rule='tract_length')
-    updateSelectInput(session,'counting_rule',selected='tract_length')
-    p$assay$motif<-clean_dna(input$motif);p$assay$status<-'unconfigured';rv$p<-p
+      end=if(nrow(rv$candidates%||%data.frame()))rv$candidates$End[1] else NULL,counting_rule=p$disease_profile$counting_rule%||%'tract_length')
+    updateSelectInput(session,'counting_rule',selected=p$reference_draft$counting_rule)
+    p$assay$motif<-clean_dna(input$motif);p$assay$status<-'unconfigured';p<-profile_setup(p);rv$p<-p
+    updateNumericInput(session,'minimum_bp',value=p$assay$minimum_bp);updateTextInput(session,'target_channel',value=p$assay$channel)
   }
   observeEvent(input$locate_primers,attempt(match_current()))
   # Save edits immediately, including incomplete primers; debouncing only delays matching.

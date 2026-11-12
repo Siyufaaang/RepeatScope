@@ -6,6 +6,7 @@ eligibility <- function(record,project) {
     f<-project$fit$records[[record$Record_ID]]
     if(identical(f$status,'target_overlap'))return(answer('eligibility_unresolved',f$reason))
     if(record$Target_kind=='normal')return(answer('not_applicable_normal','Normal target; expanded EI is not applicable.'))
+    if(!is.finite(project$localization$uncertainty))return(answer('eligibility_unresolved','CE length uncertainty is unknown; nominal range and EI remain a research calculation.'))
     if(record$Target_kind%in%c('research','unassigned'))return(answer('eligibility_unresolved','Research target identity is unresolved. An explicit target interpretation is required for formal clearance.'))
     if(record$Category!='unresolved' && record$Category!=record$Target_kind)return(answer('eligibility_unresolved','Formal category conflicts with the localized target interpretation.'))
   }

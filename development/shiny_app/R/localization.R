@@ -33,7 +33,7 @@ localization_mapping <- function(p) {
 localization_issues <- function(p,include_prescreen=TRUE) {
   p<-ensure_localization(p);x<-p$localization;issues<-character()
   for(n in c('name','gene','source','counting','mapping_source'))if(!nzchar(trimws(x[[n]])))issues<-c(issues,paste('Required:',n))
-  for(n in c('normal_max','expanded_min','unit','uncertainty'))if(length(x[[n]])!=1 || !is.finite(x[[n]]))issues<-c(issues,paste('Required numeric:',n))
+  for(n in c('normal_max','expanded_min','unit'))if(length(x[[n]])!=1 || !is.finite(x[[n]]))issues<-c(issues,paste('Required numeric:',n))
   if(all(is.finite(c(x$normal_max,x$expanded_min))) && (x$normal_max<0 || x$expanded_min<=x$normal_max))issues<-c(issues,'Normal upper bound must be below expanded lower bound.')
   if(is.finite(x$unit) && x$unit<=0)issues<-c(issues,'Repeat unit must be positive.')
   if(is.finite(x$uncertainty) && x$uncertainty<0)issues<-c(issues,'Length uncertainty cannot be negative.')
@@ -49,7 +49,8 @@ localization_issues <- function(p,include_prescreen=TRUE) {
   unique(issues)
 }
 localization_classify <- function(repeats,cfg,intercept=0,slope=cfg$unit) {
-  error<-cfg$uncertainty/slope;lo<-repeats-error;hi<-repeats+error
+  # Missing CE precision permits nominal research localization, never formal clearance.
+  error<-if(is.finite(cfg$uncertainty))cfg$uncertainty/slope else 0;lo<-repeats-error;hi<-repeats+error
   normal<-if(isTRUE(cfg$normal_inclusive))hi<=cfg$normal_max else hi<cfg$normal_max
   expanded<-if(isTRUE(cfg$expanded_inclusive))lo>=cfg$expanded_min else lo>cfg$expanded_min
   middle<-(if(isTRUE(cfg$normal_inclusive))lo>cfg$normal_max else lo>=cfg$normal_max) &
@@ -58,14 +59,22 @@ localization_classify <- function(repeats,cfg,intercept=0,slope=cfg$unit) {
 }
 localization_context_key <- function(p,source) {
   w<-p$peaks$Well[match(source,p$peaks$Record_ID)]
-  object_hash(list(policy='non-normal-ei-v1.10',config=p$localization,prescreen=p$prescreen[p$prescreen$Well%in%w,,drop=FALSE],
+  object_hash(list(policy='non-normal-ei-v1.10',profile=p$disease_profile,config=p$localization,prescreen=p$prescreen[p$prescreen$Well%in%w,,drop=FALSE],
     filter=p$assay[c('channel','minimum_bp')],structure=project_structure_view(p),
     peaks=p$peaks[p$peaks$Record_ID==source,,drop=FALSE]))
+}
+localization_profile_classify <- function(repeats,p,map) {
+  ans<-localization_classify(repeats,p$localization,map[1],map[2])
+  if(!is.null(p$disease_profile) && !isTRUE(p$profile_custom)) {
+    for(b in p$disease_profile$conditional_intervals)
+      ans[is.finite(repeats) & repeats>=b$min & repeats<=b$max]<-'boundary'
+  }
+  ans
 }
 localization_candidates <- function(p,record) {
   z<-candidate_inventory(p,record);if(!nrow(z))return(data.frame())
   map<-localization_mapping(p);cfg<-p$localization;env<-load_methods();gap<-2*p$assay$repeat_bp
-  rr<-(z$Size-map['intercept'])/map['slope'];classes<-localization_classify(rr,cfg,map[1],map[2])
+  rr<-(z$Size-map['intercept'])/map['slope'];classes<-localization_profile_classify(rr,p,map)
   global<-env$find_modal_candidates(z,gap_bp=gap)
   # Keep complete existing high-signal clusters intact across category boundaries.
   # A tail fragment above a boundary must not become a new modal by cropping.
@@ -79,7 +88,7 @@ localization_candidates <- function(p,record) {
   }
   out<-z[z$Size%in%sizes,,drop=FALSE]
   out$Repeat_estimate<-(out$Size-map[1])/map[2]
-  out$Range<-localization_classify(out$Repeat_estimate,cfg,map[1],map[2])
+  out$Range<-localization_profile_classify(out$Repeat_estimate,p,map)
   out$Candidate_origin<-ifelse(out$Size%in%global$Modal_size_bp,'existing_cluster','regional_review')
   out[order(out$Size,out$Peak_ID),,drop=FALSE]
 }

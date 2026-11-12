@@ -19,6 +19,37 @@ refresh_localization <- function(session,p) {
   updateSelectInput(session,'prescreen_wells',choices=setNames(wells$Well,paste(wells$Well,wells$Code)),selected=character())
 }
 register_localization_server <- function(input,output,session,rv,attempt,refresh,current_record,localization_pending,display_project) {
+  sync_profile_inputs<-function(p) {
+    refresh_localization(session,p)
+    updateTextInput(session,'gene',value=p$assay$gene)
+    updateTextInput(session,'organism',value=p$assay$organism)
+    updateTextInput(session,'motif',value=p$assay$motif)
+    updateNumericInput(session,'minimum_bp',value=p$assay$minimum_bp)
+    updateTextInput(session,'target_channel',value=p$assay$channel)
+  }
+  observeEvent(list(input$gene,rv$step),{
+    if(rv$step!=4L || is.null(input$gene))return()
+    gene<-trimws(input$gene);d<-find_disease_profile(gene)
+    canonical<-if(is.null(d))gene else d$gene
+    p<-rv$p
+    if(profile_key(canonical)!=profile_key(p$assay$gene))p<-apply_disease_profile(p,canonical)
+    p<-profile_setup(p)
+    if(!identical(p,rv$p)){rv$p<-p;sync_profile_inputs(p)}
+  },priority=5)
+  observeEvent(input$reset_gene_profile,attempt({
+    if(is.null(find_disease_profile(input$gene)))stop('No built-in profile for this gene; use custom ranges.')
+    p<-apply_disease_profile(rv$p,input$gene);rv$p<-p;sync_profile_inputs(p)
+  },'Gene defaults loaded.'))
+  output$disease_profile_summary<-renderUI({
+    p<-rv$p;d<-p$disease_profile
+    if(is.null(d))return(p(class='status-small',if(!nzchar(p$assay$gene))'Enter a gene symbol or disease alias, e.g. ATXN2 / SCA2 or HTT.' else 'No built-in profile: enter custom ranges in Advanced.'))
+    bands<-vapply(d$bands,function(b)paste0(b$label,': ',b$min,if(is.null(b$max))'+' else if(b$min==b$max)'' else paste0('–',b$max)),character(1))
+    tagList(p(strong(paste(d$id,'·',d$gene)),if(isTRUE(p$profile_custom))' · custom overrides' else ' · built-in profile'),
+      p(class='status-small',paste(bands,collapse=' · ')),
+      tags$details(tags$summary('Profile source and counting notes'),
+        p(d$counting),p(d$notes),p(paste('Version',d$version,'· reviewed',d$source$reviewed)),
+        tags$a(href=d$source$url,target='_blank',rel='noopener',d$source$title)))
+  })
   observeEvent(input$loc_sca2_source,{
     updateNumericInput(session,'loc_normal_max',value=31);updateNumericInput(session,'loc_expanded_min',value=33)
     updateCheckboxInput(session,'loc_normal_inclusive',value=TRUE);updateCheckboxInput(session,'loc_expanded_inclusive',value=TRUE)
@@ -26,14 +57,19 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
   })
   observeEvent(input$save_localization,attempt({
     p<-ensure_localization(rv$p);p$localization<-localization_input_config(input)
+    if(!is.null(input$minimum_bp)){if(!is.finite(input$minimum_bp) || input$minimum_bp<0)stop('Enter a non-negative candidate size.');p$assay$minimum_bp<-input$minimum_bp}
+    if(!is.null(input$target_channel))p$assay$channel<-trimws(input$target_channel)
+    if(!is.null(p$disease_profile)) {
+      d<-p$disease_profile;x<-p$localization
+      p$profile_custom<-!identical(as.numeric(x$normal_max),as.numeric(d$normal_max)) || !identical(as.numeric(x$expanded_min),as.numeric(d$expanded_min)) || x$counting!=d$counting || x$unit!=d$unit || x$normal_inclusive!=d$normal_inclusive || x$expanded_inclusive!=d$expanded_inclusive
+    }
     issues<-localization_issues(p,include_prescreen=FALSE);if(length(issues))stop(paste(issues,collapse='\n'))
     x<-p$localization;p$assay$gene<-x$gene
-    p$assay$ranges<-data.frame(Category=c('normal','intermediate','expanded'),Lower=c(0,x$normal_max,x$expanded_min),Upper=c(x$normal_max,x$expanded_min,Inf),
-      Lower_inclusive=c(TRUE,!x$normal_inclusive,x$expanded_inclusive),Upper_inclusive=c(x$normal_inclusive,!x$expanded_inclusive,FALSE),EI_allowed=c(FALSE,TRUE,TRUE),Source=x$source)
+    p$assay$ranges<-localization_ranges(x)
     updateTextAreaInput(session,'disease_ranges',value=paste(capture.output(write.csv(p$assay$ranges,row.names=FALSE)),collapse='\n'))
     p$audit<-c(p$audit,list(list(time=stamp(),action='localization_config',config=p$localization)))
     rv$p<-p
-  },'Localization inputs applied. Run again to assign targets using these inputs.'))
+  },'Analysis setup applied.'))
   observeEvent(input$prescreen_select_samples,updateSelectInput(session,'prescreen_wells',selected=rv$p$plate$Well[rv$p$plate$Role=='sample']))
   observeEvent(input$apply_prescreen,attempt({
     rv$p<-set_prescreen(rv$p,input$prescreen_wells,input$prescreen_pattern,input$prescreen_method,input$prescreen_source)
@@ -45,9 +81,11 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
   },na='Required',striped=TRUE)
   output$localization_status<-renderUI({
     p<-ensure_localization(rv$p);issues<-localization_issues(p)
-    tagList(if(localization_pending())div(class='notice danger','Localization fields have unapplied edits. Apply them before Run; old results are hidden.'),
-      if(length(issues))div(class='notice danger',strong('Before automatic target assignment: '),tags$ul(lapply(issues,tags$li))) else div(class='notice','Required localization inputs are complete. Pre-screened identities remain provisional.'),
-      if(p$localization$mode=='theoretical')p(class='status-small','Theoretical mapping uses the matched structure. It is not an empirical CE calibration; boundary conflicts remain for review.'))
+    s<-project_structure_view(p)
+    tagList(if(localization_pending())p(class='status-small','Setup has unapplied edits.'),
+      if(length(issues))div(class='notice',tags$ul(lapply(issues,tags$li))) else
+        p(class='status-small',paste('Ready · channel',p$assay$channel,'·',if(!is.null(s))paste('reference fixed length',s$fixed_bp,'bp') else 'linear CE mapping','· intermediate EI included')),
+      if(!is.finite(p$localization$uncertainty))p(class='status-small','CE precision unspecified; range labels are provisional.'))
   })
   output$localization_table<-renderTable({
     p<-ensure_localization(display_project());z<-p$records[p$records$Role=='sample',,drop=FALSE]

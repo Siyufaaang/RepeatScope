@@ -198,7 +198,7 @@ analysis_fingerprint <- function(p) {
   rec<-if(nrow(p$records))p$records[,intersect(c('Record_ID','Source_ID','Allele','Modal_rule','Modal_peak_ID','ROI_low','ROI_high'),names(p$records)),drop=FALSE] else NULL
   assay<-p$assay[setdiff(names(p$assay),c('name','gene','organism','source','validation_scope','status','include_intermediate','ranges'))]
   object_hash(list(policy='non-normal-ei-v1.10',peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
-    localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending))
+    disease_profile=p$disease_profile,profile_custom=p$profile_custom,localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending))
 }
 fit_is_stale <- function(p) !is.null(p$fit) && !identical(p$fit$fingerprint,analysis_fingerprint(p))
 validate_ranges <- function(x) {

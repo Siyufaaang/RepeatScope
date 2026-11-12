@@ -39,3 +39,5 @@ Baseline d783753 v1.9. Managed worktree created through Codex. Native execution.
 Ruling: managed worktree is outside sandbox writable roots; use scoped escalated file writes there, preserving original checkout and running v1.9.
 
 Task 1: complete. Synthetic intermediate suite RED then 11 PASS; existing shareable suite PASS; real Group 1 has 34 calculated method rows (17 wells), H06 Extended remains 3.52898696088 / 3.16422831238. Ruling: child sandbox could not restore cwd during ZIP regression; scoped elevated tests use the existing original app library, no packages installed.
+
+Task 2: complete. Profile data tests RED then 35 PASS; server gene/change/unknown/restore/reset tests RED then 5 PASS. Ruling: initial catalog covers nine CAG/polyglutamine loci with explicit conditional ranges, not an unsupported claim of universal repeat-disease coverage. Unknown CE precision allows provisional calculations and never formal clearance.

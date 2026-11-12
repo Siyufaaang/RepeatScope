@@ -105,6 +105,7 @@ add_field_help('target_channel','Required for target assignment','Apply the exac
 annotate_field<-function(id,tag) {
   h<-field_guidance[[id]]
   if(is.null(h))stop('Missing input guidance: ',id)
+  if(grepl('^loc_',id) || id%in%c('gene','organism','reference_type','forward','reverse','motif','minimum_bp','target_channel'))return(tag)
   shiny::div(class='rs-field',tag,shiny::div(id=paste0(id,'-help'),class='field-guidance',shiny::span(class=paste('field-badge',if(grepl('^Required',h$kind))'required' else 'optional'),h$kind,title=h$text,'aria-label'=paste(h$kind,h$text))))
 }
 for(field_function in c('textInput','textAreaInput','numericInput','selectInput','selectizeInput','checkboxInput','fileInput','sliderInput'))local({
