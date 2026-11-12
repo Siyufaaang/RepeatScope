@@ -32,7 +32,7 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
     gene<-trimws(input$gene);d<-find_disease_profile(gene)
     canonical<-if(is.null(d))gene else d$gene
     p<-rv$p
-    if(profile_key(canonical)!=profile_key(p$assay$gene))p<-apply_disease_profile(p,canonical)
+    if(profile_identity(canonical)!=profile_identity(p$assay$gene))p<-apply_disease_profile(p,canonical)
     p<-profile_setup(p)
     if(!identical(p,rv$p)){rv$p<-p;sync_profile_inputs(p)}
   },priority=5)

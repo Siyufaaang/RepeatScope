@@ -66,8 +66,10 @@ localization_context_key <- function(p,source) {
 localization_profile_classify <- function(repeats,p,map) {
   ans<-localization_classify(repeats,p$localization,map[1],map[2])
   if(!is.null(p$disease_profile) && !isTRUE(p$profile_custom)) {
+    error<-if(is.finite(p$localization$uncertainty))p$localization$uncertainty/map[2] else 0
+    lo<-repeats-error;hi<-repeats+error
     for(b in p$disease_profile$conditional_intervals)
-      ans[is.finite(repeats) & repeats>=b$min & repeats<=b$max]<-'boundary'
+      ans[is.finite(repeats) & hi>=b$min & lo<=b$max]<-'boundary'
   }
   ans
 }
@@ -146,7 +148,7 @@ prepare_localized_project <- function(p) {
         reason=paste('Expected',n,'non-normal physical target(s); found',nrow(z),'. Choose the intended modal in target review.'))
     }
     if(pattern=='normal_only') {
-      if(any(trusted$Range%in%c('expanded','intermediate','boundary')))result<-list(make('unresolved',status='target_conflict',reason='Normal-only prescreen conflicts with expanded/intermediate/boundary candidates, including regional review candidates.'))
+      if(any(trusted$Range%in%c('expanded','intermediate','boundary')))result<-list(make('unresolved',status='target_conflict',reason='Normal-only prescreen conflicts with trusted expanded/intermediate/boundary clusters.'))
       else add_kind('normal')
     } else if(pattern=='normal_expanded'){add_kind('normal');add_non_normal()}
     else if(pattern%in%c('expanded_present','intermediate'))add_non_normal()

@@ -37,3 +37,17 @@ check(s$assay$channel=='B','one imported channel is selected automatically')
 s$assay$channel<-'';s$peaks$Channel[1]<-'Y';s<-profile_setup(s)
 check(s$assay$channel=='','multiple channels require an explicit choice')
 cat('DISEASE PROFILE SUITE PASS\n')
+
+for(g in c('ATXN1','ATXN3')) {
+ t<-apply_disease_profile(new_project(),g);b<-t$disease_profile$conditional_intervals[[1]]
+ t$localization$uncertainty<-3
+ check(all(localization_profile_classify(c(b$min-1,b$max+1),t,c(0,3))=='boundary'),paste(g,'uncertainty touches conditional interval from either side'))
+ t$localization$uncertainty<-0
+ check(localization_profile_classify(b$max+1,t,c(0,3))=='expanded',paste(g,'zero uncertainty does not extend conditional interval'))
+ t$localization$uncertainty<-NA_real_
+ check(localization_profile_classify(b$max+1,t,c(0,3))=='expanded',paste(g,'unknown precision preserves nominal category'))
+}
+t<-synthetic_project();t$assay$gene<-'ATXN2';t<-apply_disease_profile(t,'ATXN2')
+t$assay$gene<-'SCA2'
+u<-apply_disease_profile(t,'ATXN2')
+check(identical(u$reference,t$reference) && identical(u$structure,t$structure),'alias reset preserves matched reference and structure')

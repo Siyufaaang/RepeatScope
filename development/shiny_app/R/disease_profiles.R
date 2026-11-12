@@ -18,6 +18,10 @@ find_disease_profile <- function(gene) {
  hits<-Filter(function(p)key%in%vapply(c(p$gene,p$aliases),profile_key,character(1)),disease_profiles())
  if(length(hits)==1)hits[[1]] else NULL
 }
+profile_identity <- function(gene) {
+ d<-find_disease_profile(gene)
+ profile_key(if(is.null(d))gene else d$gene)
+}
 profile_repeat_class <- function(profile,repeats) {
  cfg<-list(normal_max=profile$normal_max,normal_inclusive=profile$normal_inclusive,
   expanded_min=profile$expanded_min,expanded_inclusive=profile$expanded_inclusive,unit=profile$unit,uncertainty=0)
@@ -33,7 +37,7 @@ localization_ranges <- function(x) data.frame(Category=c('normal','intermediate'
 apply_disease_profile <- function(p,gene) {
  p<-ensure_localization(p);d<-find_disease_profile(gene)
  canonical<-if(is.null(d))trimws(gene) else d$gene
- changed<-nzchar(p$assay$gene) && profile_key(p$assay$gene)!=profile_key(canonical)
+ changed<-nzchar(p$assay$gene) && profile_identity(p$assay$gene)!=profile_identity(canonical)
  if(changed){p['reference']<-list(NULL);p['structure']<-list(NULL);p['reference_draft']<-list(NULL);p$assay$channel<-''}
  x<-default_localization();x$gene<-canonical
  p['disease_profile']<-list(d);p$profile_custom<-FALSE;p$assay$gene<-canonical;p$assay$status<-'unconfigured'

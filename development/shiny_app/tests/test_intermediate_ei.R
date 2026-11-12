@@ -45,3 +45,12 @@ check(all(vapply(overlap$fit$records,function(f)f$status=='target_overlap',logic
 old<-p;old$fit$fingerprint<-'pre-v110-policy'
 check(fit_is_stale(old) && all(is.na(threshold_results(old)$Preview_EI)),'obsolete saved fits cannot display as current')
 cat('INTERMEDIATE EI SUITE PASS\n')
+
+pc<-localized_synthetic_demo();pc$localization$uncertainty<-NA_real_
+pc$plate$Role[pc$plate$Well=='A01']<-'positive_control'
+pc<-fit_project(prepare_localized_project(pc));pr<-threshold_results(pc);pr<-pr[pr$Well=='A01',]
+check(all(is.na(pr$EI)) && all(pr$Formal_status=='eligibility_unresolved') && all(is.finite(pr$Preview_EI)),
+ 'positive control with unknown CE precision retains research EI without formal clearance')
+legacy<-synthetic_project();legacy$plate$Role[legacy$plate$Well=='A01']<-'positive_control'
+legacy<-fit_project(sync_records(legacy));lr<-threshold_results(legacy)
+check(all(lr$Formal_status[lr$Well=='A01']=='success'),'legacy non-localized positive controls retain existing clearance')
