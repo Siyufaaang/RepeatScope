@@ -58,7 +58,7 @@ localization_classify <- function(repeats,cfg,intercept=0,slope=cfg$unit) {
 }
 localization_context_key <- function(p,source) {
   w<-p$peaks$Well[match(source,p$peaks$Record_ID)]
-  object_hash(list(config=p$localization,prescreen=p$prescreen[p$prescreen$Well%in%w,,drop=FALSE],
+  object_hash(list(policy='non-normal-ei-v1.10',config=p$localization,prescreen=p$prescreen[p$prescreen$Well%in%w,,drop=FALSE],
     filter=p$assay[c('channel','minimum_bp')],structure=project_structure_view(p),
     peaks=p$peaks[p$peaks$Record_ID==source,,drop=FALSE]))
 }
@@ -125,16 +125,24 @@ prepare_localized_project <- function(p) {
       if(valid)for(j in seq_len(n))result[[length(result)+1L]]<<-make(kind,j,z$Peak_ID[j],reason=paste('Prescreen',pattern,'+',kind,'range; unique allocation. Identity remains provisional.'))
       else result[[length(result)+1L]]<<-make(kind,status=if(!nrow(z))'target_missing' else 'target_ambiguous',reason=paste('Prescreen',pattern,'expects',n,kind,'target(s); found',nrow(z),'candidate(s). Review physical peaks.'))
     }
+    add_non_normal<-function(n=1L) {
+      z<-trusted[trusted$Range%in%c('expanded','intermediate','boundary'),,drop=FALSE]
+      if(nrow(z)==n && !anyDuplicated(z$Size))for(j in seq_len(n)) {
+        kind<-if(z$Range[j]=='boundary')'research' else z$Range[j]
+        index<-sum(vapply(result,function(r)r$Target_kind==kind,logical(1)))+1L
+        result[[length(result)+1L]]<<-make(kind,index,z$Peak_ID[j],
+          reason=paste('Unique non-normal physical cluster; estimated range:',z$Range[j],'. Prescreen:',pattern,'. EI calculation is independent of disease classification.'))
+      } else result[[length(result)+1L]]<<-make('unresolved',
+        status=if(!nrow(z))'target_missing' else 'target_ambiguous',
+        reason=paste('Expected',n,'non-normal physical target(s); found',nrow(z),'. Choose the intended modal in target review.'))
+    }
     if(pattern=='normal_only') {
-      if(any(candidates$Range%in%c('expanded','intermediate','boundary')))result<-list(make('unresolved',status='target_conflict',reason='Normal-only prescreen conflicts with expanded/intermediate/boundary candidates, including regional review candidates.'))
+      if(any(trusted$Range%in%c('expanded','intermediate','boundary')))result<-list(make('unresolved',status='target_conflict',reason='Normal-only prescreen conflicts with expanded/intermediate/boundary candidates, including regional review candidates.'))
       else add_kind('normal')
-    } else if(pattern=='normal_expanded'){add_kind('normal');add_kind('expanded')}
-    else if(pattern=='expanded_present')add_kind('expanded')
-    else if(pattern=='two_expanded')add_kind('expanded',2L)
-    else result<-list(make('unresolved',status=if(pattern=='intermediate')'intermediate_review' else 'target_review',reason=paste('Prescreen:',pattern,'— choose a physical target and record its intended interpretation.')))
-    # A non-expanded candidate near the boundary may contain the apparent expanded tail.
-    if(pattern%in%c('expanded_present','normal_expanded','two_expanded') && nrow(uncertain))
-      result<-lapply(result,function(rec){rec$Modal_rule<-'blocked';rec$Modal_peak_ID<-'';rec$Localization_status<-'target_conflict';rec$Localization_reason<-'Prescreen expansion and intermediate/boundary candidate disagree. Review counting, mapping and target.';rec})
+    } else if(pattern=='normal_expanded'){add_kind('normal');add_non_normal()}
+    else if(pattern%in%c('expanded_present','intermediate'))add_non_normal()
+    else if(pattern=='two_expanded')add_non_normal(2L)
+    else result<-list(make('unresolved',status='target_review',reason=paste('Prescreen:',pattern,'— choose a physical target and record its intended interpretation.')))
     # Explicit extra target identities remain visible, even before a decision or
     # after its context expires. Never drop them during automatic reallocation.
     extras<-old[!old$Auto_target & old$Record_ID!=source &
@@ -176,7 +184,7 @@ prepare_localized_project <- function(p) {
 check_target_tail_ownership <- function(p,fits) {
   if(is.null(p$localization))return(fits)
   for(source in unique(p$records$Source_ID)) {
-    ids<-p$records$Record_ID[p$records$Source_ID==source & p$records$Target_kind%in%c('expanded','research')]
+    ids<-p$records$Record_ID[p$records$Source_ID==source & p$records$Target_kind%in%c('expanded','intermediate','research')]
     ids<-ids[vapply(ids,function(id)identical(fits[[id]]$status,'fitted'),logical(1))]
     if(length(ids)<2)next
     assigned<-lapply(ids,function(id)unique(c(fits[[id]]$adaptive$selected$Peak_ID,fits[[id]]$bayesian$selected$Peak_ID)))

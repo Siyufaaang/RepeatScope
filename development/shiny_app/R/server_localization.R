@@ -29,7 +29,7 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
     issues<-localization_issues(p,include_prescreen=FALSE);if(length(issues))stop(paste(issues,collapse='\n'))
     x<-p$localization;p$assay$gene<-x$gene
     p$assay$ranges<-data.frame(Category=c('normal','intermediate','expanded'),Lower=c(0,x$normal_max,x$expanded_min),Upper=c(x$normal_max,x$expanded_min,Inf),
-      Lower_inclusive=c(TRUE,!x$normal_inclusive,x$expanded_inclusive),Upper_inclusive=c(x$normal_inclusive,!x$expanded_inclusive,FALSE),EI_allowed=c(FALSE,FALSE,TRUE),Source=x$source)
+      Lower_inclusive=c(TRUE,!x$normal_inclusive,x$expanded_inclusive),Upper_inclusive=c(x$normal_inclusive,!x$expanded_inclusive,FALSE),EI_allowed=c(FALSE,TRUE,TRUE),Source=x$source)
     updateTextAreaInput(session,'disease_ranges',value=paste(capture.output(write.csv(p$assay$ranges,row.names=FALSE)),collapse='\n'))
     p$audit<-c(p$audit,list(list(time=stamp(),action='localization_config',config=p$localization)))
     rv$p<-p

@@ -109,7 +109,7 @@ fit_project <- function(p) {
   if(!is.null(p$localization))fits<-check_target_tail_ownership(p,fits)
   p$fit<-list(id=paste0('run-',format(Sys.time(),'%Y%m%dT%H%M%S'),'-',substr(object_hash(fits),1,8)),time=stamp(),fingerprint=analysis_fingerprint(p),
     assay=p$assay,reference=p$reference,structure=p$structure,record_inputs=p$records,records=fits,
-    versions=list(adaptive='v2.4 Method 02 walk_adaptive_tail (unchanged)',bayesian='benchmark/bayesian/model.R assign_bayesian_tail; seed_predictive=1 (unchanged)',adapter='RepeatScope 1.8; explicit prescreen/size target allocation'))
+    versions=list(adaptive='v2.4 Method 02 walk_adaptive_tail (unchanged)',bayesian='benchmark/bayesian/model.R assign_bayesian_tail; seed_predictive=1 (unchanged)',adapter='RepeatScope 1.10; non-normal EI with independent range classification'))
   p$audit<-c(p$audit,list(list(time=stamp(),action='fit',run=p$fit$id)))
   p$hierarchical$result<-NULL;p
 }
@@ -194,7 +194,6 @@ threshold_results <- function(project,p=project$threshold,window=project$window,
       if(method=='hierarchical' && !identical(project$hierarchical$result$fingerprint,hierarchy_fingerprint(project,project$hierarchical$pool))) {status<-'stale_results';reason<-'Training pool or duplicate/material mapping changed. Re-run experimental model.'}
       if(method=='hierarchical' && status=='success'){status<-'experimental_preview';reason<-'Experimental conditional LOWO; excluded from formal biological summaries.'}
       if(rec$Category=='normal' || (identical(rec$Target_kind,'normal') && f$status=='fitted')){preview_status<-'not_applicable_normal';preview_reason<-'Normal target: expanded EI is not applicable; modal and profile retained.';computational<-NA_real_}
-      if(identical(rec$Target_kind,'intermediate')){preview_status<-'intermediate_review';preview_reason<-'Intermediate target retained for review; expanded EI is not enabled.';computational<-NA_real_}
       if(!rec$Role%in%c('sample','positive_control')){preview_status<-'not_applicable_control';preview_reason<-paste(rec$Role,'profile only; excluded from biological EI summaries.')}
       if(status=='stale_results'){preview_status<-'stale_results';preview_reason<-'Results outdated. Apply current inputs and run analysis again.';computational<-NA_real_}
       preview<-if(preview_status%in%c('calculated','zero_tail'))computational else NA_real_

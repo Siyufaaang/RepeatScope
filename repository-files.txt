@@ -71,3 +71,6 @@ development/v2_4/repeat_peak.v2.4_method02_adaptive_walk.R
 README.md
 repository-files.txt
 tools/verify_repository.ps1
+development/shiny_app/tests/test_intermediate_ei.R
+docs/superpowers/specs/2026-11-12-repeatscope-v110-design.md
+docs/superpowers/plans/2026-11-12-repeatscope-v110.md

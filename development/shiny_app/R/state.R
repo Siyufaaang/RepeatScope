@@ -17,7 +17,7 @@ default_assay <- function() list(id='draft-assay',gene='',organism='',name='Unco
   seed_min_rfu=100,seed_fraction=.03,predictive_level=.95,prior_kappa=.05,
   prior_alpha=2,prior_beta=.01,seed_dominance=3,seed_min=3L,seed_max=5L,
   envelope_fraction=.03,envelope_margin=1.5,minimum_support=33,extended_upper=NA_real_,
-  include_intermediate=FALSE,ranges=data.frame(Category=character(),Lower=numeric(),Upper=numeric(),
+  include_intermediate=TRUE,ranges=data.frame(Category=character(),Lower=numeric(),Upper=numeric(),
   Lower_inclusive=logical(),Upper_inclusive=logical(),EI_allowed=logical(),Source=character()))
 new_project <- function() list(schema='RepeatScope/1',id=paste0('plate-',format(Sys.time(),'%Y%m%d-%H%M%S')),
   created=stamp(),synthetic=FALSE,plate=data.frame(Well=well_coordinates(),Code='',Full_name='',Group='',
@@ -197,7 +197,7 @@ undo_plate <- function(p) {
 analysis_fingerprint <- function(p) {
   rec<-if(nrow(p$records))p$records[,intersect(c('Record_ID','Source_ID','Allele','Modal_rule','Modal_peak_ID','ROI_low','ROI_high'),names(p$records)),drop=FALSE] else NULL
   assay<-p$assay[setdiff(names(p$assay),c('name','gene','organism','source','validation_scope','status','include_intermediate','ranges'))]
-  object_hash(list(peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
+  object_hash(list(policy='non-normal-ei-v1.10',peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
     localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending))
 }
 fit_is_stale <- function(p) !is.null(p$fit) && !identical(p$fit$fingerprint,analysis_fingerprint(p))
