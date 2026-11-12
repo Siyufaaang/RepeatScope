@@ -1,8 +1,10 @@
 # RepeatScope
 
-RepeatScope v1.11 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+RepeatScope v1.11.1 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
 
 v1.11 unifies typography, controls and group colors across the workflow. The white 96-well report emphasizes sample names and EI, with window/threshold controls and diagnostics available on demand. It preserves v1.10 analysis logic, profiles, precision and project format.
+
+v1.11.1 fixes repeated flashing in Reference & analysis when typing ahead of a server response. Profile loading no longer writes an older gene value back into the active input. Analysis formulas and disease profiles are unchanged.
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 

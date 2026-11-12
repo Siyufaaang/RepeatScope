@@ -39,3 +39,12 @@ Inspect preservation of input bindings and status visibility, long/multiple resu
 - The final runtime diff contains presentation changes only. Analysis expressions, thresholds, profiles, precision, and project schema are unchanged. Browser console has no warning/error entries.
 
 Decisions: reuse the existing Shiny stack without Figma; a later template may require restyling. Use a PowerShell ledger equivalent on Windows and visual checks plus existing behavior tests instead of style-mirroring unit tests; uncommon visual edge cases still need browser inspection. Retain Bootstrap's verified hidden-selector behavior; recheck if Bootstrap changes. Preserve the worktree and submit a separate UI PR based on v1.10, as authorized in the session.
+
+## v1.11.1 reference input hotfix
+
+- Reproduced a continuous gene/profile feedback loop in a visible browser: with a QA-only 600 ms processing delay, typing HT then HTT while the first response was pending caused older server input messages to alternate indefinitely. No additional user input was needed. The diagnostic delay is not part of the application.
+- Removed gene input echo from automatic profile synchronization. The browser retains typed text; canonical disease identity is resolved separately for NCBI lookup, reference metadata and assay saves. Saved-project restoration still fills the form. No formulas, thresholds, profile catalog or project schema changed.
+- Added a bounded replay of actual server input messages to the existing profile server suite. It fails before the fix and passes after it. Added offline coverage for disease-alias NCBI lookup and FASTA metadata; that regression also failed before its fix.
+- The same delayed browser scenario now settles after its two edits, preserving HTT. A real project accepts the SCA2 alias, retains the matched reference and moves to Results normally. Browser console has no warnings/errors.
+- Final verification: all 22 R suites and four JavaScript suites pass. Recalculated the 96-well, 3,322-peak fixture; all 58 finite EI values match v1.10 within 1e-12. The saved project downloaded after a browser calculation passes the same full-precision comparison; both displayed methods match all 58 rounded values and retain all 96 well positions. Independent review found no remaining actionable issues.
+- New local entry/trial ports: 3871 / 3872. Existing user sessions remain running. Diagnostic launchers, private fixtures, screenshots and logs stay local under ignored qa/.

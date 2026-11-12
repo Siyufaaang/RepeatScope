@@ -26,9 +26,9 @@ localization_inputs_ui <- function() tagList(
 )
 rs_ui <- function() {
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f7f8fa',fg='#25323b',primary='#286477',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · v1.11'),tags$link(rel='stylesheet',href='app.css?v=111'),tags$link(rel='stylesheet',href='dashboard.css?v=111'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=111')),
+    tags$head(tags$title('RepeatScope · v1.11.1'),tags$link(rel='stylesheet',href='app.css?v=111'),tags$link(rel='stylesheet',href='dashboard.css?v=111'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=111')),
     div(class='app-shell',
-      div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.11')),
+      div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.11.1')),
         conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project'))),
       uiOutput('workflow_progress'),
       tabsetPanel(id='main_tabs',type='hidden',
