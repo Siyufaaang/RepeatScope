@@ -25,10 +25,10 @@ localization_inputs_ui <- function() tagList(
     actionButton('save_localization','Apply analysis setup',class='btn-primary'))
 )
 rs_ui <- function() {
-  shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f3f7f8',fg='#193b46',primary='#147e91',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · v1.10'),tags$link(rel='stylesheet',href='app.css?v=110'),tags$link(rel='stylesheet',href='dashboard.css?v=110'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=110')),
+  shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f7f8fa',fg='#25323b',primary='#286477',base_font='Segoe UI'),
+    tags$head(tags$title('RepeatScope · v1.11'),tags$link(rel='stylesheet',href='app.css?v=111'),tags$link(rel='stylesheet',href='dashboard.css?v=111'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=111')),
     div(class='app-shell',
-      div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.10 · 2026-11-12')),
+      div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.11')),
         conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project'))),
       uiOutput('workflow_progress'),
       tabsetPanel(id='main_tabs',type='hidden',
@@ -119,14 +119,15 @@ rs_ui <- function() {
           actionButton('open_report','Open plate report',class='btn-primary')),
         tabPanel('Results',value='results',
           div(class='report-navigation',actionButton('show_report','Plate report'),actionButton('edit_layout','Samples'),actionButton('edit_analysis','Analysis settings'),
-            tags$details(tags$summary('More'),actionButton('show_targets','Review a target'),actionButton('show_tables','Tables / export'),actionButton('show_formal','Formal review'))),
+            tags$details(tags$summary('More'),actionButton('show_targets','Review a target'),actionButton('show_tables','Tables / export'),actionButton('show_formal','Formal review')),
+            conditionalPanel("input.result_view === 'report'",class='report-run',actionButton('run_analysis','Calculate EI',class='btn-primary'))),
           tabsetPanel(id='result_view',type='hidden',
           tabPanel('Plate report',value='report',
-          div(class='analysis-toolbar',actionButton('run_analysis','Calculate EI',class='btn-primary'),textOutput('report_sample_status')),
-          uiOutput('global_status'),
+          div(class='report-summary',textOutput('report_sample_status'),uiOutput('global_status')),
+          tags$details(class='report-settings',tags$summary('EI window & height threshold'),
           div(class='preview-controls',selectInput('window','EI window',c('Tail10 · Δ 0–10'='tail10','Extended · frozen search support'='extended'),selectize=FALSE),
             div(class='threshold-grid',sliderInput('threshold','Height threshold (% own modal)',min=0,max=100,value=3,step=.1),numericInput('threshold_number','Exact %',value=3,min=0,max=100,step=.1),actionButton('reset_threshold','Reset to 3%')),
-            div(class='formula-note',textOutput('threshold_note'))),
+            tags$details(class='report-help',tags$summary('About the EI window and height threshold'),div(class='formula-note',textOutput('threshold_note'))))),
           div(id='report-dashboard'),tags$template(id='dashboard-template',includeHTML(file.path(rs_app_dir,'www/dashboard.html')))
           ),
           tabPanel('Target review',value='targets',h2('Review a target'),p('Choose a well / acquisition below, or open a candidate from the plate report.'),

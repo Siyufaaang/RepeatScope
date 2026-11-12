@@ -1,6 +1,8 @@
 # RepeatScope
 
-RepeatScope v1.10 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+RepeatScope v1.11 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+
+v1.11 unifies typography, controls and group colors across the workflow. The white 96-well report emphasizes sample names and EI, with window/threshold controls and diagnostics available on demand. It preserves v1.10 analysis logic, profiles, precision and project format.
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 
@@ -26,7 +28,7 @@ Use **Save project** to keep a session across server restarts. On the welcome pa
 2. In **Arrange plate**, record explicit genotype, Group, Role and optional Individual ID. Group/Individual selectors only select wells. Use **Table / Excel paste** for cell editing or staged clipboard paste; apply edits explicitly, or discard/undo them.
 3. Import an already-sized peak table. Physical peaks, acquisition identities and flagged rows remain available for review.
 4. In **Reference & analysis**, enter a gene or disease alias to load its built-in profile, then match the reference and primers. Disease ranges and provenance are supplied by the profile; filters, custom ranges and CE calibration remain under **Advanced**.
-5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
+5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Use **Calculate EI** in the top navigation; expand **EI window & height threshold** to adjust display filtering. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
 
 Leading zeros remain text. Blank pasted cells clear their field; omitted columns are unchanged. Invalid or stale table patches are rejected atomically. Group and Individual labels alone do not refit models. Genotype is never inferred from group membership.
 

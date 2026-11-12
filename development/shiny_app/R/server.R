@@ -194,7 +194,7 @@ rs_server <- function(input,output,session) {
   output$metrics<-renderUI({r<-results();p<-rv$p;vals<-c(acquisition_counts(p),length(unique(r$Record_ID[is.finite(r$EI)])),length(unique(r$Record_ID[r$Status%in%c('qc_unconfirmed','control_review_required','qc_failed')])),nrow(role_conflicts(p)))
     labels<-c('acquisitions','no-acquisition placeholders','formal EI records','QC / control reviews','NA / peak conflicts')
     div(class='metrics-row',lapply(seq_along(vals),function(i)div(class='metric',strong(vals[i]),span(labels[i]))))})
-  output$plate<-renderUI({p<-ensure_sample_layout(rv$p);layout<-sample_layout_rows(p);conflicts<-role_conflicts(p)$Well;groups<-unique(p$plate$Group[nzchar(p$plate$Group)]);palette<-setNames(rep(c('#d4e8ec','#f4dfcb','#dddfef','#d9e7d5','#eadce8','#f2e9c9'),length.out=length(groups)),groups)
+  output$plate<-renderUI({p<-ensure_sample_layout(rv$p);layout<-sample_layout_rows(p);conflicts<-role_conflicts(p)$Well;groups<-unique(p$plate$Group[nzchar(p$plate$Group)]);palette<-setNames(rep(c('#567f9a','#748b78','#8b789a'),length.out=length(groups)),groups)
     cells<-list(div(class='well-label',''))
     for(c in 1:12)cells<-c(cells,list(div(class='well-label',c)))
     for(row in 1:8) {
@@ -206,7 +206,7 @@ rs_server <- function(input,output,session) {
         genotype<-layout$Genotype[i];short<-c(normal_only='N',normal_expanded='N + E',expanded_present='E + ?',two_expanded='E + E',intermediate='Int',unclear='?')[genotype]
         title<-paste(w$Well,w$Code,w$Full_name,paste0('Group: ',w$Group),paste0('Individual: ',w$Individual_ID),paste0('Role: ',role_labels[[w$Role]]),paste0('Genotype: ',genotype),sep=' | ')
         cells<-c(cells,list(tags$button(type='button',class=paste('well',if(w$Role=='unused_empty')'unused'),
-          style=paste0('background:',bg),title=title,'aria-label'=title,'data-well'=w$Well,'data-row'=row,'data-col'=col,
+          style=paste0('--well-group:',bg),title=title,'aria-label'=title,'data-well'=w$Well,'data-row'=row,'data-col'=col,
           span(class='well-coordinate',w$Well),if(nzchar(w$Code))span(class='well-sample',w$Code),if(!is.na(tag))span(class='well-role',tag),
           if(w$Role=='sample')span(class=paste('well-genotype',if(!nzchar(genotype))'missing'),if(nzchar(genotype))unname(short) else 'Set genotype'),
           if(warn)span(class='review-mark','!'))))
