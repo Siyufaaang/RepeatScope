@@ -44,7 +44,7 @@
 - [x] Run full shareable R/JS suites and exact numerical comparison against saved synthetic results; verify immutable scientific-file hashes.
 - [x] Review responsive screens and critical navigation/input flows, including refresh and all-peaks view.
 - [x] Obtain one independent whole-change code review; resolve material findings and rerun affected checks.
-- [ ] Commit/integrate the reviewed source, build the allowlisted bundle, publish to the existing content ID and confirm public startup and numerical equivalence.
+- [x] Commit/integrate the reviewed source, build the allowlisted bundle, publish to the existing content ID and confirm public startup and numerical equivalence.
 
 ## Ledger
 Ruling: the explicit user approval covers execution, integration and existing-site deployment; no additional plan confirmation is needed.
@@ -60,3 +60,5 @@ Final: fixed Demo replacement guard — test_visual_navigation.R observed RED→
 Ruling: retain the task worktree and QA evidence after integration because this is the ongoing user workspace; removing it would discard useful local release evidence. Windows-native commands and this ledger replace the skill's Bash workspace scripts.
 Bundle: 48 allowlisted runtime files; frozen manifest verifies exact checksums; existing Posit deployment record copied into a new isolated release directory. No user data or credentials are in the upload list.
 Browser integration: Shiny requires a one-argument custom-message callback. Added a regression reproducing the arity failure, corrected the callback, and reran all five JavaScript suites successfully.
+
+Task 3: complete — PR #5 merged into main (7c3126997988baebb3891710d0428c06e4b9a0f8); 48-file final bundle published to existing Posit content 01a1d5a3-31ce-5e40-498d-e4d4dc298453. Public URL startup, all five workflow screens, fresh synthetic dual-method computation, A04 2.874266 / 2.522163 and delta 0.352104, 21 retained peaks per plot, two Adaptive-only peaks, B03 unavailable Bayesian, and empty browser error log verified after deployment.
