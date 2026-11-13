@@ -34,7 +34,7 @@ Interfaces: allele_repeat_report(project, variant) returns one row per record; r
 Files: visuals.R, ui.R, workflow navigation, www/input-guide-zh.html, deployment manifests.
 - [x] Add homepage formulas, method procedures, limitations and guide link.
 - [x] Verify browser workflows and old EI values, run a fresh final code review, address material findings.
-- [ ] Update allowlists, integrate, package and deploy; verify public page and record outcomes.
+- [x] Update allowlists, integrate, package and deploy; verify public page and record outcomes.
 
 ## Verification record
 - 25 synthetic R suites pass, including a new per-allele repeat-report suite; 5 JavaScript suites pass.
@@ -42,3 +42,4 @@ Files: visuals.R, ui.R, workflow navigation, www/input-guide-zh.html, deployment
 - Fresh reviewer identified one Important freshness gap in pre-existing draft-structure fingerprint coverage. Regression reproduced RED; conditional draft fingerprint added; full suite GREEN. Existing confirmed/no-draft fingerprints preserved. No EI/selection algorithm changed.
 - Local browser: homepage methodology and guide link present; comparison section visible without expansion; normal repeat count retained while EI unavailable; A04 Extended Adaptive 2.874266 / Bayesian 2.522163 unchanged, repeat estimate 64.000.
 - No deferred review findings.
+- Released in PR #6, merge 74bacf6; public deployment succeeded at the existing Posit content ID on 2026-11-13. Public methodology and standalone Chinese guide render; A04 repeat estimate 64.000 and EI difference 0.352104 verified; comparison section visible. Public report ZIP downloaded successfully with the new per-allele table. Source-generated ZIP contains 40 artifacts and workbook sheet. Confirmed saved cloud project retains every old result column exactly.
