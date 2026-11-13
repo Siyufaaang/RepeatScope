@@ -23,4 +23,14 @@
 ## Tasks
 - [x] Field help: complete unit/example/requirement metadata; accessible inline help rendering and delegated behavior; tests for unchanged input values and required conditions.
 - [x] Method visualization: generate frozen synthetic trace with existing methods; MathML equations and parameter keys; controllable SVG player; verify frames against method outputs and EI arithmetic.
-- [ ] Verify full R/JS suites, browser keyboard/hover/click and mobile, fresh review, runtime allowlist, merge/deploy existing public URL, public acceptance.
+- [x] Verify full R/JS suites, browser keyboard/hover/click and mobile, fresh review, runtime allowlist, merge/deploy existing public URL, public acceptance.
+
+## Release acceptance
+- PR #7 merged as 30adc72; presentation implementation f5f648f.
+- 26 synthetic R suites and all 6 JavaScript suites pass. Frozen seed windows, predictions and EI match unchanged R methods.
+- Independent fresh-context review: no material findings.
+- Browser checks: MathML fractions/posteriors, click/focus/Escape help, unchanged adjacent checkbox, dynamic table help, mobile popup bounds, contained equation scrolling, playback and keyboard tab switching.
+- Repository allowlist: 115 reviewed files. Deployment: 55 runtime files, 61 dependencies, existing public content ID retained.
+- Public acceptance: EI/Adaptive/Bayesian panels loaded; Bayesian seed step displayed 210.100-211.900 bp; input help displayed meaning/unit/example; no browser errors captured.
+- Existing public URL verified: https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/
+- Scientific calculation files and input defaults unchanged.
