@@ -20,7 +20,8 @@
       </section>
       <dialog data-detail aria-labelledby="rs-plate-detail-heading">
         <div class="detail-top"><div><small data-detail-group></small><h3 id="rs-plate-detail-heading"></h3></div><button type="button" data-close aria-label="Close well detail">Close</button></div>
-        <select data-record-select aria-label="Acquisition and allele"></select>
+        <div class="report-selector-heading" data-record-help><span>Acquisition and allele</span><span class="field-tools"><span class="field-requirement">Optional</span><button type="button" class="field-help-trigger" data-field-help="dashboard_record-help" aria-label="Help for acquisition and allele" aria-expanded="false" aria-describedby="dashboard_record-help">?</button></span></div>
+        <select data-record-select aria-label="Acquisition and allele" aria-describedby="dashboard_record-help"></select>
         <section class="repeat-summary" aria-label="Allele repeat numbers">
           <h4>Estimated repeat number</h4>
           <div class="scroll-table" data-repeat-table></div>
@@ -36,7 +37,7 @@
         <small class="peak-key-note">Modal peak: black · Excluded peaks stay grey in each method's plot.</small>
         <details><summary>Target, filter and QC details</summary>
           <p data-target-note></p><p data-scope-note></p><p data-formal-note></p>
-          <div class="target-choice"><label for="dashboard-candidate">Candidate modal · Size / RFU</label>
+          <div class="target-choice"><div class="report-selector-heading"><label for="dashboard-candidate">Candidate modal · Size / RFU</label><span class="field-tools"><span class="field-requirement">Conditional</span><button type="button" class="field-help-trigger" data-field-help="dashboard_candidate-help" aria-label="Help for candidate modal" aria-expanded="false" aria-describedby="dashboard_candidate-help">?</button></span></div>
             <select id="dashboard-candidate" data-candidate-select></select>
             <button type="button" data-apply-target>Review selected candidate</button></div>
           <small>All imported peaks are retained. These are research previews.</small>

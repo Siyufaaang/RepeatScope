@@ -102,11 +102,24 @@ add_field_help(c('loc_intercept','loc_slope'),'Required for linear CE mapping','
 add_field_help(c('prescreen_wells','prescreen_pattern','prescreen_method','prescreen_source'),'Required for sample target assignment','Explicit sample selection and prescreen interpretation, method and record. Group names never infer genotype.')
 add_field_help(c('manual_target_kind','manual_target_basis'),'Required for manual target decision','Choose a research interpretation and record why this physical peak resolves or overrides the conflict.')
 add_field_help('target_channel','Required for target assignment','Apply the exact imported channel label, or explicitly enter ALL. B is specific to this batch.')
+sys.source(file.path(rs_app_dir,'R/field_help_details.R'),envir=environment())
 annotate_field<-function(id,tag) {
-  h<-field_guidance[[id]]
-  if(is.null(h))stop('Missing input guidance: ',id)
-  if(grepl('^loc_',id) || id%in%c('gene','organism','reference_type','forward','reverse','motif','minimum_bp','target_channel'))return(shiny::div(class='rs-field quiet-field',title=h$text,tag,shiny::span(id=paste0(id,'-help'),class='visually-hidden',h$text)))
-  shiny::div(class='rs-field',tag,shiny::div(id=paste0(id,'-help'),class='field-guidance',shiny::span(class=paste('field-badge',if(grepl('^Required',h$kind))'required' else 'optional'),h$kind,title=h$text,'aria-label'=paste(h$kind,h$text))))
+  if(is.null(field_guidance[[id]]))stop('Missing input guidance: ',id)
+  placed<-FALSE
+  decorate<-function(node) {
+    if(!inherits(node,'shiny.tag'))return(node)
+    if(identical(node$attribs$id,id) && node$name%in%c('input','select','textarea'))
+      node$attribs[['aria-describedby']]<-paste(trimws(node$attribs[['aria-describedby']]%||%''),paste0(id,'-help'))
+    node$children<-lapply(node$children,function(child) {
+      if(inherits(child,'shiny.tag') && child$name=='label' && !placed) {
+        placed<<-TRUE
+        label<-paste(unlist(Filter(is.character,child$children)),collapse=' ')
+        shiny::div(class='field-heading',decorate(child),shiny::span(class='field-tools',field_help_control(id,label)))
+      } else decorate(child)
+    });node
+  }
+  tag<-decorate(tag)
+  shiny::div(class='rs-field','data-field-id'=id,tag,if(!placed)shiny::div(class='field-tools',field_help_control(id)))
 }
 for(field_function in c('textInput','textAreaInput','numericInput','selectInput','selectizeInput','checkboxInput','fileInput','sliderInput'))local({
   name<-field_function;fun<-getExportedValue('shiny',name)

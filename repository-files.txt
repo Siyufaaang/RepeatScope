@@ -102,3 +102,14 @@ docs/superpowers/specs/2026-11-13-methodology-repeat-report.md
 docs/superpowers/plans/2026-11-13-methodology-repeat-report.md
 development/shiny_app/tests/test_repeat_report.R
 development/shiny_app/www/input-guide-zh.html
+development/shiny_app/R/field_help_details.R
+development/shiny_app/www/field-help.js
+development/shiny_app/www/learning.css
+development/shiny_app/www/methodology.html
+development/shiny_app/www/method-learning.js
+development/shiny_app/www/method-trace.json
+development/shiny_app/tests/test_learning_ui.R
+development/shiny_app/tests/test_learning_player.cjs
+tools/generate_method_trace.R
+docs/superpowers/specs/2026-11-13-visual-method-learning.md
+docs/superpowers/plans/2026-11-13-visual-method-learning.md

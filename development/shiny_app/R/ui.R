@@ -27,7 +27,8 @@ localization_inputs_ui <- function() tagList(
 rs_ui <- function() {
   public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f5f6f7',fg='#161819',primary='#161819',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=113'),tags$link(rel='stylesheet',href='dashboard.css?v=113'),tags$link(rel='stylesheet',href='visual.css?v=113'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=113'),tags$script(src='visual.js?v=113')),
+    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=114'),tags$link(rel='stylesheet',href='dashboard.css?v=114'),tags$link(rel='stylesheet',href='visual.css?v=114'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=114'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=114'),tags$script(src='visual.js?v=114')),
+    tags$head(tags$link(rel='stylesheet',href='learning.css?v=114'),tags$script(src='field-help.js?v=114'),tags$script(src='method-learning.js?v=114')),
     div(class='app-shell',
       div(class='topbar',tags$a(href='#landing-top','data-home-section'='landing-top',class='brand',brand_mark(),span('RepeatScope'),span(class='version-label','Beta')),
         tags$nav(class='top-actions','aria-label'='Main navigation',
@@ -71,7 +72,8 @@ rs_ui <- function() {
                 tags$button(id='layout_apply',type='button',class='btn btn-primary','Apply to selected wells')))),
             tabPanel('Table / Excel paste',value='table',
               p(class='status-small','Edit cells directly, or paste an Excel rectangle into a cell. For named wells, paste below with a header row. Text IDs keep leading zeros; blank cells clear that field. Omitted columns stay unchanged.'),
-              tags$label('for'='layout_paste','Paste from Excel (include Well and the columns you want to change)'),
+              div(class='field-heading',tags$label('for'='layout_paste','Paste from Excel (include Well and the columns you want to change)'),span(class='field-tools',field_help_control('layout_paste','Paste from Excel'))),
+              div(hidden=NA,field_help_control('table_code','Sample ID')),
               tags$textarea(id='layout_paste',class='form-control',rows=4,placeholder='Well\tIndividual ID\tGroup\tGenotype\nA01\t001\tGroup 1\tNormal + expanded'),
               div(class='button-row',tags$button(id='layout_stage',type='button',class='btn btn-default','Preview paste'),span(id='layout_stage_count',role='status','No table edits'),
                 tags$button(id='layout_table_apply',type='button',class='btn btn-primary',disabled=NA,'Apply table edits')),
@@ -129,6 +131,7 @@ rs_ui <- function() {
           div(class='preview-controls',selectInput('window','EI window',c('Tail10 · Δ 0–10'='tail10','Extended · frozen search support'='extended'),selectize=FALSE),
             div(class='threshold-grid',sliderInput('threshold','Height threshold (% own modal)',min=0,max=100,value=3,step=.1),numericInput('threshold_number','Exact %',value=3,min=0,max=100,step=.1),actionButton('reset_threshold','Reset to 3%')),
             tags$details(class='report-help',tags$summary('About the EI window and height threshold'),div(class='formula-note',textOutput('threshold_note'))))),
+          div(hidden=NA,field_help_control('dashboard_record','Acquisition and allele'),field_help_control('dashboard_candidate','Candidate modal')),
           div(id='report-dashboard'),tags$template(id='dashboard-template',includeHTML(file.path(rs_app_dir,'www/dashboard.html')))
           ),
           tabPanel('Target review',value='targets',h2('Review a target'),p('Choose a well / acquisition below, or open a candidate from the plate report.'),

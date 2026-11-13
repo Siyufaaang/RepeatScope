@@ -47,3 +47,9 @@ development/shiny_app/www/visual.js
 development/v2_4/repeat_peak.v2.4_core.R
 development/v2_4/repeat_peak.v2.4_method02_adaptive_walk.R
 development/shiny_app/www/input-guide-zh.html
+development/shiny_app/R/field_help_details.R
+development/shiny_app/www/field-help.js
+development/shiny_app/www/learning.css
+development/shiny_app/www/methodology.html
+development/shiny_app/www/method-learning.js
+development/shiny_app/www/method-trace.json

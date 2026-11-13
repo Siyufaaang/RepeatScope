@@ -150,6 +150,7 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     select.replaceChildren();
     w.recordList.forEach((r,i)=>{const o=document.createElement('option');o.value=i;o.textContent=r.acquisition+' · '+r.allele;select.append(o);});
     select.hidden=w.recordList.length<2;
+    find('[data-record-help]').hidden=select.hidden;
     select.value=recordIndex;
     select.onchange=()=>showWell(w,Number(select.value));
     const rec=w.recordList[recordIndex];
