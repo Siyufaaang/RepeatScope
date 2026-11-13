@@ -1,0 +1,87 @@
+<section class="landing-methodology learning-methods" id="methodology" aria-labelledby="learning-title">
+  <p class="section-kicker">Methodology</p>
+  <h2 id="learning-title">See how a signal becomes EI.</h2>
+  <p class="learning-intro">One modal. Two ways to assign the tail. The same final EI formula.</p>
+  <div class="learning-tabs" role="tablist" aria-label="Explore a method">
+    <button type="button" role="tab" id="learn-tab-ei" aria-controls="learn-ei" aria-selected="true" data-learn-tab="ei">01 / EI</button>
+    <button type="button" role="tab" id="learn-tab-adaptive" aria-controls="learn-adaptive" aria-selected="false" tabindex="-1" data-learn-tab="adaptive">02 / Adaptive</button>
+    <button type="button" role="tab" id="learn-tab-bayesian" aria-controls="learn-bayesian" aria-selected="false" tabindex="-1" data-learn-tab="bayesian">03 / Bayesian</button>
+  </div>
+  <div class="learning-layout">
+    <div class="learning-theory">
+      <section id="learn-ei" role="tabpanel" aria-labelledby="learn-tab-ei" tabindex="0">
+        <h3>Height-weighted tail distance</h3>
+        <div class="textbook-equation">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="EI equals sum over included peaks of height times relative repeat step, divided by the sum of their heights">
+            <mi mathvariant="normal">EI</mi><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mrow><mi>k</mi><mo>∈</mo><mi mathvariant="script">I</mi></mrow></munder><msub><mi>H</mi><mi>k</mi></msub><mi>k</mi></mrow><mrow><munder><mo>∑</mo><mrow><mi>k</mi><mo>∈</mo><mi mathvariant="script">I</mi></mrow></munder><msub><mi>H</mi><mi>k</mi></msub></mrow></mfrac>
+          </math>
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="secondary-equation" aria-label="Included set I contains assigned steps within the selected window whose height is at least p times the modal height">
+            <mi mathvariant="script">I</mi><mo>=</mo><mo>{</mo><mi>k</mi><mo>∈</mo><mi mathvariant="script">A</mi><mo>∩</mo><mi mathvariant="script">W</mi><mo>:</mo><msub><mi>H</mi><mi>k</mi></msub><mo>≥</mo><mi>p</mi><msub><mi>H</mi><mn>0</mn></msub><mo>}</mo>
+          </math>
+        </div>
+        <dl class="symbol-key"><dt>k</dt><dd>Relative repeat step; the modal is 0.</dd><dt>Hₖ / H₀</dt><dd>Peak / modal height, in RFU.</dd><dt>p</dt><dd>Height fraction; default 0.03 = 3%.</dd><dt>𝒜 / 𝒲</dt><dd>Assigned steps / selected EI window.</dd><dt>ℐ</dt><dd>Included peaks, with the modal.</dd></dl>
+        <p class="learning-note">Tail10: k = 0…10. Extended: fitted support. Changing p filters the fitted assignment; it does not refit it.</p>
+      </section>
+      <section id="learn-adaptive" role="tabpanel" aria-labelledby="learn-tab-adaptive" tabindex="0" hidden>
+        <h3>Walk, select, update the spacing</h3>
+        <div class="textbook-equation">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Adaptive spacing is the clipped modal-anchored least squares estimate over accepted nonmodal peaks">
+            <msub><mi>s</mi><mi>j</mi></msub><mo>=</mo><msub><mi mathvariant="normal">clip</mi><mrow><mo>[</mo><msub><mi>s</mi><mi>min</mi></msub><mo>,</mo><msub><mi>s</mi><mi>max</mi></msub><mo>]</mo></mrow></msub><mo>(</mo><mfrac><mrow><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><msub><mi mathvariant="script">A</mi><mi>j</mi></msub></mrow></munder><msub><mi>k</mi><mi>i</mi></msub><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>m</mi><mo>)</mo></mrow><mrow><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><msub><mi mathvariant="script">A</mi><mi>j</mi></msub></mrow></munder><msubsup><mi>k</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mfrac><mo>)</mo>
+          </math>
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="secondary-equation" aria-label="Next predicted position is modal plus next step times spacing; search within tolerance tau">
+            <msub><mover><mi>x</mi><mo>^</mo></mover><mrow><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>m</mi><mo>+</mo><mo>(</mo><mi>j</mi><mo>+</mo><mn>1</mn><mo>)</mo><msub><mi>s</mi><mi>j</mi></msub>
+          </math>
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="secondary-equation" aria-label="A candidate must be within tau of the predicted position"><mo>|</mo><mi>x</mi><mo>−</mo><msub><mover><mi>x</mi><mo>^</mo></mover><mrow><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>|</mo><mo>≤</mo><mi>τ</mi></math>
+        </div>
+        <dl class="symbol-key"><dt>m / xᵢ</dt><dd>Modal / observed peak position, bp.</dd><dt>j / kᵢ</dt><dd>Current step / assigned repeat step.</dd><dt>𝒜ⱼ</dt><dd>Nonmodal peaks accepted through step j.</dd><dt>sⱼ</dt><dd>Spacing, bp per step; starts at s₀ = 3.</dd><dt>smin / smax</dt><dd>Spacing bounds; default 2.5 / 3.2 bp.</dd><dt>τ</dt><dd>Search half-width; default 0.8 bp.</dd></dl>
+        <p class="learning-note">No accepted tail peak → use s₀. Highest unused candidate wins; ties use nearest position, then smaller size. Missing step → skip.</p>
+      </section>
+      <section id="learn-bayesian" role="tabpanel" aria-labelledby="learn-tab-bayesian" tabindex="0" hidden>
+        <h3>Calibrate seeds, then predict</h3>
+        <div class="textbook-equation bayesian-equation">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Distance from modal y i equals k i times spacing plus normal residual epsilon">
+            <msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>m</mi><mo>=</mo><msub><mi>k</mi><mi>i</mi></msub><mi>s</mi><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub>
+          </math>
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="secondary-equation" aria-label="Residuals follow a normal distribution with mean zero and variance sigma squared"><msub><mi>ε</mi><mi>i</mi></msub><mo>∼</mo><mi mathvariant="script">N</mi><mo>(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo>)</mo></math>
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Given the seeds and modal, peak position has Student t prediction with 2 alpha degrees of freedom, location m plus k mu, and scale square root of beta over alpha times 1 plus k squared over kappa">
+            <msub><mi>x</mi><mi>k</mi></msub><mo>|</mo><mi mathvariant="script">D</mi><mo>,</mo><mi>m</mi><mo>∼</mo><msub><mi>t</mi><mrow><mn>2</mn><mi>α</mi></mrow></msub><mo>(</mo><mi>m</mi><mo>+</mo><mi>k</mi><mi>μ</mi><mo>,</mo><msqrt><mfrac><mi>β</mi><mi>α</mi></mfrac><mo>(</mo><mn>1</mn><mo>+</mo><mfrac><msup><mi>k</mi><mn>2</mn></msup><mi>κ</mi></mfrac><mo>)</mo></msqrt><mo>)</mo>
+          </math>
+        </div>
+        <dl class="symbol-key"><dt>m / xᵢ / yᵢ</dt><dd>Modal / peak position / offset, bp.</dd><dt>kᵢ / s</dt><dd>Repeat step / spacing in bp per step.</dd><dt>εᵢ / σ²</dt><dd>Position error / residual variance.</dd><dt>𝒟</dt><dd>Accepted early seeds; default 3–5.</dd><dt>μ / κ</dt><dd>Posterior spacing / precision factor.</dd><dt>α / β</dt><dd>Posterior variance shape / scale.</dd><dt>t₂α</dt><dd>Student-t prediction; 2α degrees of freedom. Second argument is scale.</dd></dl>
+        <p class="learning-note">Seed floor = max(100 RFU, 3% of modal); competing-peak dominance ≥3×. Freeze the seed posterior. Accept unique later candidates; unresolved in-scope assignments can make EI unavailable.</p>
+        <details class="posterior-details"><summary>Prior &amp; posterior equations</summary>
+          <div class="textbook-equation posterior-equations">
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Variance has inverse gamma prior; spacing conditional on variance has a normal prior"><mtable columnalign="right center left"><mtr><mtd><msup><mi>σ</mi><mn>2</mn></msup></mtd><mtd><mo>∼</mo></mtd><mtd><mi mathvariant="normal">InvGamma</mi><mo>(</mo><msub><mi>α</mi><mn>0</mn></msub><mo>,</mo><msub><mi>β</mi><mn>0</mn></msub><mo>)</mo></mtd></mtr><mtr><mtd><mi>s</mi><mo>|</mo><msup><mi>σ</mi><mn>2</mn></msup></mtd><mtd><mo>∼</mo></mtd><mtd><mi mathvariant="script">N</mi><mo>(</mo><msub><mi>μ</mi><mn>0</mn></msub><mo>,</mo><mfrac><msup><mi>σ</mi><mn>2</mn></msup><msub><mi>κ</mi><mn>0</mn></msub></mfrac><mo>)</mo></mtd></mtr></mtable></math>
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Posterior kappa, mu and alpha updates"><mtable columnalign="right center left" rowspacing="0.8em"><mtr><mtd><mi>κ</mi></mtd><mtd><mo>=</mo></mtd><mtd><msub><mi>κ</mi><mn>0</mn></msub><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><msubsup><mi>k</mi><mi>i</mi><mn>2</mn></msubsup></mtd></mtr><mtr><mtd><mi>μ</mi></mtd><mtd><mo>=</mo></mtd><mtd><mfrac><mrow><msub><mi>κ</mi><mn>0</mn></msub><msub><mi>μ</mi><mn>0</mn></msub><mo>+</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>k</mi><mi>i</mi></msub><msub><mi>y</mi><mi>i</mi></msub></mrow><mi>κ</mi></mfrac></mtd></mtr><mtr><mtd><mi>α</mi></mtd><mtd><mo>=</mo></mtd><mtd><msub><mi>α</mi><mn>0</mn></msub><mo>+</mo><mfrac><mi>n</mi><mn>2</mn></mfrac></mtd></mtr></mtable></math>
+            <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Posterior beta equals prior beta plus half residual sum of squares plus half prior precision times squared shift in mean"><mi>β</mi><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><munder><mo>∑</mo><mi>i</mi></munder><msup><mrow><mo>(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mi>k</mi><mi>i</mi></msub><mi>μ</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><mfrac><msub><mi>κ</mi><mn>0</mn></msub><mn>2</mn></mfrac><msup><mrow><mo>(</mo><mi>μ</mi><mo>−</mo><msub><mi>μ</mi><mn>0</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></math>
+          </div>
+          <dl class="symbol-key"><dt>n / i</dt><dd>Number / index of accepted seeds.</dd><dt>μ₀</dt><dd>Prior spacing; configured nominal value.</dd><dt>κ₀ / α₀ / β₀</dt><dd>Prior precision / shape / scale; defaults 0.05 / 2 / 0.01.</dd></dl>
+          <p class="learning-note">95% refers to a pointwise position-prediction interval, conditional on the seeds and modal. It is not a true-peak probability or an EI confidence interval.</p>
+        </details>
+      </section>
+    </div>
+    <figure class="learning-player" aria-label="Synthetic peak-selection animation">
+      <div class="learning-player-heading"><span class="section-kicker">SYNTHETIC WALKTHROUGH</span><span data-learn-step>Loading…</span></div>
+      <h3 data-learn-caption>Explore the method step by step.</h3>
+      <p class="learning-chart-label" data-learn-assignment>Illustrative A04 · Extended · 3% threshold</p>
+      <svg data-learn-plot viewBox="0 0 680 235" role="img" aria-label="Synthetic peaks, full RFU scale"></svg>
+      <p class="learning-chart-label">Tail detail · 0–1,000 RFU · taller peaks clipped at the labelled limit</p>
+      <svg data-learn-zoom viewBox="0 0 680 165" role="img" aria-label="Same synthetic peaks, zoomed to 0–1000 RFU"></svg>
+      <div class="learning-legend"><span>■ Modal</span><span class="learn-accent">● Accepted</span><span>□ Search interval</span><span class="learn-grey">│ Other peak</span></div>
+      <p class="learning-readout" data-learn-readout aria-live="polite">The animation uses a fixed synthetic trace, never your uploaded data.</p>
+      <div class="learning-controls" role="group" aria-label="Animation playback">
+        <button type="button" data-learn-prev disabled aria-label="Previous animation step">← Back</button>
+        <button type="button" data-learn-play disabled aria-pressed="false">Play</button>
+        <button type="button" data-learn-next disabled aria-label="Next animation step">Step →</button>
+        <button type="button" data-learn-reset disabled>Replay</button>
+      </div>
+      <div class="learning-progress" role="progressbar" aria-label="Animation progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"><span data-learn-progress></span></div>
+      <figcaption>Read directly from the existing R methods. Illustrative synthetic data; unchanged analysis logic.</figcaption>
+    </figure>
+  </div>
+  <div class="repeat-equation-strip">
+    <div><h3>Allele length is a separate quantity.</h3><math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Estimated repeat number N equals modal length minus mapping intercept, divided by mapping slope"><mover><mi>N</mi><mo>^</mo></mover><mo>=</mo><mfrac><mrow><mi>m</mi><mo>−</mo><mi>a</mi></mrow><mi>b</mi></mfrac></math></div>
+    <dl class="symbol-key"><dt>m</dt><dd>Allele modal length, bp.</dd><dt>a / b</dt><dd>Mapping intercept, bp / slope, bp per repeat.</dd><dt>N̂</dt><dd>Estimated repeats; shared by both EI methods. Not sequence confirmation.</dd></dl>
+  </div>
+  <p class="method-guide"><a href="input-guide-zh.html" target="_blank" rel="noopener">完整输入说明 · 中文 ↗</a><span>Actual parameters and peak decisions are recorded in every report.</span></p>
+</section>

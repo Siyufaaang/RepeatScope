@@ -1,0 +1,677 @@
+{
+  "source": "SYNTHETIC A04 · Extended · 3% · unchanged RepeatScope methods",
+  "modal": 208,
+  "modalHeight": 10000,
+  "threshold": 0.029999999999999999,
+  "upper": 265.43000000000001,
+  "peaks": [
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0",
+      "Size": 208,
+      "Height": 10000
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1",
+      "Size": 210.91999999999999,
+      "Height": 6500
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2",
+      "Size": 213.84,
+      "Height": 4000
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3",
+      "Size": 216.75999999999999,
+      "Height": 2400
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4",
+      "Size": 219.68000000000001,
+      "Height": 1600
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5",
+      "Size": 222.59999999999999,
+      "Height": 1000
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6",
+      "Size": 225.52000000000001,
+      "Height": 798
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7",
+      "Size": 228.44,
+      "Height": 708
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8",
+      "Size": 231.36000000000001,
+      "Height": 628
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9",
+      "Size": 234.28,
+      "Height": 557
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10",
+      "Size": 237.19999999999999,
+      "Height": 494
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11",
+      "Size": 240.12,
+      "Height": 438
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12",
+      "Size": 243.03999999999999,
+      "Height": 389
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13",
+      "Size": 245.96000000000001,
+      "Height": 345
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14",
+      "Size": 248.88,
+      "Height": 306
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15",
+      "Size": 251.80000000000001,
+      "Height": 271
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16",
+      "Size": 254.72,
+      "Height": 240
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17",
+      "Size": 257.63999999999999,
+      "Height": 213
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-18",
+      "Size": 261.00999999999999,
+      "Height": 345
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-19",
+      "Size": 263.93000000000001,
+      "Height": 335
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-20",
+      "Size": 266.39999999999998,
+      "Height": 149
+    }
+  ],
+  "adaptive": [
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0",
+      "Delta": 0,
+      "Expected_size_bp": 208,
+      "Local_repeat_spacing_bp": 3,
+      "Size": 208
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1",
+      "Delta": 1,
+      "Expected_size_bp": 211,
+      "Local_repeat_spacing_bp": 3,
+      "Size": 210.91999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2",
+      "Delta": 2,
+      "Expected_size_bp": 213.83999999999997,
+      "Local_repeat_spacing_bp": 2.9199999999999875,
+      "Size": 213.84
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3",
+      "Delta": 3,
+      "Expected_size_bp": 216.75999999999999,
+      "Local_repeat_spacing_bp": 2.919999999999999,
+      "Size": 216.75999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4",
+      "Delta": 4,
+      "Expected_size_bp": 219.67999999999998,
+      "Local_repeat_spacing_bp": 2.9199999999999977,
+      "Size": 219.68000000000001
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5",
+      "Delta": 5,
+      "Expected_size_bp": 222.59999999999999,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 222.59999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6",
+      "Delta": 6,
+      "Expected_size_bp": 225.51999999999998,
+      "Local_repeat_spacing_bp": 2.9199999999999995,
+      "Size": 225.52000000000001
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7",
+      "Delta": 7,
+      "Expected_size_bp": 228.44,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
+      "Size": 228.44
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8",
+      "Delta": 8,
+      "Expected_size_bp": 231.36000000000001,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 231.36000000000001
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9",
+      "Delta": 9,
+      "Expected_size_bp": 234.28,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
+      "Size": 234.28
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10",
+      "Delta": 10,
+      "Expected_size_bp": 237.19999999999999,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
+      "Size": 237.19999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11",
+      "Delta": 11,
+      "Expected_size_bp": 240.12,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 240.12
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12",
+      "Delta": 12,
+      "Expected_size_bp": 243.03999999999999,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 243.03999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13",
+      "Delta": 13,
+      "Expected_size_bp": 245.96000000000001,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 245.96000000000001
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14",
+      "Delta": 14,
+      "Expected_size_bp": 248.88,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 248.88
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15",
+      "Delta": 15,
+      "Expected_size_bp": 251.80000000000001,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
+      "Size": 251.80000000000001
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16",
+      "Delta": 16,
+      "Expected_size_bp": 254.72,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 254.72
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17",
+      "Delta": 17,
+      "Expected_size_bp": 257.63999999999999,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
+      "Size": 257.63999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-18",
+      "Delta": 18,
+      "Expected_size_bp": 260.56,
+      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Size": 261.00999999999999
+    },
+    {
+      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-19",
+      "Delta": 19,
+      "Expected_size_bp": 263.55297297297295,
+      "Local_repeat_spacing_bp": 2.9238406827880512,
+      "Size": 263.93000000000001
+    }
+  ],
+  "bayesian": {
+    "seeds": ["SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5"],
+    "seedAudit": [
+      {
+        "Delta": 1,
+        "Low": 210.10032896049248,
+        "High": 211.89967103950752,
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1",
+        "Status": "accepted_seed"
+      },
+      {
+        "Delta": 2,
+        "Low": 213.48836934079895,
+        "High": 214.20686875443909,
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2",
+        "Status": "accepted_seed"
+      },
+      {
+        "Delta": 3,
+        "Low": 216.52487648392292,
+        "High": 216.99987599132459,
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3",
+        "Status": "accepted_seed"
+      },
+      {
+        "Delta": 4,
+        "Low": 219.49482419479264,
+        "High": 219.86745338527854,
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4",
+        "Status": "accepted_seed"
+      },
+      {
+        "Delta": 5,
+        "Low": 222.44336593737421,
+        "High": 222.75796517743447,
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5",
+        "Status": "accepted_seed"
+      }
+    ],
+    "predictions": [
+      {
+        "Delta": 1,
+        "Center": 210.92007266121706,
+        "Low": 210.81161270817489,
+        "High": 211.02853261425923,
+        "Scale": 0.04794536596565141,
+        "Level": 0.94999999999999996,
+        "Status": "calibration",
+        "N_candidates": null,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1"
+      },
+      {
+        "Delta": 2,
+        "Center": 213.84014532243415,
+        "Low": 213.72882061702009,
+        "High": 213.95147002784822,
+        "Scale": 0.049211746754310691,
+        "Level": 0.94999999999999996,
+        "Status": "calibration",
+        "N_candidates": null,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2"
+      },
+      {
+        "Delta": 3,
+        "Center": 216.76021798365122,
+        "Low": 216.64427588141237,
+        "High": 216.87616008589006,
+        "Scale": 0.051252894425525046,
+        "Level": 0.94999999999999996,
+        "Status": "calibration",
+        "N_candidates": null,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3"
+      },
+      {
+        "Delta": 4,
+        "Center": 219.68029064486831,
+        "Low": 219.55817715453244,
+        "High": 219.80240413520417,
+        "Scale": 0.053980993161770074,
+        "Level": 0.94999999999999996,
+        "Status": "calibration",
+        "N_candidates": null,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4"
+      },
+      {
+        "Delta": 5,
+        "Center": 222.60036330608537,
+        "Low": 222.47074621467044,
+        "High": 222.7299803975003,
+        "Scale": 0.057298004553575525,
+        "Level": 0.94999999999999996,
+        "Status": "calibration",
+        "N_candidates": null,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5"
+      },
+      {
+        "Delta": 6,
+        "Center": 225.52043596730246,
+        "Low": 225.38219983358147,
+        "High": 225.65867210102346,
+        "Scale": 0.061108103360074092,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6"
+      },
+      {
+        "Delta": 7,
+        "Center": 228.44050862851952,
+        "Low": 228.29273305760265,
+        "High": 228.5882841994364,
+        "Scale": 0.065325068190265831,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7"
+      },
+      {
+        "Delta": 8,
+        "Center": 231.36058128973661,
+        "Low": 231.20251243616985,
+        "High": 231.51865014330338,
+        "Scale": 0.069875274877553809,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8"
+      },
+      {
+        "Delta": 9,
+        "Center": 234.28065395095368,
+        "Low": 234.11167567427168,
+        "High": 234.44963222763568,
+        "Scale": 0.074697850114430794,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9"
+      },
+      {
+        "Delta": 10,
+        "Center": 237.20072661217074,
+        "Low": 237.02033452274515,
+        "High": 237.38111870159634,
+        "Scale": 0.079743393780147581,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10"
+      },
+      {
+        "Delta": 11,
+        "Center": 240.12079927338783,
+        "Low": 239.92857881069287,
+        "High": 240.31301973608279,
+        "Scale": 0.084972196386740723,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11"
+      },
+      {
+        "Delta": 12,
+        "Center": 243.04087193460489,
+        "Low": 242.8364804987657,
+        "High": 243.24526337044409,
+        "Scale": 0.090352447301395369,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12"
+      },
+      {
+        "Delta": 13,
+        "Center": 245.96094459582199,
+        "Low": 245.74409726652192,
+        "High": 246.17779192512205,
+        "Scale": 0.095858648933048657,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13"
+      },
+      {
+        "Delta": 14,
+        "Center": 248.88101725703905,
+        "Low": 248.65147549217014,
+        "High": 249.11055902190796,
+        "Scale": 0.10147029951932215,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14"
+      },
+      {
+        "Delta": 15,
+        "Center": 251.80108991825614,
+        "Low": 251.55865264424878,
+        "High": 252.0435271922635,
+        "Scale": 0.10717083587042642,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15"
+      },
+      {
+        "Delta": 16,
+        "Center": 254.7211625794732,
+        "Low": 254.46565916608796,
+        "High": 254.97666599285844,
+        "Scale": 0.11294680033159082,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16"
+      },
+      {
+        "Delta": 17,
+        "Center": 257.64123524069026,
+        "Low": 257.37251994695112,
+        "High": 257.90995053442941,
+        "Scale": 0.11878719045619379,
+        "Level": 0.94999999999999996,
+        "Status": "unique_candidate",
+        "N_candidates": 1,
+        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17"
+      },
+      {
+        "Delta": 18,
+        "Center": 260.56130790190736,
+        "Low": 260.27925546646043,
+        "High": 260.84336033735428,
+        "Scale": 0.12468295310571254,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 19,
+        "Center": 263.48138056312445,
+        "Low": 263.18588268494562,
+        "High": 263.77687844130327,
+        "Scale": 0.13062659086571926,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 20,
+        "Center": 266.40145322434148,
+        "Low": 266.09241573779781,
+        "High": 266.71049071088515,
+        "Scale": 0.13661185510266727,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 21,
+        "Center": 269.32152588555857,
+        "Low": 268.99886647908687,
+        "High": 269.64418529203027,
+        "Scale": 0.14263350565465932,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 22,
+        "Center": 272.24159854677566,
+        "Low": 271.90524490922354,
+        "High": 272.57795218432778,
+        "Scale": 0.14868712178072707,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 23,
+        "Center": 275.16167120799275,
+        "Low": 274.81155951321688,
+        "High": 275.51178290276863,
+        "Scale": 0.15476895263226806,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 24,
+        "Center": 278.08174386920979,
+        "Low": 277.71781752974323,
+        "High": 278.44567020867635,
+        "Scale": 0.16087579830942611,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      },
+      {
+        "Delta": 25,
+        "Center": 281.00181653042688,
+        "Low": 280.62402516642999,
+        "High": 281.37960789442377,
+        "Scale": 0.16700491469371345,
+        "Level": 0.94999999999999996,
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
+      }
+    ],
+    "fit": {
+      "mean": 2.9200726612170751,
+      "kappa": 55.049999999999997,
+      "alpha": 4.5,
+      "beta": 0.010159854677565852,
+      "df": 9,
+      "scale": 0.0064041106858580745,
+      "low95": 2.9055855563577087,
+      "high95": 2.9345597660764415,
+      "n_seed": 5,
+      "residual_rms": 0.00024098999385070846
+    },
+    "selected": [
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0",
+        "Delta": 0
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1",
+        "Delta": 1
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2",
+        "Delta": 2
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3",
+        "Delta": 3
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4",
+        "Delta": 4
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5",
+        "Delta": 5
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6",
+        "Delta": 6
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7",
+        "Delta": 7
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8",
+        "Delta": 8
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9",
+        "Delta": 9
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10",
+        "Delta": 10
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11",
+        "Delta": 11
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12",
+        "Delta": 12
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13",
+        "Delta": 13
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14",
+        "Delta": 14
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15",
+        "Delta": 15
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16",
+        "Delta": 16
+      },
+      {
+        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17",
+        "Delta": 17
+      }
+    ]
+  },
+  "adaptiveEI": {
+    "ids": ["SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-18", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-19"],
+    "numerator": 88651,
+    "denominator": 30843,
+    "ei": 2.874266446195247
+  },
+  "bayesianEI": {
+    "ids": ["SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14"],
+    "numerator": 76076,
+    "denominator": 30163,
+    "ei": 2.5221629148294267
+  },
+  "tolerance": 0.80000000000000004
+}

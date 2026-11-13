@@ -49,35 +49,7 @@ landing_step_art <- function(kind) {
   HTML(paste0('<svg viewBox="0 0 130 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">',inside,'</svg>'))
 }
 
-methodology_ui <- function() tags$section(class='landing-methodology',id='methodology',
-  p(class='section-kicker','Methodology'),h2('One signal. Two tail assignments.'),
-  p(class='method-intro','Adaptive and Bayesian assign repeat-step indices to physical peaks to the right of the same target modal. Both then calculate the same height-weighted expansion index. Repeat number describes modal allele length; EI describes its selected right-hand tail.'),
-  div(class='method-equation',HTML('EI = Σ(H<sub>k</sub> × k) / ΣH<sub>k</sub>'),
-    p('k = repeat steps from the modal (modal k = 0); H = that physical peak’s own RFU height. Include the modal and assigned peaks meeting H ≥ p × modal height within the selected EI window. Default p = 0.03. No area weighting, background subtraction or posterior-probability weighting.')),
-  div(class='method-columns',
-    tags$article(h3('01 / Adaptive EI'),
-      tags$ol(tags$li('Start at the shared modal m with nominal spacing s (default 3 bp).'),
-        tags$li('Predict the next repeat position m + k × s. Search unused physical peaks within ± tolerance (default 0.8 bp). Choose the highest peak; ties use closest position, then smaller size. A missing step is skipped.'),
-        tags$li(HTML('After each accepted tail peak, update spacing by modal-anchored least squares: s = Σ[k<sub>i</sub>(Size<sub>i</sub> − m)] / Σk<sub>i</sub>², constrained to the configured bounds (default 2.5–3.2 bp).')),
-        tags$li('After assignment, apply the chosen height threshold and window, then calculate EI. The threshold does not refit the walk.'))),
-    tags$article(h3('02 / Bayesian EI'),
-      tags$ol(tags$li('Model distance from the modal as Sizeₖ − m = k × s + ε, with normal residuals and a Normal–Inverse-Gamma prior for spacing and residual variance.'),
-        tags$li('Calibrate with consecutive early tail seeds (default at least 3, at most 5). Each seed must fit its sequential predictive window, meet max(100 RFU, 3% of modal), and dominate a competing peak by at least 3×. Calibration stops at the first failed step.'),
-        tags$li('Freeze the posterior fitted to those seeds. For later repeat positions, use pointwise Student-t posterior predictive intervals (default 95%). Accept a single candidate; multiple, overlapping or excessively wide windows remain unresolved.'),
-        tags$li('Apply the same final height threshold and EI window. An unresolved in-scope assignment can make EI unavailable; unavailable is not zero.')))),
-  tags$details(class='method-math',tags$summary('Bayesian posterior and reproducibility details'),
-    p(HTML('Let y<sub>i</sub> = Size<sub>i</sub> − m. Prior: σ² ~ Inv-Gamma(α₀, β₀), s | σ² ~ Normal(μ₀, σ²/κ₀). Defaults: μ₀ = configured nominal spacing, κ₀ = 0.05, α₀ = 2, β₀ = 0.01.')),
-    p(class='math-line',HTML('κ = κ₀ + Σk<sub>i</sub>²; μ = (κ₀μ₀ + Σk<sub>i</sub>y<sub>i</sub>)/κ; α = α₀ + n/2')),
-    p(class='math-line',HTML('β = β₀ + ½Σ(y<sub>i</sub> − k<sub>i</sub>μ)² + ½κ₀(μ − μ₀)²')),
-    p(class='math-line','Predictive centre: m + kμ; scale: √[(β/α)(1 + k²/κ)]; degrees of freedom: 2α.'),
-    p('Intervals use the configured two-sided coverage. These are position-prediction intervals conditional on seeds and the chosen modal, not the probability that a peak is real, a repeat-count confidence interval, or an EI confidence interval.'),
-    p('Shared support is frozen at fitting: by default, the smaller of the largest observed candidate size and max(modal + 33 bp, rightmost candidate ≥3% of modal + 1.5 bp). An explicit upper bp overrides the envelope but remains capped by observed input. Tail10 retains k = 0…10; Extended uses the frozen support. Changing the reporting height threshold does not change seeds, spacing or support.'),
-    p('Every export records the actual assay parameters, method versions, run/input fingerprints and physical peak decisions. Defaults above are software settings, not a claim that they suit every assay.')),
-  div(class='method-repeat',h3('Repeat number ≠ expansion index'),
-    p(class='math-line','Estimated repeats = (modal size in bp − mapping intercept in bp) / mapping slope in bp per repeat'),
-    p('Reference mapping uses the matched primer/reference fixed length and counted repeat unit. Measured CE mapping uses the supplied calibration intercept and slope. Normal, expanded and intermediate targets each retain their own estimate; both EI methods share it. Missing targets are not invented.'),
-    p('Supplied CE ±bp margins are propagated to repeat units without calling them confidence intervals. Unknown uncertainty stays unknown. Entered repeat evidence is exported separately. These nominal estimates do not confirm sequence, genotype, target category or formal QC clearance.')),
-  p(class='method-guide',tags$a(href='input-guide-zh.html',target='_blank',rel='noopener','完整输入说明 · 中文 ↗')))
+methodology_ui <- function() includeHTML(file.path(rs_app_dir,'www/methodology.html'))
 
 landing_ui <- function() {
   steps<-c('Import plate','Arrange plate','Import peaks','Reference & analysis','Results')

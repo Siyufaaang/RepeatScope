@@ -88,7 +88,8 @@
       if(!data)return;
       const table=$('layout_table');table.replaceChildren();
       const head=document.createElement('thead'),tr=document.createElement('tr');
-      for(const h of headings){const th=document.createElement('th');th.textContent=h;tr.append(th);}head.append(tr);table.append(head);
+      const helpIds=['','table_code','layout_individual','layout_group','layout_role','layout_genotype'];
+      headings.forEach((h,i)=>{const th=document.createElement('th');th.textContent=h;if(helpIds[i]){const b=document.createElement('button');b.type='button';b.className='field-help-trigger';b.dataset.fieldHelp=helpIds[i]+'-help';b.setAttribute('aria-label','Help for '+h);b.setAttribute('aria-expanded','false');b.setAttribute('aria-describedby',helpIds[i]+'-help');b.textContent='?';th.append(b);}tr.append(th);});head.append(tr);table.append(head);
       const body=document.createElement('tbody');
       data.rows.forEach((row,index)=>{
         const tr=document.createElement('tr');tr.dataset.well=row.Well;
@@ -98,6 +99,7 @@
           const el=document.createElement(choices?'select':'input');if(!choices){el.type='text';el.autocomplete='off';el.spellcheck=false;}
           if(choices)for(const [label,value] of Object.entries(choices)){const opt=document.createElement('option');opt.value=value;opt.textContent=label;el.append(opt);}
           el.setAttribute('aria-label',row.Well+' '+headings[columns.indexOf(key)]);el.dataset.column=key;
+          el.setAttribute('aria-describedby',helpIds[columns.indexOf(key)]+'-help');
           el.value=Object.hasOwn(draft.get(row.Well)||{},key)?draft.get(row.Well)[key]:row[key];
           td.classList.toggle('staged',Object.hasOwn(draft.get(row.Well)||{},key));
           el.addEventListener('change',()=>{const patch={...draft.get(row.Well),Well:row.Well,[key]:el.value};draft.set(row.Well,patch);td.classList.add('staged');pending();});
