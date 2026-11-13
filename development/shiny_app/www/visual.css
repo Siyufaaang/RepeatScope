@@ -171,6 +171,29 @@ body {background:var(--canvas);color:var(--ink);font-size:14px}
 #rs-plate-report-sketch .board-key {gap:12px;font-size:10px}
 #rs-plate-report-sketch .swatch {border-radius:0}
 #rs-plate-report-sketch .comparisons {margin-top:28px}
+.landing-methodology {padding:64px 32px;background:#f4f5f6;color:#161819;border-top:1px solid #c7ccd0;scroll-margin-top:90px}
+.landing-methodology h2 {font-size:clamp(30px,3.4vw,48px);letter-spacing:-.035em;font-weight:700;margin:14px 0 22px}
+.landing-methodology h3 {font-size:20px;font-weight:650;margin:0 0 18px}
+.method-intro {max-width:940px;line-height:1.75}
+.method-equation {margin:30px 0;padding:26px 0;border-block:1px solid #c7ccd0;font-size:28px;font-weight:600}
+.method-equation p {font-size:14px;font-weight:400;line-height:1.7;margin:18px 0 0;max-width:960px}
+.method-columns {display:grid;grid-template-columns:1fr 1fr;gap:48px;margin:32px 0}
+.method-columns ol {padding-left:20px;margin:0;line-height:1.8;font-size:14px}
+.method-columns li {padding-left:6px;margin-bottom:14px}
+.method-math {padding:20px 0;border-block:1px solid #c7ccd0}
+.method-math summary {font-weight:600;cursor:pointer;margin-bottom:12px}
+.method-math p,.method-repeat p {font-size:14px;line-height:1.75;max-width:1050px}
+.math-line {font-family:Consolas,monospace;overflow-wrap:anywhere}
+.method-repeat {margin-top:32px}
+.method-guide {margin-top:28px;font-size:14px}
+@media(max-width:760px) {.method-columns {grid-template-columns:1fr;gap:24px}.landing-methodology {padding:36px 20px}}
+#rs-plate-report-sketch .comparisons>h3 {font-size:20px;margin:0 0 18px}
+#rs-plate-report-sketch .repeat-summary {margin:20px 0;padding:14px 0;border-top:1px solid #c7ccd0;border-bottom:1px solid #c7ccd0}
+#rs-plate-report-sketch .repeat-summary h4 {font-size:13px;margin:0 0 10px}
+#rs-plate-report-sketch .repeat-summary table {width:100%;font-size:11px;font-variant-numeric:tabular-nums}
+#rs-plate-report-sketch .repeat-summary th,#rs-plate-report-sketch .repeat-summary td {text-align:left;padding:6px;border-bottom:1px solid #e0e2e4}
+#rs-plate-report-sketch .current-repeat {background:#e9edee;font-weight:600}
+#rs-plate-report-sketch .repeat-summary p {font-size:11px;line-height:1.6;margin:10px 0 0;color:#535b62;overflow-wrap:anywhere}
 @media(max-width:1250px) {
  #rs-plate-report-sketch .body {grid-template-columns:1fr}
  #rs-plate-report-sketch dialog {border-left:0;border-top:1px solid #c7ccd0;padding:24px 0}

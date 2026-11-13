@@ -15,6 +15,7 @@ assert.equal(c.dashboardTileSummary({...well,recordList:[{...record,a:null,a_sta
 assert.equal(c.dashboardTileSummary(well,'a',true).value,'Rerun');
 assert.equal(c.dashboardTileSummary({...well,role:'ce_fill'},'a').value,'');
 const html=fs.readFileSync('development/shiny_app/www/dashboard.html','utf8');
-assert.match(html,/<details[^>]*data-comparisons(?![^>]*open)/);
+assert.match(html,/<section[^>]*data-comparisons/,'method and group comparison is permanently visible');
+assert.doesNotMatch(html,/<details[^>]*data-comparisons/);
 assert.match(html,/data-method="a"/);assert.match(html,/data-method="b"/);
 console.log('COMPACT DASHBOARD PASS');

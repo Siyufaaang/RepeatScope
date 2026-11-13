@@ -98,3 +98,7 @@ tools/deploy_beta.R
 tools/prepare_beta.R
 tools/verify_repository.ps1
 development/shiny_app/tests/test_visual_navigation.R
+docs/superpowers/specs/2026-11-13-methodology-repeat-report.md
+docs/superpowers/plans/2026-11-13-methodology-repeat-report.md
+development/shiny_app/tests/test_repeat_report.R
+development/shiny_app/www/input-guide-zh.html
