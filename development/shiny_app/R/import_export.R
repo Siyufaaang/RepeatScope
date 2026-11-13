@@ -26,19 +26,26 @@ safe_filename <- function(x) {
   x<-sub('^\\.+','',x);if(!nzchar(x))'upload.bin' else x
 }
 validate_project <- function(p) {
+  # Inspect plain storage and attributes before any schema access or S3 dispatch.
+  safe<-function(x,depth=0L) {
+    kind<-typeof(x)
+    if(depth>35L || isS4(x) || !kind%in%c('NULL','list','logical','integer','double','complex','character','raw'))return(FALSE)
+    cls<-attr(x,'class',exact=TRUE)
+    if(!is.null(cls) && !identical(cls,'data.frame') && !identical(cls,c('matrix','array')) &&
+       !identical(cls,'matrix') && !identical(cls,'array') && !identical(cls,'AsIs'))return(FALSE)
+    attrs<-attributes(x)
+    if(!is.null(attrs))for(i in seq_along(attrs))if(!safe(.subset2(attrs,i),depth+1L))return(FALSE)
+    if(kind=='list')for(i in seq_along(x))if(!safe(.subset2(x,i),depth+1L))return(FALSE)
+    TRUE
+  }
+  if(!safe(p))stop('Project contains unsupported executable, classed or deeply nested objects.')
   if(!is.list(p) || !identical(p$schema,'RepeatScope/1'))stop('Unsupported RepeatScope project version.')
   req<-c('plate','records','peaks','assay','threshold','window','fit','reference','structure','audit','originals','hierarchical','reviewed')
   if(!all(req%in%names(p)))stop('Project is missing restoration fields.')
-  if(!is.data.frame(p$plate) || nrow(p$plate)!=96 || !identical(p$plate$Well,well_coordinates()) || !all(p$plate$Role%in%roles))stop('Invalid project plate schema.')
+  if(!is.data.frame(p$plate) || typeof(p$plate)!='list' || nrow(p$plate)!=96 || !identical(p$plate$Well,well_coordinates()) || !all(p$plate$Role%in%roles))stop('Invalid project plate schema.')
   if(!is.numeric(p$threshold) || length(p$threshold)!=1 || !is.finite(p$threshold) || p$threshold<0 || p$threshold>1 || !p$window%in%c('tail10','extended'))stop('Invalid restored threshold/window.')
   if(nrow(p$peaks) && (!all(c('Peak_ID','Record_ID','Well','Size','Height')%in%names(p$peaks)) || anyDuplicated(p$peaks$Peak_ID) || any(!p$peaks$Well%in%well_coordinates()) || any(!is.finite(p$peaks$Size) | !is.finite(p$peaks$Height) | p$peaks$Height<=0)))stop('Invalid project physical peak inventory.')
   if(nrow(p$records) && (anyDuplicated(p$records$Record_ID) || !all(c('Source_ID','Well','Allele','Category','QC_status')%in%names(p$records))))stop('Invalid project record identities.')
-  safe<-function(x,depth=0L) {
-    if(depth>35 || is.environment(x) || is.function(x) || is.language(x) || typeof(x)%in%c('externalptr','weakref','promise'))return(FALSE)
-    if(is.list(x))return(all(vapply(x,safe,logical(1),depth=depth+1L)))
-    is.atomic(x) || is.null(x)
-  }
-  if(!safe(p))stop('Project contains unsupported executable or deeply nested objects.')
   invisible(TRUE)
 }
 save_project <- function(p,path) { validate_project(p);saveRDS(p,path,version=3,compress='gzip');invisible(path) }

@@ -1,0 +1,4 @@
+Title: RepeatScope Research Beta
+Version: 1.11.1
+Depends: R (>= 4.5.0)
+Imports: shiny, bslib, jsonlite, readxl, writexl, zip, curl, ggplot2, digest
