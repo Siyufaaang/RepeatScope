@@ -1,3 +1,13 @@
+function dashboardComparison(record,stale=false) {
+  if (stale || !Number.isFinite(record.a) || !Number.isFinite(record.b)) return 'unavailable';
+  return record.a.toFixed(3)===record.b.toFixed(3) ? 'equal' : 'different';
+}
+function dashboardPeakInk(peak,modal,method=null) {
+  const [bp,,a,b]=peak, A=a===1, B=b===1;
+  if (bp===modal) return '--modal';
+  if ((method==='Adaptive' && !A) || (method==='Bayesian' && !B)) return '--excluded';
+  return A && B ? '--both' : A ? '--adaptive' : B ? '--bayes' : '--excluded';
+}
 function dashboardTileSummary(w,method='a',stale=false) {
   if (!['sample','positive_control'].includes(w.role)) return {value:'',count:0};
   if (stale && w.acquired) return {value:'Rerun',count:0};
@@ -37,7 +47,7 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   const byWell = new Map(wells.map(w => [w.w, w]));
   const paired = w => Number.isFinite(w.a) && Number.isFinite(w.b);
   const fmt = x => x.toFixed(3);
-  const different = w => (w.recordList || [w]).some(r => paired(r) && fmt(r.a) !== fmt(r.b));
+  const different = w => (w.recordList || [w]).some(r => dashboardComparison(r,payload.stale)==='different');
   const records = wells.flatMap(w=>w.recordList.map(r=>Object.assign({},w,r,{chart:{peak:r.all || [],modal:r.modal}})));
   const pairs = records.filter(w => w.role === 'sample' && paired(w));
   const comparableWells = wells.filter(w => w.role === 'sample' && w.recordList.some(paired));
@@ -128,12 +138,10 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     }
     for (const [bp,rfu,a,b] of peaks) {
       const A = a === 1, B = b === 1;
-      const ink = bp===w.modal ? '--modal' : mini ? (A && B ? '--both' : A ? '--adaptive' : B ? '--bayes' : '--muted') :
-        (method==='Adaptive' && A ? '--adaptive' : method==='Bayesian' && B ? '--bayes' : '--muted');
-      const stick = line(chart,x(bp),bottom,x(bp),y(rfu),'var('+ink+')',ink==='--muted' ? .75 : 1.5);
+      const ink = dashboardPeakInk([bp,rfu,a,b],w.modal,method);
+      const stick = line(chart,x(bp),bottom,x(bp),y(rfu),'var('+ink+')',ink==='--excluded' ? 1 : 1.8);
       const tip=svg('title',{},stick);tip.textContent=bp.toFixed(2)+' bp / '+rfu+' RFU'+(bp===w.modal?' · modal':'');
-      if (ink==='--muted' && paired(w)) stick.setAttribute('opacity','.45');
-      if (mini && state.view==='tail' && A !== B) svg('circle',{cx:x(bp),cy:y(rfu),r:1.1,fill:'var('+ink+')'},chart);
+      if (A !== B && ink!=='--excluded') svg('circle',{cx:x(bp),cy:y(rfu),r:mini?1.1:2,fill:'var('+ink+')'},chart);
     }
     return chart;
   }
@@ -156,6 +164,9 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     find('[data-target-note]').textContent = w.target || 'No target yet.';
     find('[data-scope-note]').textContent = payload.filter+' · '+payload.window+' · '+payload.threshold+'% own modal'+(Number.isFinite(w.modal_rfu)?' = '+(w.modal_rfu*payload.threshold/100).toFixed(2)+' RFU':'')+(Number.isFinite(w.upper)?' · support through '+w.upper.toFixed(2)+' bp':'');
     find('[data-formal-note]').textContent = 'Formal eligibility: '+(w.formal || 'not reviewed');
+    const comparison=dashboardComparison(w,payload.stale), delta=find('[data-detail-difference]');
+    delta.classList.toggle('delta',comparison==='different');
+    delta.textContent=comparison==='different' ? 'Δ Methods differ · Adaptive − Bayesian = '+(w.a-w.b).toFixed(6) : comparison==='equal' ? 'Same EI at displayed precision (3 d.p.)' : 'Method comparison unavailable';
     const candidates=find('[data-candidate-select]');candidates.replaceChildren();
     const placeholder=el('option','','Choose a candidate');placeholder.value='';candidates.append(placeholder);
     (w.candidates || []).filter(c=>c.id).forEach(c=>{const o=el('option','',c.size.toFixed(2)+' bp · '+c.rfu+' RFU');o.value=c.id;candidates.append(o);});
@@ -170,12 +181,12 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
       const methods = [['Adaptive',w.a,w.a_reason],['Bayesian',w.b,w.b_reason]];
       for (const [method,ei,reason] of methods) {
         const panel = el('section');
-        panel.append(el('h3','',method+' · Preview EI '+(Number.isFinite(ei)?ei.toFixed(6):'unavailable')),plot(w,peaks,method));
+        panel.append(el('h3','',method+' EI'),el('strong','ei-number',Number.isFinite(ei)?ei.toFixed(6):'Unavailable'),plot(w,peaks,method));
         if (reason) panel.append(el('small','',reason));
         holder.append(panel);
       }
     } else holder.append(el('p','',paired(w)?'No expansion-tail peaks':'No sizing peaks'));
-    if (!detail.open) detail.showModal();
+    if (!detail.open) detail.show();
     persist();
   }
 
@@ -299,7 +310,6 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   find('[data-differences]').addEventListener('click',()=>{state.diff=!state.diff;update();persist();});
   find('[data-fold]').addEventListener('click',()=>{state.fold=!state.fold;state.expanded=[];update();persist();});
   find('[data-close]').addEventListener('click',()=>detail.close());
-  detail.addEventListener('click',e=>{if(e.target===detail) detail.close();});
   root.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;update();persist();if(detail.open && byWell.has(state.well)){const w=byWell.get(state.well);showWell(w,Math.max(0,w.recordList.findIndex(r=>r.id===state.record)));}}));
   
   drawScatter();
@@ -307,5 +317,8 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   update();
   if(reopen && state.well && byWell.has(state.well)) {
     const w=byWell.get(state.well);const index=w.recordList.findIndex(r=>r.id===state.record);showWell(w,Math.max(0,index));
+  } else if(!state.well) {
+    const first=wells.find(w=>w.role==='sample' && w.recordList.length);
+    if(first)showWell(first);
   }
 });

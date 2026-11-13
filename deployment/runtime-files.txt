@@ -32,13 +32,17 @@ development/shiny_app/R/server.R
 development/shiny_app/R/state.R
 development/shiny_app/R/synthetic.R
 development/shiny_app/R/ui.R
+development/shiny_app/R/visuals.R
 development/shiny_app/R/workflow.R
 development/shiny_app/www/app.css
+development/shiny_app/www/brand-logo.png
 development/shiny_app/www/dashboard.css
 development/shiny_app/www/dashboard.html
 development/shiny_app/www/dashboard.js
 development/shiny_app/www/layout.js
 development/shiny_app/www/plate.js
 development/shiny_app/www/threshold.js
+development/shiny_app/www/visual.css
+development/shiny_app/www/visual.js
 development/v2_4/repeat_peak.v2.4_core.R
 development/v2_4/repeat_peak.v2.4_method02_adaptive_walk.R

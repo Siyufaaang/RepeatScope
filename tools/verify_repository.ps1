@@ -9,6 +9,15 @@ $badModes=@(& git -C $repoRoot ls-files --stage | Where-Object {$_ -notmatch '^1
 if($badModes){throw 'Unexpected symlink, executable or submodule in repository manifest.'}
 $secretPattern='gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----'
 foreach($file in $tracked){
+  # The approved Figma logo is the sole reviewed raster runtime asset.
+  if($file -eq 'development/shiny_app/www/brand-logo.png'){
+    $stagedLogo=(& git -C $repoRoot rev-parse (':'+$file))
+    $workingLogo=(& git -C $repoRoot hash-object -- $file)
+    if($stagedLogo -ne $workingLogo){throw 'Staged logo differs from the approved working asset.'}
+    $logoHash=(Get-FileHash -LiteralPath (Join-Path $repoRoot $file) -Algorithm SHA256).Hash
+    if($logoHash -ne 'BBDF46E809313704201042694E68D75FAC6429427D60958B0B8D857DF9253638'){throw 'Approved logo checksum changed.'}
+    continue
+  }
   if($file -match '(^|/)(qa|private_inputs|\.library|\.aws|\.codex|\.agents)(/|$)|\.(rds|fsa|RData|zip|png|jpg|pdf)$'){throw "Private/generated artifact is tracked: $file"}
   if($file -notmatch '\.xlsx$'){
     $text=(& git -C $repoRoot show (':'+$file)) -join "`n"

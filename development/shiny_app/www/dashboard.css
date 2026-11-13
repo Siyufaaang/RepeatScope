@@ -1,9 +1,9 @@
 /* Plate report: a single paper surface, shared app typography and color tokens. */
 #rs-plate-report-sketch {
   --paper:var(--surface);--line:var(--border);--tone:var(--accent);
-  --g1:#567f9a;--g2:#748b78;--g3:#8b789a;--ce:#f4f6f7;
-  --difference:#9b5b32;--flag:#faf4eb;
-  --adaptive:#286f80;--bayes:#ac6735;--both:#506f84;--modal:#88649c;
+  --g1:#029E73;--g2:#A45A97;--g3:#69737B;--ce:#f0f1f2;
+  --difference:#A66B00;--flag:#faf6ee;
+  --adaptive:#029E73;--bayes:#A45A97;--both:#34383B;--modal:#161819;--excluded:#A8AEB4;
   color:var(--ink);background:var(--paper);font:14px/1.5 var(--font-ui);
   border:1px solid var(--line);border-radius:var(--radius);
 }

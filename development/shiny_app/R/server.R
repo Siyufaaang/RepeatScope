@@ -104,6 +104,7 @@ rs_server <- function(input,output,session) {
     showNotification('Choose the target kind and record the review basis, then apply and rerun.',duration=8)
   })
   observeEvent(input$dashboard_record,{if(input$dashboard_record%in%rv$p$records$Record_ID)updateSelectInput(session,'record_id',selected=input$dashboard_record)})
+  register_demo_navigation(input,session,rv)
   observeEvent(input$load_demo,attempt({rv$p<-localized_synthetic_demo();rv$selected<-character();session$sendCustomMessage('plate-selection',character());refresh(rv$p,replacement=TRUE)},'Synthetic demonstration loaded with explicit synthetic localization inputs. Run the dual-method analysis.'))
   observeEvent(input$apply_preview_filter,attempt({
     minimum<-input$minimum_bp;channel<-trimws(input$target_channel%||%'')
@@ -194,7 +195,7 @@ rs_server <- function(input,output,session) {
   output$metrics<-renderUI({r<-results();p<-rv$p;vals<-c(acquisition_counts(p),length(unique(r$Record_ID[is.finite(r$EI)])),length(unique(r$Record_ID[r$Status%in%c('qc_unconfirmed','control_review_required','qc_failed')])),nrow(role_conflicts(p)))
     labels<-c('acquisitions','no-acquisition placeholders','formal EI records','QC / control reviews','NA / peak conflicts')
     div(class='metrics-row',lapply(seq_along(vals),function(i)div(class='metric',strong(vals[i]),span(labels[i]))))})
-  output$plate<-renderUI({p<-ensure_sample_layout(rv$p);layout<-sample_layout_rows(p);conflicts<-role_conflicts(p)$Well;groups<-unique(p$plate$Group[nzchar(p$plate$Group)]);palette<-setNames(rep(c('#567f9a','#748b78','#8b789a'),length.out=length(groups)),groups)
+  output$plate<-renderUI({p<-ensure_sample_layout(rv$p);layout<-sample_layout_rows(p);conflicts<-role_conflicts(p)$Well;groups<-unique(p$plate$Group[nzchar(p$plate$Group)]);palette<-setNames(rep(c('#029E73','#A45A97','#69737B'),length.out=length(groups)),groups)
     cells<-list(div(class='well-label',''))
     for(c in 1:12)cells<-c(cells,list(div(class='well-label',c)))
     for(row in 1:8) {
@@ -212,7 +213,7 @@ rs_server <- function(input,output,session) {
           if(warn)span(class='review-mark','!'))))
       }
     }
-    div(class='plate-grid',cells)
+    tagList(div(class='plate-grid',cells),div(class='plate-group-key',lapply(groups,function(g)span(tags$i(style=paste0('background:',palette[[g]])),g))))
   })
   output$threshold_note<-renderText(paste0('Height >= ',format(rv$p$threshold,digits=5),' × own modal height (',100*rv$p$threshold,'%). Seeds, fit and search support stay frozen.'))
   output$overview_plot<-renderPlot({r<-results();if(nrow(r))r<-r[r$Role%in%c('sample','positive_control'),,drop=FALSE];overview_plot(r,rv$p$synthetic)},res=110)

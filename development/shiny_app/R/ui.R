@@ -26,26 +26,21 @@ localization_inputs_ui <- function() tagList(
 )
 rs_ui <- function() {
   public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
-  shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f7f8fa',fg='#25323b',primary='#286477',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · v1.11.1'),tags$link(rel='stylesheet',href='app.css?v=111'),tags$link(rel='stylesheet',href='dashboard.css?v=111'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=111')),
+  shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f5f6f7',fg='#161819',primary='#161819',base_font='Segoe UI'),
+    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=112'),tags$link(rel='stylesheet',href='dashboard.css?v=112'),tags$link(rel='stylesheet',href='visual.css?v=112'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=112'),tags$script(src='visual.js?v=112')),
     div(class='app-shell',
-      div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.11.1')),
-        conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project'))),
-      if(public_beta)div(class='notice',strong('Public research Beta. '),
+      div(class='topbar',tags$a(href='#landing-top','data-home-section'='landing-top',class='brand',brand_mark(),span('RepeatScope'),span(class='version-label','Beta')),
+        tags$nav(class='top-actions','aria-label'='Main navigation',
+          tags$a(href='#how-it-works','data-home-section'='how-it-works','How it works'),
+          tags$button(type='button','data-trigger'='request_demo',class='header-link','Demo'),
+          actionButton('try_workflow','Try your data ↗',class='header-start'),
+          conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project')))),
+      if(public_beta)tags$details(class='beta-disclosure',tags$summary('About this research Beta'),p(strong('Public research Beta. '),
         'Use synthetic or de-identified data you are authorized to upload. Files are processed on the hosting server. ',
-        'Save project before leaving; sessions can expire. Computational previews are not diagnostic results.'),
+        'Save project before leaving; sessions can expire. Computational previews are not diagnostic results.')),
       uiOutput('workflow_progress'),
       tabsetPanel(id='main_tabs',type='hidden',
-        tabPanel('Welcome',value='welcome',
-          div(class='welcome',span(class='eyebrow','REPEAT TAIL ANALYSIS'),h1('RepeatScope'),
-            p('From your plate to a repeat-tail comparison, one step at a time.'),
-            actionButton('try_workflow','Try RepeatScope →',class='btn-primary btn-lg')),
-          tags$details(class='entry-options',tags$summary('Continue a saved project or try synthetic data'),
-            section_card('Reopen a project',subtitle='A project contains restoration inputs, configuration, fitted results and audit history. A report ZIP is a separate deliverable.',
-            fileInput('project_file','RepeatScope project',accept='.rds'),actionButton('restore_project','Restore project',class='btn-primary'),
-            p(if(public_beta)'Save project downloads your session to your device. Restore uploads it to the hosting server; long-term storage is not provided.' else
-              'Project files are local. The server does not provide long-term storage.')),
-            actionButton('load_demo','Load synthetic demo'),p(class='muted','Synthetic data demonstrates software behavior only.'))),
+        tabPanel('Welcome',value='welcome',landing_ui()),
         tabPanel('Import plate',value='plate_import',h2('Start with your plate'),p('Import the layout first. You will assign groups and controls on the next page.'),section_card('Plate map',subtitle='Text sample codes retain leading zeros. Empty cells are previewed, never silently labelled NA.',
               fileInput('plate_file','8 × 12 Excel plate map',accept=c('.xlsx','.xls')),uiOutput('plate_sheet_ui'),textInput('plate_range','Excel range','A1:M9'),
               tags$details(tags$summary('Advanced · orientation'),checkboxInput('transpose_plate','Transpose the selected range before preview',FALSE)),
@@ -125,11 +120,11 @@ rs_ui <- function() {
         tabPanel('Results',value='results',
           div(class='report-navigation',actionButton('show_report','Plate report'),actionButton('edit_layout','Samples'),actionButton('edit_analysis','Analysis settings'),
             tags$details(tags$summary('More'),actionButton('show_targets','Review a target'),actionButton('show_tables','Tables / export'),actionButton('show_formal','Formal review')),
-            conditionalPanel("input.result_view === 'report'",class='report-run',actionButton('run_analysis','Calculate EI',class='btn-primary'))),
+            conditionalPanel("input.result_view === 'report'",class='report-run',actionButton('run_analysis','Calculate EI',class='btn-primary')),downloadButton('download_report','Export report')),
           tabsetPanel(id='result_view',type='hidden',
           tabPanel('Plate report',value='report',
           div(class='report-summary',textOutput('report_sample_status'),uiOutput('global_status')),
-          tags$details(class='report-settings',tags$summary('EI window & height threshold'),
+          div(class='report-settings',tags$h3('EI window & height threshold'),
           div(class='preview-controls',selectInput('window','EI window',c('Tail10 · Δ 0–10'='tail10','Extended · frozen search support'='extended'),selectize=FALSE),
             div(class='threshold-grid',sliderInput('threshold','Height threshold (% own modal)',min=0,max=100,value=3,step=.1),numericInput('threshold_number','Exact %',value=3,min=0,max=100,step=.1),actionButton('reset_threshold','Reset to 3%')),
             tags$details(class='report-help',tags$summary('About the EI window and height threshold'),div(class='formula-note',textOutput('threshold_note'))))),
@@ -153,7 +148,7 @@ rs_ui <- function() {
           section_card('Report preview',uiOutput('report_overview'),
             uiOutput('well_metrics'),plotOutput('tail_plot',height='360px'),
             tags$details(tags$summary('Physical peak decisions'),div(class='scroll-table',tableOutput('decisions'))))),
-          tags$details(class='advanced-panel',tags$summary('Downloads'),downloadButton('download_report','Complete report ZIP'),
+          tags$details(class='advanced-panel',tags$summary('Downloads'),p(class='status-small','Use Export report above to download the complete report ZIP.'),
             tags$details(tags$summary('Optional · individual files and original uploads'),
               checkboxInput('include_originals','Include original uploaded files in report ZIP',FALSE),
               div(class='download-grid',downloadButton('download_results','Results long CSV'),downloadButton('download_wide','EI comparison CSV'),
@@ -191,8 +186,7 @@ rs_ui <- function() {
         actionButton('workflow_back','Back'),div(class='nav-message',textOutput('workflow_reason')),
         conditionalPanel("input.main_tabs !== 'results'",tags$button(id='workflow_next',type='button',
           class='btn btn-primary action-button',disabled='disabled','Next →')))),
-      div(class='footer',if(public_beta)'RepeatScope · Public research Beta · Your input and uncertainty remain traceable.' else
-        'RepeatScope · Local research prototype · Your input and uncertainty remain traceable.')
+      tags$footer(class='footer','Feedback · ',tags$a(href='mailto:siyu.fang.24@ucl.ac.uk','siyu.fang.24@ucl.ac.uk'))
     ))
 }
 
