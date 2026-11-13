@@ -102,7 +102,7 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   function plot(w, peaks, method = null) {
     const mini = method === null;
     const W = mini ? 65 : 310, H = mini ? 25 : 168;
-    const margin = mini ? {l:1,r:1,t:1,b:2} : {l:39,r:9,t:9,b:34};
+    const margin = mini ? {l:1,r:1,t:1,b:2} : {l:43,r:9,t:22,b:34};
     const chart = svg('svg',{viewBox:'0 0 '+W+' '+H,preserveAspectRatio:mini?'none':'xMidYMid meet'});
     if (mini) chart.setAttribute('aria-hidden','true');
     else {
@@ -188,6 +188,8 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     button.dataset.tooltip=[w.w,name,method+' EI '+summary.value].filter(Boolean).join(' · ');
     button.setAttribute('aria-label',button.dataset.tooltip);button.title=button.dataset.tooltip;
     const value=el('span','value',summary.value);
+    value.classList.toggle('status-value',!/^\d/.test(summary.value));
+    value.classList.toggle('multiple-values',summary.count>1);
     if(summary.count>1)value.title=summary.count+' separate target results; open the well for identities';
     button.append(el('span','well-id',w.w),el('span','name',name.replace(/^DNA_/,'')),value);
     button.addEventListener('click',()=>showWell(w));return button;

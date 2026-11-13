@@ -21,7 +21,9 @@ refresh_localization <- function(session,p) {
 register_localization_server <- function(input,output,session,rv,attempt,refresh,current_record,localization_pending,display_project) {
   sync_profile_inputs<-function(p) {
     refresh_localization(session,p)
-    updateTextInput(session,'gene',value=p$assay$gene)
+    # The browser owns the gene being typed. Echoing an earlier edit here can
+    # overwrite a newer one and start an endless input/profile feedback loop.
+    # Canonical identity is stored in the project; refresh() restores saved input.
     updateTextInput(session,'organism',value=p$assay$organism)
     updateTextInput(session,'motif',value=p$assay$motif)
     updateNumericInput(session,'minimum_bp',value=p$assay$minimum_bp)

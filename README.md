@@ -1,6 +1,10 @@
 # RepeatScope
 
-RepeatScope v1.10 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+RepeatScope v1.11.1 is a local R/Shiny application for plate-based repeat-tail analysis. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+
+v1.11 unifies typography, controls and group colors across the workflow. The white 96-well report emphasizes sample names and EI, with window/threshold controls and diagnostics available on demand. It preserves v1.10 analysis logic, profiles, precision and project format.
+
+v1.11.1 fixes repeated flashing in Reference & analysis when typing ahead of a server response. Profile loading no longer writes an older gene value back into the active input. Analysis formulas and disease profiles are unchanged.
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 
@@ -26,12 +30,14 @@ Use **Save project** to keep a session across server restarts. On the welcome pa
 2. In **Arrange plate**, record explicit genotype, Group, Role and optional Individual ID. Group/Individual selectors only select wells. Use **Table / Excel paste** for cell editing or staged clipboard paste; apply edits explicitly, or discard/undo them.
 3. Import an already-sized peak table. Physical peaks, acquisition identities and flagged rows remain available for review.
 4. In **Reference & analysis**, enter a gene or disease alias to load its built-in profile, then match the reference and primers. Disease ranges and provenance are supplied by the profile; filters, custom ranges and CE calibration remain under **Advanced**.
-5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
+5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Use **Calculate EI** in the top navigation; expand **EI window & height threshold** to choose which fitted peaks contribute to EI. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
 
 Leading zeros remain text. Blank pasted cells clear their field; omitted columns are unchanged. Invalid or stale table patches are rejected atomically. Group and Individual labels alone do not refit models. Genotype is never inferred from group membership.
 
 ## Disease profiles and EI
 Intermediate targets calculate EI. Normal targets are excluded by category; missing or ambiguous physical targets remain unavailable, not zero. The application records provisional range estimates separately from EI and formal evidence/QC. Old v1.9 fits require a rerun under the new allocation policy.
+
+New projects default to **Tail10**, which uses selected peaks at repeat offsets Δ0–10 from the modal peak. **Extended** uses selected peaks throughout the frozen search support. Both apply the chosen height threshold. EI is the peak-height-weighted mean repeat offset within that window; changing the window recalculates EI from the existing fits without refitting either model. If the methods differ only beyond Δ10, their Tail10 EI can be exactly equal while their Extended EI differs. Compare methods using the same window and threshold; the report header records both settings.
 
 The versioned JSON catalog at `development/shiny_app/profiles/diseases.json` covers ATXN1, ATXN2, ATXN3, CACNA1A/SCA6, ATXN7, TBP/SCA17, HTT, ATN1 and AR. Each profile includes aliases, counting notes, range bands, source URL and reviewed date. Conditional boundaries and interruption dependence are retained. This catalog is not a claim of support for every repeat disease or a clinical diagnostic service.
 
@@ -59,6 +65,6 @@ node development/shiny_app/tests/test_dashboard_identity.cjs
 node development/shiny_app/tests/test_dashboard_compact.cjs
 ```
 
-The synthetic suite covers state, import/export, reference handling, methods, eligibility/QC, server navigation, threshold synchronization, v1.9 layout edits, atomic rejection, independent drafts and Undo. The local real-data checks are separate from these shareable tests.
+The synthetic suite covers state, import/export, reference handling, methods, eligibility/QC, server navigation, threshold synchronization, v1.9 layout edits, atomic rejection, independent drafts and Undo. An independently summed fixture checks equal Tail10 values, distinct Extended values, separate method peak flags and unchanged fits when the window changes. The local real-data checks are separate from these shareable tests.
 
 Before committing new files, review their contents, add their paths to both `repository-files.txt` and `.gitignore`, and run `tools/verify_repository.ps1`. Do not use `git add -f` to bypass the allowlist. See [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -1,14 +1,16 @@
 register_reference_server <- function(input,output,session,rv,attempt,refresh) {
+  # Resolve aliases at use time without writing into the active gene input.
+  reference_gene<-reactive(find_disease_profile(input$gene)$gene%||%input$gene)
   set_reference<-function(ref) {p<-rv$p;p$reference<-ref;p['structure']<-list(NULL);p['reference_draft']<-list(NULL);p$assay$status<-'unconfigured';rv$p<-p;rv$amplicon<-NULL;rv$candidates<-NULL}
   output$ncbi_status<-renderText({
     if(is.null(rv$p$reference) && !identical(rv$ncbi_message,'No query yet.'))rv$ncbi_message else ''
   })
   observeEvent(input$search_ncbi,{
-    withProgress(message='Querying NCBI (no sample data sent)',value=.4,{rv$query<-ncbi_search(input$gene,input$organism,input$reference_type)})
+    withProgress(message='Querying NCBI (no sample data sent)',value=.4,{rv$query<-ncbi_search(reference_gene(),input$organism,input$reference_type)})
     rv$ncbi_message<-paste(rv$query$status,rv$query$message)
     if(rv$query$status=='ok') {
       z<-rv$query$candidates
-      showModal(modalDialog(title='Choose a versioned NCBI reference',size='l',p(paste(input$gene,'·',input$organism,'·',nrow(z),'candidates shown. No default selection.')),
+      showModal(modalDialog(title='Choose a versioned NCBI reference',size='l',p(paste(reference_gene(),'·',input$organism,'·',nrow(z),'candidates shown. No default selection.')),
         selectInput('ncbi_choice','Reference accession.version',choices=c('Select explicitly'='',setNames(z$Accession,paste(z$Accession,z$Type,z$Length,'bp'))),selected=''),
         div(style='max-height:420px;overflow:auto',lapply(seq_len(nrow(z)),function(i)div(class='ncbi-row',strong(z$Accession[i]),p(z$Title[i]),
           p(class='muted',paste(z$Organism[i],z$Type[i],z$Length[i],'bp',z$Assembly_or_transcript[i],sep=' · ')),tags$a(href=z$URL[i],target='_blank',rel='noopener','Open NCBI record')))),
@@ -19,16 +21,16 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
   observeEvent(input$select_ncbi,attempt({req(nzchar(input$ncbi_choice));z<-rv$query$candidates[rv$query$candidates$Accession==input$ncbi_choice,]
     if(nrow(z)!=1)stop('Select one current candidate.')
     if(z$Length>2000000){updateTextInput(session,'accession',value=z$Accession);removeModal();stop('Large genomic reference: select a locus interval in the accession panel, then fetch.')}
-    ref<-ncbi_fetch(z$Accession,z$Type);ref$query<-rv$query$query;ref$organism<-input$organism;ref$gene<-input$gene
+    ref<-ncbi_fetch(z$Accession,z$Type);ref$query<-rv$query$query;ref$organism<-input$organism;ref$gene<-reference_gene()
     set_reference(ref);updateTextInput(session,'accession',value=z$Accession);removeModal();rv$ncbi_message<-paste('Fetched exact version',ref$accession,ref$length,'bp')
   },'Selected reference version fetched and pinned.'))
   observeEvent(input$fetch_accession,attempt({start<-if(is.finite(input$ref_start))input$ref_start else NULL;end<-if(is.finite(input$ref_end))input$ref_end else NULL
-    ref<-ncbi_fetch(input$accession,input$reference_type,start,end,as.integer(input$ref_strand));ref$gene<-input$gene;ref$organism<-input$organism;set_reference(ref)
+    ref<-ncbi_fetch(input$accession,input$reference_type,start,end,as.integer(input$ref_strand));ref$gene<-reference_gene();ref$organism<-input$organism;set_reference(ref)
     rv$ncbi_message<-paste('Fetched exact version',ref$accession,ref$length,'bp')
   },'Reference fetched. Verify reference type and primer structure.'))
   observeEvent(input$use_fasta,attempt({text<-input$fasta_text
     if(!is.null(input$fasta_file))text<-paste(readLines(input$fasta_file$datapath,warn=FALSE),collapse='\n')
-    ref<-parse_fasta(text);ref$type<-input$reference_type;ref$gene<-input$gene;ref$organism<-input$organism;set_reference(ref)
+    ref<-parse_fasta(text);ref$type<-input$reference_type;ref$gene<-reference_gene();ref$organism<-input$organism;set_reference(ref)
   },'Offline reference loaded; source is explicitly recorded as offline FASTA.'))
   output$reference_info<-renderUI({
     r<-rv$p$reference;req(!is.null(r))
@@ -103,7 +105,7 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
     if(!is.null(s))p(paste('Interruptions:',s$interruptions,'· Theoretical fixed length:',s$fixed_bp,'bp')))
   })
   observeEvent(input$save_assay,attempt({p<-rv$p;a<-p$assay
-    a$name<-input$assay_name;a$gene<-input$gene;a$organism<-input$organism;a$source<-input$assay_source;a$validation_scope<-input$assay_scope
+    a$name<-input$assay_name;a$gene<-reference_gene();a$organism<-input$organism;a$source<-input$assay_source;a$validation_scope<-input$assay_scope
     a$fixed_bp<-input$fixed_bp;a$minimum_bp<-input$minimum_bp;a$channel<-input$target_channel;a$motif<-input$motif
     a$nominal_spacing<-input$nominal_spacing;a$spacing_low<-input$spacing_low;a$spacing_high<-input$spacing_high;a$tolerance<-input$tolerance
     a$seed_min_rfu<-input$seed_rfu;a$seed_fraction<-input$seed_fraction;a$predictive_level<-input$predictive_level;a$extended_upper<-input$search_upper;a$repeat_bp<-input$repeat_bp
