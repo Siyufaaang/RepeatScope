@@ -7,8 +7,9 @@ script<-sub('^--file=','',commandArgs(FALSE)[grepl('^--file=',commandArgs(FALSE)
 root<-normalizePath(file.path(dirname(script),'..'),winslash='/',mustWork=TRUE)
 source(file.path(root,'tools/prepare_beta.R'))
 verified<-verify_beta_bundle(root,bundle)
+manifest<-verify_beta_manifest(verified)
 accounts<-rsconnect::accounts()
 if(!any(accounts$name==args[2] & accounts$server=='connect.posit.cloud'))stop('Connect Cloud account is not configured. Run rsconnect::connectCloudUser() first.')
-rsconnect::deployApp(appDir=bundle,appFiles=verified$files,appMode='shiny',
+rsconnect::deployApp(appDir=bundle,manifestPath=manifest,
   appName='repeatscope-beta',appTitle='RepeatScope Beta',account=args[2],server='connect.posit.cloud',
   appVisibility='public',launch.browser=FALSE,lint=FALSE)

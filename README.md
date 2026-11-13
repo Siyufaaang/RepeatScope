@@ -55,6 +55,8 @@ A project stores the profile snapshot it used; reopening does not silently repla
 
 ## Hosted research Beta
 
+Public Beta (verified 2026-11-13): [Open RepeatScope](https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/). Release evidence and rollback details are in [the release plan](docs/superpowers/plans/2026-11-13-public-beta.md#verified-public-release--2026-11-13).
+
 The hosted entry point preserves the original source layout and scientific calculations. Visitors start an empty session or load the labelled synthetic demo. Uploads are processed by the hosting server; use only synthetic or de-identified data you are authorized to upload. Session state is temporary. Download **Save project** before leaving and retain your original inputs. A public website does not make another visitor's session your project, and computational previews are not diagnostic clearance.
 
 Prepare a clean bundle from the repository root, using an R environment with the application dependencies installed:
@@ -62,17 +64,18 @@ Prepare a clean bundle from the repository root, using an R environment with the
 ```r
 source('tools/prepare_beta.R')
 bundle <- prepare_beta('.', '../repeatscope-beta-bundle')
+rsconnect::writeManifest(appDir=bundle$directory, appFiles=bundle$files, appMode='shiny')
 ```
 
 The destination must not exist. The packager uses the explicit runtime manifest, validates it against the repository allowlist, and records SHA256 for each copied file. Do not deploy the full research workspace. Verify the actual selected bundle with `Rscript --vanilla development/shiny_app/tests/test_deployment.R ../repeatscope-beta-bundle` and the normal suites before publishing. Both acceptance and deployment compare that bundle with the reviewed source, so an older bundle cannot pass solely on its own checksums.
 
-Install `rsconnect` from CRAN and authorize the host separately with `rsconnect::connectCloudUser()`. Do not store tokens in this repository. Direct upload supports a private source repository:
+Use `rsconnect` 1.11.2 or newer from CRAN and authorize the host separately with `rsconnect::connectCloudUser()`. Do not store tokens in this repository. Direct upload supports a private source repository:
 
 ```sh
 Rscript --vanilla tools/deploy_beta.R ../repeatscope-beta-bundle ACCOUNT_NAME
 ```
 
-The deployment command verifies bundle hashes before any upload and sends only those files. It records the resolved R/package versions through rsconnect's deployment manifest. Retain the ignored deployment directory and its rsconnect record for subsequent releases. To roll back, redeploy a previously verified bundle to the same content, then repeat the synthetic browser acceptance checks. Publication status and the final public URL must be verified on the hosting service; source integration alone does not establish a live deployment.
+Generate the manifest in the tested application library before switching to any separate publishing-tool library. The deployment command verifies bundle hashes and the manifest's exact file list/checksums before any upload, and uses that frozen manifest to preserve the tested R/package versions. Retain the ignored deployment directory and its rsconnect record for subsequent releases. To roll back, redeploy a previously verified bundle from its matching source checkout to the same content, then repeat the synthetic browser acceptance checks. Publication status and the final public URL must be verified on the hosting service; source integration alone does not establish a live deployment.
 
 ## Verify
 

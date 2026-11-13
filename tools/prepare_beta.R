@@ -51,3 +51,17 @@ verify_beta_bundle <- function(root, destination) {
     stop('Bundle differs from the tested source or recorded hashes; rebuild and verify it.')
   list(directory=destination,files=outputs,checksums=actual)
 }
+
+# Freeze application dependencies in the tested R environment; the publishing
+# client may use a separate library without silently changing the hosted runtime.
+verify_beta_manifest <- function(bundle) {
+  path<-file.path(bundle$directory,'manifest.json')
+  manifest<-jsonlite::read_json(path)
+  if(!identical(manifest$metadata$appmode,'shiny') ||
+     anyDuplicated(names(manifest$files)) || !setequal(names(manifest$files),bundle$files))
+    stop('Deployment manifest must contain exactly the reviewed Shiny runtime files.')
+  expected<-unname(tools::md5sum(file.path(bundle$directory,bundle$files)))
+  actual<-vapply(manifest$files[bundle$files],function(x)as.character(x$checksum),character(1))
+  if(!identical(expected,unname(actual)))stop('Deployment manifest is stale; regenerate it in the tested application environment.')
+  normalizePath(path,winslash='/',mustWork=TRUE)
+}
