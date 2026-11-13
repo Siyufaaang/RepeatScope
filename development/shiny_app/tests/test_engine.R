@@ -22,9 +22,9 @@ check(all(r$Status=='success') && all(is.finite(r$EI)),'documented synthetic eli
 p$records$Category<-'normal'
 check(all(is.na(threshold_results(p,.001,'extended')$EI)) && all(threshold_results(p,.001,'extended')$Status=='not_applicable_normal'),'slider never bypasses normal-range NA')
 p$records$Category<-'intermediate'
-check(all(threshold_results(p,.03,'tail10')$Status=='intermediate_excluded'),'intermediate is excluded by default')
-p$assay$include_intermediate<-TRUE
-check(all(threshold_results(p,.03,'tail10')$Status=='success'),'intermediate checkbox changes eligibility without refitting')
+check(all(threshold_results(p,.03,'tail10')$Status=='success'),'intermediate EI is enabled by category')
+p$assay$include_intermediate<-FALSE
+check(all(threshold_results(p,.03,'tail10')$Status=='success'),'legacy intermediate checkbox cannot suppress EI')
 p$records$Category<-'expanded';p$peaks$Saturation[1]<-'TRUE';p<-fit_project(p)
 check(all(threshold_results(p,.03,'tail10')$Status=='qc_failed'),'manual QC pass cannot override imported saturation')
 p$peaks$Saturation[1]<-'';p<-fit_project(p);p$control_review$status<-'failed';p$control_review$scope<-'unresolved'

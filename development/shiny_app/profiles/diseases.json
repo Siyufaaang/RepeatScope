@@ -1,0 +1,429 @@
+{
+  "schema": "RepeatScope/disease-profiles/1",
+  "catalog_version": "2026-11-12.1",
+  "scope": "Curated polyglutamine CAG/CAA repeat profiles; nominal research localization, not a diagnostic call.",
+  "profiles": [
+    {
+      "id": "SCA1",
+      "gene": "ATXN1",
+      "aliases": [
+        "SCA1",
+        "Spinocerebellar ataxia type 1"
+      ],
+      "disease": "Spinocerebellar ataxia type 1",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG units; CAT interruption pattern must be established separately.",
+      "counting_rule": "motif_only",
+      "normal_max": 35,
+      "normal_inclusive": true,
+      "expanded_min": 39,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "usual normal",
+          "min": 0,
+          "max": 35
+        },
+        {
+          "label": "interruption-dependent",
+          "min": 36,
+          "max": 44
+        },
+        {
+          "label": "expanded range; structure-dependent",
+          "min": 45,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [
+        {
+          "min": 36,
+          "max": 44
+        }
+      ],
+      "notes": "36–44 repeats depend on CAT interruptions; length alone cannot establish category. Reference sequence is not sample sequencing.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 1",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1184/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SCA2",
+      "gene": "ATXN2",
+      "aliases": [
+        "SCA2",
+        "Spinocerebellar ataxia type 2"
+      ],
+      "disease": "Spinocerebellar ataxia type 2",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "Bounded glutamine-coding CAG/CAA triplets; include CAA interruptions.",
+      "counting_rule": "tract_length",
+      "normal_max": 31,
+      "normal_inclusive": true,
+      "expanded_min": 33,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "not SCA2-causing",
+          "min": 0,
+          "max": 31
+        },
+        {
+          "label": "uncertain",
+          "min": 32,
+          "max": 32
+        },
+        {
+          "label": "reduced penetrance",
+          "min": 33,
+          "max": 34
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 35,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "SCA2-specific categories; ATXN2-associated ALS risk is a different interpretation.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 2",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1275/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SCA3",
+      "gene": "ATXN3",
+      "aliases": [
+        "SCA3",
+        "Spinocerebellar ataxia type 3",
+        "MJD",
+        "Machado-Joseph disease"
+      ],
+      "disease": "Spinocerebellar ataxia type 3",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG repeat tract; verify the assay's counted boundaries.",
+      "counting_rule": "tract_length",
+      "normal_max": 44,
+      "normal_inclusive": true,
+      "expanded_min": 60,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 44
+        },
+        {
+          "label": "intermediate / boundary uncertain",
+          "min": 45,
+          "max": 60
+        },
+        {
+          "label": "full-penetrance range (approximate lower boundary)",
+          "min": 61,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [
+        {
+          "min": 45,
+          "max": 60
+        }
+      ],
+      "notes": "The lower full-penetrance boundary is approximate (~60), not a sharp validated cutoff. Boundary estimates remain provisional.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 3",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1196/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SCA6",
+      "gene": "CACNA1A",
+      "aliases": [
+        "SCA6",
+        "Spinocerebellar ataxia type 6"
+      ],
+      "disease": "Spinocerebellar ataxia type 6",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG repeat units within the SCA6 expansion tract.",
+      "counting_rule": "tract_length",
+      "normal_max": 18,
+      "normal_inclusive": true,
+      "expanded_min": 20,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 18
+        },
+        {
+          "label": "questionable significance",
+          "min": 19,
+          "max": 19
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 20,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "This profile concerns the CACNA1A CAG expansion, not other CACNA1A sequence variants.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 6",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1140/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SCA7",
+      "gene": "ATXN7",
+      "aliases": [
+        "SCA7",
+        "Spinocerebellar ataxia type 7"
+      ],
+      "disease": "Spinocerebellar ataxia type 7",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG repeat units in the ATXN7 expansion tract.",
+      "counting_rule": "tract_length",
+      "normal_max": 27,
+      "normal_inclusive": true,
+      "expanded_min": 34,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 27
+        },
+        {
+          "label": "mutable normal",
+          "min": 28,
+          "max": 33
+        },
+        {
+          "label": "reduced penetrance",
+          "min": 34,
+          "max": 36
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 37,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "Mutable-normal alleles are included for EI calculation.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 7",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1256/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SCA17",
+      "gene": "TBP",
+      "aliases": [
+        "SCA17",
+        "Spinocerebellar ataxia type 17"
+      ],
+      "disease": "Spinocerebellar ataxia type 17",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "Total CAG plus CAA triplets across the bounded polyglutamine tract.",
+      "counting_rule": "tract_length",
+      "normal_max": 40,
+      "normal_inclusive": true,
+      "expanded_min": 41,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 40
+        },
+        {
+          "label": "reduced penetrance",
+          "min": 41,
+          "max": 48
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 49,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "41–48 has reduced penetrance; STUB1 and interruption structure may affect interpretation.",
+      "source": {
+        "title": "GeneReviews: Spinocerebellar ataxia type 17",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1438/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "HD",
+      "gene": "HTT",
+      "aliases": [
+        "HD",
+        "Huntington disease",
+        "Huntington",
+        "Huntington's disease"
+      ],
+      "disease": "Huntington disease",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "HTT CAG tract count; exclude the adjacent canonical CAA-CAG from the reported CAG count.",
+      "counting_rule": "motif_only",
+      "normal_max": 26,
+      "normal_inclusive": true,
+      "expanded_min": 36,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 26
+        },
+        {
+          "label": "intermediate",
+          "min": 27,
+          "max": 35
+        },
+        {
+          "label": "reduced penetrance",
+          "min": 36,
+          "max": 39
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 40,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "Loss-of-interruption variants can alter sizing interpretation. Confirm tract boundaries; reference sequence does not establish the sample's interruption pattern.",
+      "source": {
+        "title": "GeneReviews: Huntington disease",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1305/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "DRPLA",
+      "gene": "ATN1",
+      "aliases": [
+        "DRPLA",
+        "Dentatorubral-pallidoluysian atrophy"
+      ],
+      "disease": "Dentatorubral-pallidoluysian atrophy",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG repeat units in the ATN1 expansion tract.",
+      "counting_rule": "tract_length",
+      "normal_max": 34,
+      "normal_inclusive": true,
+      "expanded_min": 48,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 34
+        },
+        {
+          "label": "overlapping source boundary",
+          "min": 35,
+          "max": 35
+        },
+        {
+          "label": "intermediate / reduced penetrance",
+          "min": 36,
+          "max": 47
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 48,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [
+        {
+          "min": 35,
+          "max": 35
+        }
+      ],
+      "notes": "GeneReviews lists 35 at the overlap of normal/intermediate ranges; this boundary stays conditional.",
+      "source": {
+        "title": "GeneReviews: Dentatorubral-pallidoluysian atrophy",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1491/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    },
+    {
+      "id": "SBMA",
+      "gene": "AR",
+      "aliases": [
+        "SBMA",
+        "Spinal and bulbar muscular atrophy"
+      ],
+      "disease": "Spinal and bulbar muscular atrophy",
+      "motif": "CAG",
+      "unit": 3,
+      "counting": "CAG repeat units in AR exon 1.",
+      "counting_rule": "tract_length",
+      "normal_max": 34,
+      "normal_inclusive": true,
+      "expanded_min": 36,
+      "expanded_inclusive": true,
+      "bands": [
+        {
+          "label": "normal",
+          "min": 0,
+          "max": 34
+        },
+        {
+          "label": "questionable significance",
+          "min": 35,
+          "max": 35
+        },
+        {
+          "label": "reduced penetrance",
+          "min": 36,
+          "max": 37
+        },
+        {
+          "label": "full-penetrance range",
+          "min": 38,
+          "max": null
+        }
+      ],
+      "conditional_intervals": [],
+      "notes": "Clinical penetrance is sex/context dependent; this profile does not infer sex or diagnosis.",
+      "source": {
+        "title": "GeneReviews: Spinal and bulbar muscular atrophy",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK1333/",
+        "reviewed": "2026-11-12"
+      },
+      "version": "2026-11-12.1"
+    }
+  ]
+}

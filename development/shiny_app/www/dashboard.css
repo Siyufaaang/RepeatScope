@@ -114,3 +114,23 @@
   .app-shell:has(.tab-pane.active #report-dashboard) .workflow-nav{padding:6px 12px;margin:8px 0}
   .app-shell:has(.tab-pane.active #report-dashboard) .footer{display:none}
 }
+
+/* v1.10: calculation first; diagnostics are available on demand. */
+#rs-plate-report-sketch {color-scheme:light;border-radius:8px}
+#rs-plate-report-sketch .overview {display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px}
+#rs-plate-report-sketch .report-meta {font-size:12px;color:var(--muted);white-space:nowrap}
+#rs-plate-report-sketch .body {display:block;padding:0 16px 14px}
+#rs-plate-report-sketch .tile,#rs-plate-report-sketch .tile.different {height:74px;grid-template-rows:13px 20px 1fr;padding:6px 5px;box-shadow:none}
+#rs-plate-report-sketch .tile .value,#rs-plate-report-sketch .tile.different .value {font-size:15px;line-height:1.25;font-weight:600;white-space:nowrap;letter-spacing:0}
+#rs-plate-report-sketch .tile .name {font-size:11px;line-height:20px}
+#rs-plate-report-sketch .tile.ce {opacity:.65}
+#rs-plate-report-sketch .comparisons {padding:12px 18px;border-top:1px solid var(--line)}
+#rs-plate-report-sketch .comparisons summary {cursor:pointer;color:var(--muted);font-size:13px}
+#rs-plate-report-sketch .sidebar {display:grid;grid-template-columns:190px 1fr;gap:16px;margin-top:10px}
+#rs-plate-report-sketch .detail-plots h3 {font-size:14px}
+#rs-plate-report-sketch dialog details {margin-top:14px;color:var(--muted)}
+#rs-plate-report-sketch dialog details summary {cursor:pointer;font-size:12px}
+.report-navigation details {display:inline-block}
+.report-navigation details[open] {flex-basis:100%}
+.report-status {font-size:12px;color:#526b74;margin:5px 0}
+@media(max-width:600px){#rs-plate-report-sketch .overview {display:block}#rs-plate-report-sketch .report-meta {margin-top:6px}#rs-plate-report-sketch .sidebar {grid-template-columns:150px 1fr}}

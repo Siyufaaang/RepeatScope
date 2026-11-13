@@ -1,3 +1,14 @@
+function dashboardTileSummary(w,method='a',stale=false) {
+  if (!['sample','positive_control'].includes(w.role)) return {value:'',count:0};
+  if (stale && w.acquired) return {value:'Rerun',count:0};
+  const records=w.recordList || w.records || [];
+  const nonNormal=records.filter(r=>r.kind!=='normal' && r[method+'_status']!=='not_applicable_normal');
+  const short=s=>({target_ambiguous:'Review',target_conflict:'Review',target_overlap:'Review',target_review:'Review',
+    target_missing:'No target',missing_target:'No target',not_fitted:'Not run',stale_results:'Rerun'})[s] || 'Unavailable';
+  if(!nonNormal.length) return {value:records.length && records.every(r=>r[method+'_status']==='not_applicable_normal')?'Normal':w.acquired?'Review':'No peaks',count:0};
+  const values=nonNormal.map(r=>Number.isFinite(r[method])?r[method].toFixed(3):short(r[method+'_status']));
+  return {value:values.length<=2?values.join(' / '):values.length+' results',count:values.length};
+}
 function dashboardRecordIndex(w) {
   return Math.max(0,w.recordList.findIndex(r=>r.id===w.id));
 }
@@ -10,7 +21,7 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   const find = s => root.querySelector(s);
   const wells = payload.wells.map(w => {
     w.records = w.records || [];
-    const rec = w.records.find(r=>['expanded','research'].includes(r.kind)) || w.records[0] || {};
+    const rec = w.records.find(r=>['expanded','intermediate','research'].includes(r.kind)) || w.records[0] || {};
     return Object.assign(w,rec,{recordList:w.records, status:rec.status || '', all:rec.all || [], chart:{peak:rec.all || [],modal:rec.modal}});
   });
   find('[data-gene]').textContent = payload.gene || 'Plate';
@@ -50,6 +61,8 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   for(const name of groups){const item=el('span'); item.append(el('i','swatch '+groupClass({group:name})),document.createTextNode(name));find('[data-group-key]').append(item);}
   const ns = 'http://www.w3.org/2000/svg';
   let state = window.rsDashboardState || {view:'tail', diff:false, fold:false, well:null, expanded:[]};
+  if(!['a','b'].includes(state.method))state.method='a';
+  find('[data-comparisons]').open=Boolean(state.comparisons);
 
   function el(tag, cls, label) {
     const e = document.createElement(tag);
@@ -168,25 +181,16 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
 
   function tile(w) {
     const button = el('button',['tile',groupClass(w),different(w)?'different':'',state.well===w.w?'selected':''].join(' '));
-    button.type = 'button';
-    button.dataset.well = w.w;
-    const name = w.role === 'ce_fill' ? 'CE Fill' : (w.name || w.role || 'Pending');
-    const short = s=>({weak_seed:'weak seed',missing_seed:'missing seed',missing_target:'no target',not_applicable_normal:'normal: n/a',stale_results:'rerun',not_fitted:'not run',unresolved_assignment:'unresolved',target_conflict:'target conflict',target_overlap:'shared tail: review',target_missing:'missing target',target_ambiguous:'ambiguous target',target_review:'review target',intermediate_review:'intermediate: review'})[s] || 'unavailable';
-    const status = payload.stale && w.acquired ? 'Outdated · rerun' : w.recordList.length>1 ? w.recordList.length+' targets · '+(paired(w)?'EI '+fmt(w.a)+(fmt(w.a)!==fmt(w.b)?' / '+fmt(w.b):''):short(w.a_status)) : paired(w) ? 'EI '+fmt(w.a)+(different(w)?' vs '+fmt(w.b):'') :
-      Number.isFinite(w.a) ? 'A '+fmt(w.a)+' · B '+short(w.b_status) :
-      Number.isFinite(w.b) ? 'A '+short(w.a_status)+' · B '+fmt(w.b) :
-      w.role === 'sample' ? short(w.a_status)+' / '+short(w.b_status) : w.acquired ? 'Sizing peaks' : '';
-    button.dataset.tooltip = [w.w,name,status].filter(Boolean).join(' · ');
-    button.setAttribute('aria-label',button.dataset.tooltip);
-    const value = el('span','value');
-    if (w.recordList.length>1) value.textContent = status;
-    else if (different(w)) value.append(el('span','','A '+fmt(w.a)),el('span','','B '+fmt(w.b)));
-    else value.textContent = status;
+    button.type='button';button.dataset.well=w.w;
+    const name=w.role==='ce_fill'?'':(w.name || (w.role==='unlabelled'?'':w.role));
+    const summary=dashboardTileSummary(w,state.method,payload.stale);
+    const method=state.method==='a'?'Adaptive':'Bayesian';
+    button.dataset.tooltip=[w.w,name,method+' EI '+summary.value].filter(Boolean).join(' · ');
+    button.setAttribute('aria-label',button.dataset.tooltip);button.title=button.dataset.tooltip;
+    const value=el('span','value',summary.value);
+    if(summary.count>1)value.title=summary.count+' separate target results; open the well for identities';
     button.append(el('span','well-id',w.w),el('span','name',name.replace(/^DNA_/,'')),value);
-    const peaks = w.recordList.length===1 ? displayPeaks(w) : [];
-    if (peaks.length) button.append(plot(w,peaks));
-    button.addEventListener('click',()=>showWell(w));
-    return button;
+    button.addEventListener('click',()=>showWell(w));return button;
   }
   function band(key,cls) {
     const button = el('button','band '+cls,key.slice(3));
@@ -284,14 +288,17 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     find('[data-differences]').setAttribute('aria-pressed',state.diff);
     find('[data-fold]').setAttribute('aria-pressed',state.fold);
     root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===state.view));
+    root.querySelectorAll('[data-method]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.method===state.method));
     drawBoard();
   }
+  find('[data-comparisons]').addEventListener('toggle',()=>{state.comparisons=find('[data-comparisons]').open;persist();});
+  root.querySelectorAll('[data-method]').forEach(b=>b.addEventListener('click',()=>{state.method=b.dataset.method;update();persist();}));
   find('[data-pair-count]').textContent = diffCount+' / '+comparableWells.length+' comparable';
   find('[data-differences]').addEventListener('click',()=>{state.diff=!state.diff;update();persist();});
   find('[data-fold]').addEventListener('click',()=>{state.fold=!state.fold;state.expanded=[];update();persist();});
   find('[data-close]').addEventListener('click',()=>detail.close());
   detail.addEventListener('click',e=>{if(e.target===detail) detail.close();});
-  root.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;update();persist();}));
+  root.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;update();persist();if(detail.open && byWell.has(state.well)){const w=byWell.get(state.well);showWell(w,Math.max(0,w.recordList.findIndex(r=>r.id===state.record)));}}));
   
   drawScatter();
   drawGroups();

@@ -16,7 +16,7 @@ require_dependencies <- function() {
   absent<-rs_dependencies[!vapply(rs_dependencies,requireNamespace,logical(1),quietly=TRUE)]
   if(length(absent))stop('Missing packages: ',paste(absent,collapse=', '),'. Run development/shiny_app/setup.R.')
 }
-for(rs_module in c('state','import_export','reference','localization','sample_layout','engine','report','synthetic','workflow','field_help')) {
+for(rs_module in c('state','import_export','reference','localization','disease_profiles','sample_layout','engine','report','synthetic','workflow','field_help')) {
   rs_path<-file.path(rs_app_dir,'R',paste0(rs_module,'.R'))
   if(file.exists(rs_path))sys.source(rs_path,envir=environment())
 }

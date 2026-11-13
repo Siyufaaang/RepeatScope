@@ -7,17 +7,16 @@ eligibility <- function(record,project) {
     if(identical(f$status,'target_overlap'))return(answer('eligibility_unresolved',f$reason))
     if(record$Target_kind=='normal')return(answer('not_applicable_normal','Normal target; expanded EI is not applicable.'))
     if(record$Target_kind%in%c('research','unassigned'))return(answer('eligibility_unresolved','Research target identity is unresolved. An explicit target interpretation is required for formal clearance.'))
-    if(record$Target_kind=='intermediate')return(answer('intermediate_excluded','Intermediate target is retained for review; expanded EI is not enabled.'))
     if(record$Category!='unresolved' && record$Category!=record$Target_kind)return(answer('eligibility_unresolved','Formal category conflicts with the localized target interpretation.'))
   }
   if(record$Category=='normal' && nzchar(record$Evidence))return(answer('not_applicable_normal','Not applicable — normal range; profile retained.'))
   if(record$Role=='unused_empty')return(answer('role_conflict','Unused/empty position has an analysis record. Resolve role and peak mapping.'))
   if(record$Role!='sample' && record$Role!='positive_control')return(answer('not_applicable_control',if(record$Role=='unlabelled')'Well contents/role unconfirmed.' else 'Control or filling well; excluded from biological EI summaries.'))
+  if(!is.null(project$localization) && !is.finite(project$localization$uncertainty))return(answer('eligibility_unresolved','CE length uncertainty is unknown; nominal range and EI remain a research calculation.'))
   pk<-project$peaks[project$peaks$Record_ID==record$Source_ID,,drop=FALSE]
   sat<-tolower(trimws(text_value(pk$Saturation)))%in%c('true','1','yes','saturated','offscale','off-scale','fail','failed')
   qc<-tolower(trimws(text_value(pk$QC)))
   if(any(sat) || any(grepl('fail|off.?scale|saturat|poor',qc)) || record$QC_status=='failed')return(answer('qc_failed','Imported or recorded upstream QC affects quantification; a manual pass cannot override this signal failure.'))
-  if(record$Category=='intermediate' && !isTRUE(project$assay$include_intermediate))return(answer('intermediate_excluded','Intermediate EI is disabled by default.'))
   if(!nzchar(record$Evidence) || record$Category=='unresolved')return(answer('eligibility_unresolved','Record evidence for the target allele category; bp conversion alone is not confirmation.'))
   if(!isTRUE(record$Target_confirmed) || !nzchar(record$Target_evidence))return(answer('eligibility_unresolved','Target allele/modal and assignment region have not been reviewed.'))
   other<-project$records[project$records$Source_ID==record$Source_ID & project$records$Record_ID!=record$Record_ID,,drop=FALSE]
@@ -26,7 +25,7 @@ eligibility <- function(record,project) {
   range_ok<-try(validate_ranges(project$assay$ranges),silent=TRUE)
   if(inherits(range_ok,'try-error'))return(answer('eligibility_unresolved','Disease ranges and sources are incomplete or invalid.'))
   range<-project$assay$ranges[project$assay$ranges$Category==record$Category,,drop=FALSE]
-  if(!nrow(range) || !range$EI_allowed)return(answer('not_applicable_category','This assay category is not eligible for expanded EI.'))
+  if(!nrow(range) || (!range$EI_allowed && record$Category!='intermediate'))return(answer('not_applicable_category','This assay category is not eligible for expanded EI.'))
   if(is.finite(record$Repeat_low) || is.finite(record$Repeat_high)) {
     category<-classify_repeat(record$Repeat_low,record$Repeat_high,project$assay$ranges)
     if(category!=record$Category)return(answer('eligibility_unresolved','Repeat evidence interval crosses a boundary or conflicts with the selected category.'))

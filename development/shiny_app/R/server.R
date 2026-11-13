@@ -182,9 +182,9 @@ rs_server <- function(input,output,session) {
     if(length(layout_select(p,'missing')))return(div(class='notice warning',paste(length(layout_select(p,'missing')),'samples need Genotype. Use Edit sample information; Run will select the missing wells.')))
     if(length(localization_issues(p,FALSE)))return(div(class='notice warning','Analysis settings are incomplete. Open Analysis settings, apply the candidate filter and required assay inputs.'))
     if(is.null(p$fit))return(div(class='notice',if(p$synthetic)'Synthetic demo loaded. Run dual-method analysis to calculate this plate.' else if(nrow(p$peaks))'Input ready. Run dual-method analysis to calculate this plate.' else 'Import a plate and peak table to begin.'))
-    div(class='notice',paste0('Research preview · ',sum(r$Method=='adaptive' & r$Role=='sample' & is.finite(r$Preview_EI)),' Adaptive / ',
-      sum(r$Method=='bayesian' & r$Role=='sample' & is.finite(r$Preview_EI)),' Bayesian sample results. Formal clearance: ',length(unique(r$Record_ID[is.finite(r$EI)])),
-      ' records. Candidate identity, category and QC are separate from calculation.'))
+    div(class='report-status',title=paste('Formal clearance:',length(unique(r$Record_ID[is.finite(r$EI)])),'records; details in Formal review.'),
+      paste0('Research preview · ',sum(r$Method=='adaptive' & r$Role=='sample' & is.finite(r$Preview_EI)),' Adaptive · ',
+        sum(r$Method=='bayesian' & r$Role=='sample' & is.finite(r$Preview_EI)),' Bayesian results'))
   })
   output$filter_status<-renderText(paste0('Applied: ',if(nzchar(rv$p$assay$channel))paste('channel',rv$p$assay$channel) else 'all channels',
     ' · Size >= ',rv$p$assay$minimum_bp,' bp',if(filter_pending())' · unapplied edits' else ''))
