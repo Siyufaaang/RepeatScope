@@ -105,3 +105,11 @@
 !/docs/superpowers/specs/2026-11-13-public-beta-design.md
 !/docs/superpowers/plans/2026-11-13-public-beta.md
 !/development/shiny_app/tests/test_project_safety.R
+!/development/shiny_app/R/visuals.R
+!/development/shiny_app/www/visual.css
+!/development/shiny_app/www/visual.js
+!/development/shiny_app/www/brand-logo.png
+!/development/shiny_app/tests/test_visual_semantics.cjs
+!/docs/superpowers/specs/2026-11-13-approved-visual-design.md
+!/docs/superpowers/plans/2026-11-13-approved-visual-refresh.md
+!/development/shiny_app/tests/test_visual_navigation.R

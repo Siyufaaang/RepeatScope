@@ -28,6 +28,12 @@ saved_primer_key<-function(p) {
 register_workflow_server<-function(input,output,session,rv) {
   go<-function(step){rv$step<-step;updateTabsetPanel(session,'main_tabs',selected=c('welcome','plate_import','layout','peaks','reference','results')[step+1L])}
   observeEvent(input$try_workflow,go(1L))
+  observeEvent(input$home_section,{
+    target<-input$home_section$section
+    if(length(target)!=1L || !target%in%c('landing-top','how-it-works','demo-data'))return()
+    go(0L)
+    session$onFlushed(function()session$sendCustomMessage('landing-scroll',target),once=TRUE)
+  })
   readiness<-reactive({
     p<-rv$p
     if(rv$step==1 && !identical(upload_source_key(input,'plate'),rv$plate_committed_key))return(list(ready=FALSE,reason='Use the current plate map to continue.'))

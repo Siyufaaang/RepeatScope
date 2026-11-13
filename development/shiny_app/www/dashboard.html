@@ -18,6 +18,25 @@
         <div class="scrollboard"><div class="board" data-board></div></div>
         <div class="board-key"><span data-group-key></span><span><i class="swatch ce"></i>CE Fill</span><span class="delta">Δ Methods differ</span></div>
       </section>
+      <dialog data-detail aria-labelledby="rs-plate-detail-heading">
+        <div class="detail-top"><div><small data-detail-group></small><h3 id="rs-plate-detail-heading"></h3></div><button type="button" data-close aria-label="Close well detail">Close</button></div>
+        <select data-record-select aria-label="Acquisition and allele"></select>
+        <div class="seg" role="group" aria-label="Peak display">
+          <button type="button" data-view="tail" aria-pressed="true">EI support</button>
+          <button type="button" data-view="all" aria-pressed="false">All sizing peaks</button>
+        </div>
+        <div class="detail-plots" data-detail-plots></div>
+        <p class="comparison-note" data-detail-difference></p>
+        <div class="peak-key"><span><i class="ink-both"></i>Both included</span><span><i class="ink-a"></i>Adaptive only ●</span><span><i class="ink-b"></i>Bayesian only ●</span><span><i class="ink-excluded"></i>Excluded</span></div>
+        <small class="peak-key-note">Modal peak: black · Excluded peaks stay grey in each method's plot.</small>
+        <details><summary>Target, filter and QC details</summary>
+          <p data-target-note></p><p data-scope-note></p><p data-formal-note></p>
+          <div class="target-choice"><label for="dashboard-candidate">Candidate modal · Size / RFU</label>
+            <select id="dashboard-candidate" data-candidate-select></select>
+            <button type="button" data-apply-target>Review selected candidate</button></div>
+          <small>All imported peaks are retained. These are research previews.</small>
+        </details>
+      </dialog>
     </div>
     <details class="comparisons" data-comparisons>
       <summary>Compare methods and groups</summary>
@@ -28,20 +47,4 @@
       </aside>
     </details>
   </div>
-  <dialog data-detail aria-labelledby="rs-plate-detail-heading">
-    <div class="detail-top"><div><small data-detail-group></small><h3 id="rs-plate-detail-heading"></h3></div><button type="button" data-close aria-label="Close well detail">Close</button></div>
-    <select data-record-select aria-label="Acquisition and allele"></select>
-    <div class="seg" role="group" aria-label="Peak display">
-      <button type="button" data-view="tail" aria-pressed="true">EI support</button>
-      <button type="button" data-view="all" aria-pressed="false">All sizing peaks</button>
-    </div>
-    <div class="detail-plots" data-detail-plots></div>
-    <details><summary>Target, filter and QC details</summary>
-      <p data-target-note></p><p data-scope-note></p><p data-formal-note></p>
-      <div class="target-choice"><label for="dashboard-candidate">Candidate modal · Size / RFU</label>
-        <select id="dashboard-candidate" data-candidate-select></select>
-        <button type="button" data-apply-target>Review selected candidate</button></div>
-      <small>Purple = modal · colour = included · grey = excluded. All imported peaks are retained.</small>
-    </details>
-  </dialog>
 </section>

@@ -1,0 +1,23 @@
+source('development/shiny_app/R/bootstrap.R');require_dependencies();library(shiny)
+testServer(function(input,output,session){
+  rv<-reactiveValues(p=synthetic_project())
+  register_demo_navigation(input,session,rv)
+},{
+  messages<-list();modals<-list()
+  session$sendCustomMessage<-function(type,message)messages[[length(messages)+1L]]<<-list(type=type,message=message)
+  session$sendModal<-function(type,message)modals[[length(modals)+1L]]<<-list(type=type,message=message)
+  before<-object_hash(rv$p)
+  session$setInputs(request_demo=1)
+  stopifnot(identical(object_hash(rv$p),before),length(messages)==0L,length(modals)==1L,modals[[1]]$type=='show')
+  # A cancelled/dismissed prompt never emits a replacement action.
+  session$flushReact()
+  stopifnot(identical(object_hash(rv$p),before),length(messages)==0L)
+  session$setInputs(confirm_demo=1)
+  stopifnot(length(messages)==1L,messages[[1]]$type=='demo-load',identical(object_hash(rv$p),before))
+  session$setInputs(confirm_demo=2)
+  stopifnot(length(messages)==1L)
+  rv$p<-new_project()
+  session$setInputs(request_demo=2)
+  stopifnot(length(messages)==2L,messages[[2]]$type=='demo-load')
+})
+cat('DEMO NAVIGATION GUARD PASS\n')
