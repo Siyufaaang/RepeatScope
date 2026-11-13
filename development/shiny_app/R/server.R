@@ -57,7 +57,7 @@ rs_server <- function(input,output,session) {
   })
   display_project<-reactive({p<-rv$p;if(filter_pending())p$assay$ui_filter_pending<-TRUE
     if(localization_pending() || prescreen_pending() || isTRUE(input$layout_draft$affects_fit))p$localization_pending<-TRUE;p})
-  results<-reactive(threshold_results(display_project(),variant=current_variant()))
+  results<-reactive(report_results(display_project(),variant=current_variant()))
   observe({
     req(rv$step==5L)
     session$sendCustomMessage('dashboard-data',dashboard_data(display_project(),results(),current_variant()))
@@ -219,7 +219,7 @@ rs_server <- function(input,output,session) {
   output$overview_plot<-renderPlot({r<-results();if(nrow(r))r<-r[r$Role%in%c('sample','positive_control'),,drop=FALSE];overview_plot(r,rv$p$synthetic)},res=110)
   output$all_results<-renderTable({r<-results();if(nrow(r)){
     r$Preview_EI[!r$Role%in%c('sample','positive_control')]<-NA_real_
-    r[,c('Code','Well','Acquisition','Allele','Group','Role','Method','Preview_EI','Preview_status','Preview_reason','Formal_status')]
+    r[,c('Code','Well','Acquisition','Allele','Group','Role','Target_kind','Estimated_repeat_number','Repeat_status','Method','Preview_EI','Preview_status','Preview_reason','Formal_status')]
   }},digits=6,na='NA',striped=TRUE)
   output$summary<-renderTable(summarise_results(results()),digits=4,na='Not evaluable',striped=TRUE)
   well_key<-reactive({
@@ -233,9 +233,9 @@ rs_server <- function(input,output,session) {
   output$tail_plot<-renderPlot({rec<-current_record();if(is.null(rec))empty_plot('Choose an acquisition after importing peaks.') else tail_plot(display_project(),rec$Record_ID,current_variant(),well_decisions())},res=110) |>
     bindCache(well_key(),current_record()$Code,rv$p$assay$predictive_level,cache='session')
   output$decisions<-renderTable({rec<-current_record();req(!is.null(rec));d<-well_decisions();if(nrow(d))d[,c('Peak_ID','Size','Height','Method','Delta','Included','Decision')]},digits=4,na='NA')
-  output$well_metrics<-renderUI({rec<-current_record();req(!is.null(rec));r<-results();r<-r[r$Record_ID==rec$Record_ID,,drop=FALSE];tagList(tableOutput('well_result_table'),if(nrow(r) && is.finite(rv$p$assay$fixed_bp))p(class='muted',paste0('BP conversion estimate: ',round((r$Modal_bp[1]-rv$p$assay$fixed_bp)/rv$p$assay$repeat_bp,3),' repeat units. This is not sequence-confirmed sample structure.')))})
+  output$well_metrics<-renderUI({rec<-current_record();req(!is.null(rec));r<-allele_repeat_report(display_project(),current_variant());r<-r[r$Record_ID==rec$Record_ID,,drop=FALSE];tagList(tableOutput('well_result_table'),if(nrow(r))p(class='muted',r$Repeat_reason[1]))})
   output$well_result_table<-renderTable({rec<-current_record();req(!is.null(rec));r<-results();if(nrow(r)){
-    z<-r[r$Record_ID==rec$Record_ID,c('Method','Preview_EI','Preview_status','Preview_reason','Formal_status','Modal_bp','Modal_RFU','N_tail','Threshold_RFU','Search_upper_bp')]
+    z<-r[r$Record_ID==rec$Record_ID,c('Method','Preview_EI','Estimated_repeat_number','Repeat_margin_low','Repeat_margin_high','Repeat_status','Preview_status','Preview_reason','Formal_status','Modal_bp','Modal_RFU','N_tail','Threshold_RFU','Search_upper_bp')]
     if(!rec$Role%in%c('sample','positive_control'))z$Preview_EI<-NA_real_
     z$Threshold_pct<-100*rv$p$threshold;z
   }},digits=6,na='NA')

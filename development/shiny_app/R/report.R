@@ -1,3 +1,63 @@
+# Report-only conversion. EI and peak assignment remain in the frozen engine.
+allele_repeat_report <- function(project,variant='automatic') {
+  p<-ensure_localization(project);rec<-p$records;n<-nrow(rec)
+  r<-data.frame(Record_ID=rec$Record_ID,Well=rec$Well,Code=rec$Code,Acquisition=rec$Acquisition,
+    Allele=rec$Allele,Target_kind=rec$Target_kind,Category=rec$Category,
+    Repeat_modal_bp=rep(NA_real_,n),Estimated_repeat_number=rep(NA_real_,n),
+    Repeat_margin_low=rep(NA_real_,n),Repeat_margin_high=rep(NA_real_,n),
+    Reported_repeat_low=rec$Repeat_low,Reported_repeat_high=rec$Repeat_high,
+    Repeat_status=rep('not_fitted',n),Repeat_reason=rep('Run analysis to identify the current target modal.',n),
+    Repeat_mapping=rep(p$localization$mode,n),Repeat_intercept_bp=rep(NA_real_,n),Repeat_slope_bp=rep(NA_real_,n),
+    Repeat_CE_margin_bp=rep(p$localization$uncertainty,n),Repeat_counting_definition=rep(p$localization$counting,n),
+    Repeat_mapping_source=rep(p$localization$mapping_source,n),stringsAsFactors=FALSE)
+  run<-if(variant=='automatic')p[['fit']] else p$reviewed[[variant]]
+  if(!n || is.null(run))return(r)
+  if(!identical(run$fingerprint,analysis_fingerprint(project))) {
+    r$Repeat_status<-'stale';r$Repeat_reason<-'Inputs changed; apply edits and run analysis again.';return(r)
+  }
+  cfg<-p$localization
+  map<-tryCatch({
+    if(!cfg$mode%in%c('theoretical','linear'))stop('Choose a length-to-repeat mapping in Analysis setup.')
+    m<-localization_mapping(p)
+    if(length(m)!=2L || any(!is.finite(m)) || m['slope']<=0)stop('Mapping requires a finite intercept and a positive bp-per-repeat slope.')
+    if(is.finite(cfg$uncertainty) && cfg$uncertainty<0)stop('CE length margin must be non-negative or unknown.')
+    m
+  },error=function(e)e)
+  if(inherits(map,'error')) {
+    r$Repeat_status<-'mapping_unavailable';r$Repeat_reason<-conditionMessage(map);return(r)
+  }
+  r$Repeat_intercept_bp<-unname(map['intercept']);r$Repeat_slope_bp<-unname(map['slope'])
+  for(i in seq_len(n)) {
+    f<-run$records[[r$Record_ID[i]]]
+    if(is.null(f))next
+    if(!identical(f$status,'fitted') || length(f$modal_size)!=1L || !is.finite(f$modal_size)) {
+      r$Repeat_status[i]<-'target_unavailable';r$Repeat_reason[i]<-f$reason%||%'No unambiguous fitted modal.';next
+    }
+    value<-unname((f$modal_size-map['intercept'])/map['slope'])
+    if(!is.finite(value) || value<0) {
+      r$Repeat_status[i]<-'mapping_conflict';r$Repeat_reason[i]<-'Modal length is incompatible with the selected repeat mapping.';next
+    }
+    r$Repeat_modal_bp[i]<-f$modal_size;r$Estimated_repeat_number[i]<-value;r$Repeat_status[i]<-'estimated'
+    r$Repeat_reason[i]<-'Modal-based estimate; not sequence confirmation or automatic category assignment.'
+    if(is.finite(cfg$uncertainty)) {
+      margin<-cfg$uncertainty/unname(map['slope'])
+      r$Repeat_margin_low[i]<-value-margin;r$Repeat_margin_high[i]<-value+margin
+      r$Repeat_reason[i]<-paste(r$Repeat_reason[i],'Range propagates the supplied CE margin only; not a confidence interval or calibration-parameter uncertainty.')
+      if(value-margin<0)r$Repeat_reason[i]<-paste(r$Repeat_reason[i],'Margin crosses zero; review mapping and uncertainty.')
+    } else r$Repeat_reason[i]<-paste(r$Repeat_reason[i],'CE uncertainty is unknown; no margin is reported.')
+  }
+  r
+}
+
+report_results <- function(project,variant='automatic') {
+  r<-threshold_results(project,variant=variant)
+  if(!nrow(r))return(r)
+  counts<-allele_repeat_report(project,variant)
+  extra<-setdiff(names(counts),names(r))
+  for(nm in extra)r[[nm]]<-counts[[nm]][match(r$Record_ID,counts$Record_ID)]
+  r
+}
+
 eligibility <- function(record,project) {
   answer<-function(status,reason='')list(status=status,reason=reason)
   if(nzchar(record$Localization_status%||%'')) {
@@ -67,6 +127,7 @@ rs_theme <- function() ggplot2::theme_minimal(base_size=12)+ggplot2::theme(panel
   strip.text=ggplot2::element_text(face='bold'),legend.position='bottom',axis.title=ggplot2::element_text(color='#526b74'))
 
 dashboard_data <- function(p,results,variant='automatic') {
+  repeat_report<-allele_repeat_report(p,variant)
   run<-if(variant=='automatic')p$fit else p$reviewed[[variant]]
   stale<-!is.null(run) && !identical(run$fingerprint,analysis_fingerprint(p))
   decisions<-if(!is.null(run) && !stale)peak_decisions(p,variant=variant) else data.frame()
@@ -89,7 +150,10 @@ dashboard_data <- function(p,results,variant='automatic') {
       f<-if(!is.null(run))run$records[[rec$Record_ID]] else NULL
       field<-function(method,name,default='')if(any(rr$Method==method))rr[[name]][match(method,rr$Method)] else default
       target<-target_description(p,rec,if(stale)NULL else f)
+      repeat_row<-repeat_report[match(rec$Record_ID,repeat_report$Record_ID),,drop=FALSE]
+      repeat_number<-lapply(repeat_row,function(v)if(is.numeric(v) && !is.finite(v))NULL else unname(v))
       list(id=rec$Record_ID,acquisition=rec$Acquisition,allele=rec$Allele,kind=rec$Target_kind%||%'unassigned',
+        repeat_number=repeat_number,
         a=val('adaptive'),b=val('bayesian'),all=all,modal=if(!stale && !is.null(f) && is.finite(f$modal_size))f$modal_size else NULL,
         modal_rfu=if(!stale && !is.null(f))f$modal_height else NULL,
         upper=if(!stale && !is.null(f))f$upper else NULL,

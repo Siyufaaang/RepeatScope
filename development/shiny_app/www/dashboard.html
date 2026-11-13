@@ -21,6 +21,11 @@
       <dialog data-detail aria-labelledby="rs-plate-detail-heading">
         <div class="detail-top"><div><small data-detail-group></small><h3 id="rs-plate-detail-heading"></h3></div><button type="button" data-close aria-label="Close well detail">Close</button></div>
         <select data-record-select aria-label="Acquisition and allele"></select>
+        <section class="repeat-summary" aria-label="Allele repeat numbers">
+          <h4>Estimated repeat number</h4>
+          <div class="scroll-table" data-repeat-table></div>
+          <p data-repeat-basis></p>
+        </section>
         <div class="seg" role="group" aria-label="Peak display">
           <button type="button" data-view="tail" aria-pressed="true">EI support</button>
           <button type="button" data-view="all" aria-pressed="false">All sizing peaks</button>
@@ -38,13 +43,13 @@
         </details>
       </dialog>
     </div>
-    <details class="comparisons" data-comparisons>
-      <summary>Compare methods and groups</summary>
+    <section class="comparisons" data-comparisons aria-labelledby="comparisons-heading">
+      <h3 id="comparisons-heading">Compare methods and groups</h3>
       <button type="button" class="fold" data-differences aria-pressed="false">Highlight differences · <span data-pair-count></span></button>
       <aside class="sidebar">
         <section class="panel"><h3>Adaptive vs Bayesian</h3><div data-scatter></div><div class="pair-key"><span>● Same EI</span><span class="delta">● Different EI</span></div></section>
         <section class="panel"><h3>EI by group</h3><small>Paired mean ± SD; n = target records</small><div data-groups></div></section>
       </aside>
-    </details>
+    </section>
   </div>
 </section>

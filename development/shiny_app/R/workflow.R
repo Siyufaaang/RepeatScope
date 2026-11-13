@@ -30,7 +30,7 @@ register_workflow_server<-function(input,output,session,rv) {
   observeEvent(input$try_workflow,go(1L))
   observeEvent(input$home_section,{
     target<-input$home_section$section
-    if(length(target)!=1L || !target%in%c('landing-top','how-it-works','demo-data'))return()
+    if(length(target)!=1L || !target%in%c('landing-top','how-it-works','methodology','demo-data'))return()
     go(0L)
     session$onFlushed(function()session$sendCustomMessage('landing-scroll',target),once=TRUE)
   })

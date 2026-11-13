@@ -56,6 +56,7 @@ read_project <- function(path) {
 result_wide <- function(results) {
   if(!nrow(results))return(data.frame())
   id<-c('Record_ID','Code','Well','Acquisition','Allele','Group','Window','Threshold','Variant','Reference','Run_ID')
+  id<-c(id,intersect(c('Target_kind','Estimated_repeat_number','Repeat_margin_low','Repeat_margin_high','Repeat_status','Repeat_mapping','Repeat_intercept_bp','Repeat_slope_bp','Repeat_counting_definition','Repeat_mapping_source','Reported_repeat_low','Reported_repeat_high'),names(results)))
   r<-results[results$Method%in%c('adaptive','bayesian'),c(id,'Method','Method_version','EI','Preview_EI','Status','Reason')]
   stats::reshape(r,idvar=id,timevar='Method',direction='wide')
 }
@@ -65,6 +66,8 @@ analysis_manifest <- function(p,variant='automatic') {
   list(product='RepeatScope local prototype',schema=p$schema,project_id=p$id,created=p$created,exported=stamp(),
   synthetic=p$synthetic,threshold_fraction=p$threshold,threshold_percent=100*p$threshold,threshold_rule='Height >= p * own modal height',window=p$window,
   EI_definition='sum(own Height * Delta) / sum(own Height), modal included; conditional on selected peaks',
+  repeat_definition='Estimated_repeat_number = (current fitted modal bp - selected mapping intercept bp) / selected mapping slope bp per repeat; one shared estimate per acquisition/allele, independent of EI method, threshold and window.',
+  repeat_margin='Repeat_margin_low/high propagate only the supplied CE +/- bp margin through the selected mapping; not a confidence interval, sequence-confirmed count or calibration-parameter uncertainty. Unknown margin stays blank. Reported_repeat_low/high are separately entered evidence.',
   current_input_fingerprint=analysis_fingerprint(p),variant=variant,run_id=run$id,fit_input_fingerprint=run$fingerprint,stale=!is.null(run) && !identical(run$fingerprint,analysis_fingerprint(p)),
   review=run$review,assay=p$assay,localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,reference=p$reference,structure=p$structure,reference_draft=p$reference_draft,fit_configuration=list(assay=run$assay,reference=run$reference,structure=run$structure),method_versions=run$versions,control_review=p$control_review,
   hierarchical_pool=p$hierarchical$pool,hierarchical_training_fraction=p$hierarchical$result$anchor_fraction,
@@ -77,8 +80,8 @@ analysis_manifest <- function(p,variant='automatic') {
     'Unknown assay/primer/cutoff/QC/control facts remain unconfirmed.'))
 }
 write_tables <- function(p,directory,variant='automatic') {
-  r<-threshold_results(p,variant=variant);d<-peak_decisions(p,variant=variant)
-  tables<-list(plate_metadata=p$plate,record_metadata=p$records,results_long=r,EI_comparison=result_wide(r),group_summary=summarise_results(r),peak_decisions=d,import_issues=p$import_issues)
+  r<-report_results(p,variant=variant);d<-peak_decisions(p,variant=variant)
+  tables<-list(plate_metadata=p$plate,record_metadata=p$records,allele_repeat_numbers=allele_repeat_report(p,variant),results_long=r,EI_comparison=result_wide(r),group_summary=summarise_results(r),peak_decisions=d,import_issues=p$import_issues)
   for(nm in names(tables))utils::write.csv(tables[[nm]],file.path(directory,paste0(nm,'.csv')),row.names=FALSE,na='',fileEncoding='UTF-8')
   utils::write.table(p$plate,file.path(directory,'plate_metadata.tsv'),sep='\t',row.names=FALSE,na='',fileEncoding='UTF-8')
   writexl::write_xlsx(tables[vapply(tables,ncol,integer(1))>0],file.path(directory,'tables.xlsx'))
@@ -91,6 +94,8 @@ write_report_bundle <- function(p,path,include_originals=FALSE,variant='automati
   jsonlite::write_json(analysis_manifest(p,variant),file.path(directory,'manifest.json'),auto_unbox=TRUE,pretty=TRUE,na='null',null='null',digits=16)
   writeLines(c('RepeatScope — local research prototype',if(p$synthetic)'SYNTHETIC SOFTWARE DEMONSTRATION. No biological validation implied.' else 'Research data. Review all eligibility and QC status fields.',
     'Formal EI is blank unless status is success. Preview_EI is a calculation preview; it is not QC clearance.',
+    'allele_repeat_numbers.csv: one row per acquisition/allele, including normal, expanded and intermediate targets. Estimated_repeat_number = (fitted modal bp - mapping intercept) / mapping slope. Both EI methods share this count. No inferred missing alleles or integer rounding.',
+    'Repeat_margin_low/high propagate the supplied CE length margin only, not a confidence interval or calibration-parameter uncertainty. Blank margin means unknown; it does not mean zero. Reported_repeat_low/high retain independently entered evidence. Review Repeat_status, Repeat_reason and mapping/counting sources.',
     'All failures, normal-range NA and unresolved records are retained. Raw originals excluded unless explicitly requested.',
     'Report groups describe samples/alleles; unknown individual IDs are not independent-patient counts.',
     'Use the separate .repeatscope.rds project download to restore the complete working session.',
@@ -106,7 +111,7 @@ write_report_bundle <- function(p,path,include_originals=FALSE,variant='automati
   }
   if(length(p$reviewed)) {
     dir.create(file.path(directory,'reviewed_versions'))
-    for(id in names(p$reviewed))write.csv(threshold_results(p,variant=id),file.path(directory,'reviewed_versions',paste0(safe_filename(id),'.csv')),row.names=FALSE,na='')
+    for(id in names(p$reviewed))write.csv(report_results(p,variant=id),file.path(directory,'reviewed_versions',paste0(safe_filename(id),'.csv')),row.names=FALSE,na='')
   }
   if(include_originals && length(p$originals)) {
     dir.create(file.path(directory,'originals'))

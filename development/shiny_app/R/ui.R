@@ -27,11 +27,12 @@ localization_inputs_ui <- function() tagList(
 rs_ui <- function() {
   public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f5f6f7',fg='#161819',primary='#161819',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=112'),tags$link(rel='stylesheet',href='dashboard.css?v=112'),tags$link(rel='stylesheet',href='visual.css?v=112'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=112'),tags$script(src='visual.js?v=112')),
+    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=113'),tags$link(rel='stylesheet',href='dashboard.css?v=113'),tags$link(rel='stylesheet',href='visual.css?v=113'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=113'),tags$script(src='visual.js?v=113')),
     div(class='app-shell',
       div(class='topbar',tags$a(href='#landing-top','data-home-section'='landing-top',class='brand',brand_mark(),span('RepeatScope'),span(class='version-label','Beta')),
         tags$nav(class='top-actions','aria-label'='Main navigation',
           tags$a(href='#how-it-works','data-home-section'='how-it-works','How it works'),
+          tags$a(href='#methodology','data-home-section'='methodology','Methodology'),
           tags$button(type='button','data-trigger'='request_demo',class='header-link','Demo'),
           actionButton('try_workflow','Try your data ↗',class='header-start'),
           conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project')))),

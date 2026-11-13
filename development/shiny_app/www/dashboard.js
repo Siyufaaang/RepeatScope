@@ -72,7 +72,6 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
   const ns = 'http://www.w3.org/2000/svg';
   let state = window.rsDashboardState || {view:'tail', diff:false, fold:false, well:null, expanded:[]};
   if(!['a','b'].includes(state.method))state.method='a';
-  find('[data-comparisons]').open=Boolean(state.comparisons);
 
   function el(tag, cls, label) {
     const e = document.createElement(tag);
@@ -161,6 +160,22 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     board.querySelectorAll('.tile').forEach(b => b.classList.toggle('selected',b.dataset.well===w.w));
     find('#rs-plate-detail-heading').textContent = w.w+' · '+(w.name || 'CE Fill');
     find('[data-detail-group]').textContent = [w.group,w.role,w.acquisition,w.allele].filter(Boolean).join(' · ');
+    const repeatHolder=find('[data-repeat-table]');repeatHolder.replaceChildren();
+    const repeatTable=el('table'),repeatHead=el('tr');
+    ['Acquisition / allele','Target','Repeats'].forEach(t=>repeatHead.append(el('th','',t)));
+    repeatTable.append(repeatHead);
+    w.recordList.forEach(r=>{
+      const row=el('tr',r.id===w.id?'current-repeat':''),v=r.repeat_number || {};
+      const value=Number.isFinite(v.Estimated_repeat_number)?v.Estimated_repeat_number.toFixed(3):'Unavailable';
+      row.append(el('td','',r.acquisition+' / '+r.allele),el('td','',r.kind || 'unassigned'),el('td','',value));
+      row.title=v.Repeat_reason || 'Run analysis to identify the target.';repeatTable.append(row);
+    });
+    repeatHolder.append(repeatTable);
+    const count=w.repeat_number || {},hasCount=Number.isFinite(count.Estimated_repeat_number);
+    const margin=Number.isFinite(count.Repeat_margin_low)&&Number.isFinite(count.Repeat_margin_high)?' · CE margin '+count.Repeat_margin_low.toFixed(3)+'–'+count.Repeat_margin_high.toFixed(3)+' repeats (not a CI)':' · CE margin unknown';
+    find('[data-repeat-basis]').textContent=hasCount ?
+      'Selected target: ('+count.Repeat_modal_bp.toFixed(3)+' bp − '+count.Repeat_intercept_bp.toFixed(3)+' bp) / '+count.Repeat_slope_bp.toFixed(4)+' bp per repeat = '+count.Estimated_repeat_number.toFixed(3)+'. '+count.Repeat_mapping+' mapping'+margin+'. '+count.Repeat_counting_definition+'. Basis: '+(count.Repeat_mapping_source || 'not supplied')+'. '+count.Repeat_reason :
+      (count.Repeat_reason || 'Run analysis to identify the current modal.');
     find('[data-target-note]').textContent = w.target || 'No target yet.';
     find('[data-scope-note]').textContent = payload.filter+' · '+payload.window+' · '+payload.threshold+'% own modal'+(Number.isFinite(w.modal_rfu)?' = '+(w.modal_rfu*payload.threshold/100).toFixed(2)+' RFU':'')+(Number.isFinite(w.upper)?' · support through '+w.upper.toFixed(2)+' bp':'');
     find('[data-formal-note]').textContent = 'Formal eligibility: '+(w.formal || 'not reviewed');
@@ -304,7 +319,6 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     root.querySelectorAll('[data-method]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.method===state.method));
     drawBoard();
   }
-  find('[data-comparisons]').addEventListener('toggle',()=>{state.comparisons=find('[data-comparisons]').open;persist();});
   root.querySelectorAll('[data-method]').forEach(b=>b.addEventListener('click',()=>{state.method=b.dataset.method;update();persist();}));
   find('[data-pair-count]').textContent = diffCount+' / '+comparableWells.length+' comparable';
   find('[data-differences]').addEventListener('click',()=>{state.diff=!state.diff;update();persist();});

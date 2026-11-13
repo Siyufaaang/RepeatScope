@@ -197,8 +197,12 @@ undo_plate <- function(p) {
 analysis_fingerprint <- function(p) {
   rec<-if(nrow(p$records))p$records[,intersect(c('Record_ID','Source_ID','Allele','Modal_rule','Modal_peak_ID','ROI_low','ROI_high'),names(p$records)),drop=FALSE] else NULL
   assay<-p$assay[setdiff(names(p$assay),c('name','gene','organism','source','validation_scope','status','include_intermediate','ranges'))]
-  object_hash(list(policy='non-normal-ei-v1.10',peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
-    disease_profile=p$disease_profile,profile_custom=p$profile_custom,localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending))
+  inputs<-list(policy='non-normal-ei-v1.10',peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
+    disease_profile=p$disease_profile,profile_custom=p$profile_custom,localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending)
+  # Preview structures supply the active theoretical mapping too. Preserve
+  # existing confirmed-structure hashes, but never reuse a changed draft fit.
+  if(is.null(p$structure) && !is.null(p$reference_draft))inputs$reference_draft<-p$reference_draft
+  object_hash(inputs)
 }
 fit_is_stale <- function(p) !is.null(p$fit) && !identical(p$fit$fingerprint,analysis_fingerprint(p))
 validate_ranges <- function(x) {
