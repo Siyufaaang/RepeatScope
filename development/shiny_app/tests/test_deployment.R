@@ -20,11 +20,27 @@ checks$sha256[checks$path=='app.R']<-digest::digest(entry,algo='sha256',file=TRU
 write.csv(checks,file.path(destination,'bundle-checksums.csv'),row.names=FALSE)
 verify_beta_bundle(root,destination)
 args<-commandArgs(trailingOnly=TRUE)
+check(exists('verify_beta_manifest',mode='function'),'deployment supports a frozen application dependency manifest')
+manifest_file<-file.path(destination,'manifest.json')
+manifest<-list(metadata=list(appmode='shiny'),files=setNames(lapply(bundle$files,function(path)
+  list(checksum=unname(tools::md5sum(file.path(destination,path))))),bundle$files))
+jsonlite::write_json(manifest,manifest_file,auto_unbox=TRUE)
+verify_beta_manifest(bundle)
+manifest$files[['unreviewed.txt']]<-list(checksum='unused')
+jsonlite::write_json(manifest,manifest_file,auto_unbox=TRUE)
+check(inherits(try(verify_beta_manifest(bundle),silent=TRUE),'try-error'),'frozen manifest cannot add unreviewed upload files')
+manifest$files[['unreviewed.txt']]<-NULL
+manifest$files[['app.R']]$checksum<-'stale'
+jsonlite::write_json(manifest,manifest_file,auto_unbox=TRUE)
+check(inherits(try(verify_beta_manifest(bundle),silent=TRUE),'try-error'),'frozen manifest checksums must match the selected source')
+manifest$files[['app.R']]$checksum<-unname(tools::md5sum(file.path(destination,'app.R')))
+jsonlite::write_json(manifest,manifest_file,auto_unbox=TRUE)
 temporary_destination<-destination
 if(length(args)){
   destination<-normalizePath(args[1],winslash='/',mustWork=TRUE)
   bundle<-verify_beta_bundle(root,destination)
 }
+verify_beta_manifest(bundle)
 actual<-list.files(destination,recursive=TRUE,all.files=TRUE,no..=TRUE)
 check(all(c(bundle$files,'bundle-checksums.csv')%in%actual),'selected bundle contains all reviewed runtime files and checksums')
 check(!any(grepl('(^|/)(qa|tests|private_inputs|\\.library|\\.deploy-library|rsconnect)(/|$)|\\.(rds|fsa|RData)$',actual,ignore.case=TRUE)),

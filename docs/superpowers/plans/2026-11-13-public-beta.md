@@ -36,14 +36,14 @@
 **Interfaces:** packaged app from Task 1, local private fixtures from the existing v1.11.1 QA directory; GitHub PRs 1/2 and deployment PR.
 - [x] Recalculate both methods/windows locally and compare with independently verified values; fingerprint scientific files.
 - [x] Independent whole-branch deployment review; fix Important/Critical findings with regression tests.
-- [ ] Verify repository manifest; commit/push deployment branch.
-- [ ] Merge PRs 1/2 and deployment PR with expected-head protection; verify integrated source equals tested tree.
+- [x] Verify repository manifest; commit/push deployment branch.
+- [x] Merge PRs 1/2 and deployment PR with expected-head protection; verify integrated source equals tested tree.
 
 ### Task 3: Cloud deployment and acceptance
 **Interfaces:** verified clean package, user-authorized Connect Cloud login, rsconnect deployment record.
-- [ ] Complete account authorization, deploy reviewed package and monitor build logs.
-- [ ] Verify public HTTPS, synthetic import/calculation, both windows/methods, saved project/download and two independent sessions.
-- [ ] Record deployment ID/version, URL, limitations and rollback procedure; deliver verified Beta URL.
+- [x] Complete account authorization, deploy reviewed package and monitor build logs.
+- [x] Verify public HTTPS, synthetic import/calculation, both windows/methods, saved project/download and two independent sessions.
+- [x] Record deployment ID/version, URL, limitations and rollback procedure; deliver verified Beta URL.
 
 ## Ledger
 Ruling: user requested autonomous continuation; execute inline without another design approval. A scoped deployment review is delegated at the end as required by executing-plans.
@@ -55,3 +55,17 @@ Pre-flight: Task 1 package is Task 2 verification target and Task 3 upload input
 Review ruling: fixed the Important finding that project structure was checked after field access. Inert malformed-object regressions fail before the fix and pass afterward; normal fitted projects still round-trip. Regraded the review's Minor selected-bundle gap to Important: deployment now compares every upload file with both its checksum and the reviewed source, and acceptance can exercise that exact bundle. A tampered bundle with updated internal checksums is rejected. No scientific algorithm files changed.
 
 Integration: PRs #1 and #2 were merged with expected-head checks. The resulting main source matches the verified v1.11.1 baseline. User completed Connect Cloud authorization for siyufang; credentials remain in the local rsconnect store. Public visibility is explicit in the deployment call. Cloud Linux startup, numerical UI behavior and public access remain release gates.
+
+## Verified public release — 2026-11-13
+
+- Public application: https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/
+- Connect Cloud content ID: `01a1d5a3-31ce-5e40-498d-e4d4dc298453`; account `siyufang`; application version `1.11.1`; deployment record version `1` (the host does not return a bundle ID here).
+- Application source: `009b3415b2d2a40292f9bc20325fdbcba82352bc`, merged by PR #3 into `8fcc3af2352983b1b67652de86486aa60f816597`; complete trees compared equal after merge. Subsequent fixes affect publishing tools, acceptance and documentation only; the 44 deployed application files are unchanged.
+- Initial publish stopped before upload because publishing-tool httr2 required rlang >= 1.3.0 while the application library provided 1.1.6. Resolved by using the isolated publishing-tool library and the pre-generated application dependency manifest. A regression rejects additional files or stale checksums in that manifest. The exact selected bundle passes acceptance. No application dependency was silently upgraded to solve the client problem.
+- Direct rsconnect upload completed successfully. Host UI reports Public; an independent HTTPS request without account cookies returned 200 with the application. Linux startup, assets and both analysis methods work.
+- Browser import: synthetic Excel plate preserved codes 001–007; synthetic CSV produced 168 physical peaks, eight acquisitions and zero flagged source rows. No real research inputs were uploaded.
+- Cloud synthetic download: 11 finite EI values per window (22 total) exactly match local refits, with maximum absolute error 0. Independent A04 sums match Tail10 `57821/28685` for both methods; Extended `88651/30843` Adaptive and `76076/30163` Bayesian.
+- Independent simultaneous browser session began empty. Saved project uploaded/restored successfully; downloaded restored fits and every result row are identical. Browser warning/error logs were empty.
+- Complete report ZIP downloaded with 39 nonempty artifacts; result CSV matches the project, and Cairo PNG/PDF outputs have valid signatures. Local evidence is retained only in ignored QA files and synthetic downloads.
+- Scope: computational research Beta, not biological/clinical validation. Sessions can expire; visitors must download Save project and retain original inputs. Use only synthetic or authorized de-identified data.
+- Rollback: use the matching reviewed source checkout and retained bundle/rsconnect record, verify hashes and frozen manifest, redeploy to this same content ID, then repeat synthetic public acceptance. Preserve prior source checkouts; never deploy the full research workspace.
