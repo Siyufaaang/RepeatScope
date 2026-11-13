@@ -173,7 +173,7 @@ rs_server <- function(input,output,session) {
     rv$p<-apply_roles(rv$p,rv$role_wells,input$batch_role,confirm=TRUE)
     rv$role_wells<-NULL;removeModal()
   }))
-  output$project_badge<-renderUI(tagList(span(class='status-pill',if(rv$p$synthetic)'SYNTHETIC WORKSPACE' else 'LOCAL WORKSPACE'),p(class='status-small',rv$p$id),p(class='status-small',rv$p$assay$name)))
+  output$project_badge<-renderUI(tagList(span(class='status-pill',if(rv$p$synthetic)'SYNTHETIC WORKSPACE' else if(isTRUE(getOption('repeatscope.public_beta',FALSE)))'SESSION WORKSPACE' else 'LOCAL WORKSPACE'),p(class='status-small',rv$p$id),p(class='status-small',rv$p$assay$name)))
   output$global_status<-renderUI({p<-display_project();r<-results();
     if(isTRUE(input$layout_draft$affects_fit))return(div(class='notice danger','Sample information has unapplied edits. Apply or discard them in Arrange plate; previous results are hidden.'))
     if(localization_pending() || prescreen_pending())return(div(class='notice danger','Localization / prescreen edits are pending. Apply current inputs, then Run. Previous results are hidden.'))

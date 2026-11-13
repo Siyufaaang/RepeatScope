@@ -25,11 +25,15 @@ localization_inputs_ui <- function() tagList(
     actionButton('save_localization','Apply analysis setup',class='btn-primary'))
 )
 rs_ui <- function() {
+  public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f7f8fa',fg='#25323b',primary='#286477',base_font='Segoe UI'),
     tags$head(tags$title('RepeatScope · v1.11.1'),tags$link(rel='stylesheet',href='app.css?v=111'),tags$link(rel='stylesheet',href='dashboard.css?v=111'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=19'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=111')),
     div(class='app-shell',
       div(class='topbar',div(class='brand',span(class='brand-symbol','R'),span('RepeatScope'),span(class='version-label','v1.11.1')),
         conditionalPanel("input.main_tabs !== 'welcome'",downloadButton('download_project','Save project'))),
+      if(public_beta)div(class='notice',strong('Public research Beta. '),
+        'Use synthetic or de-identified data you are authorized to upload. Files are processed on the hosting server. ',
+        'Save project before leaving; sessions can expire. Computational previews are not diagnostic results.'),
       uiOutput('workflow_progress'),
       tabsetPanel(id='main_tabs',type='hidden',
         tabPanel('Welcome',value='welcome',
@@ -39,7 +43,8 @@ rs_ui <- function() {
           tags$details(class='entry-options',tags$summary('Continue a saved project or try synthetic data'),
             section_card('Reopen a project',subtitle='A project contains restoration inputs, configuration, fitted results and audit history. A report ZIP is a separate deliverable.',
             fileInput('project_file','RepeatScope project',accept='.rds'),actionButton('restore_project','Restore project',class='btn-primary'),
-            p('Project files are local. The server does not provide long-term storage.')),
+            p(if(public_beta)'Save project downloads your session to your device. Restore uploads it to the hosting server; long-term storage is not provided.' else
+              'Project files are local. The server does not provide long-term storage.')),
             actionButton('load_demo','Load synthetic demo'),p(class='muted','Synthetic data demonstrates software behavior only.'))),
         tabPanel('Import plate',value='plate_import',h2('Start with your plate'),p('Import the layout first. You will assign groups and controls on the next page.'),section_card('Plate map',subtitle='Text sample codes retain leading zeros. Empty cells are previewed, never silently labelled NA.',
               fileInput('plate_file','8 × 12 Excel plate map',accept=c('.xlsx','.xls')),uiOutput('plate_sheet_ui'),textInput('plate_range','Excel range','A1:M9'),
@@ -186,7 +191,8 @@ rs_ui <- function() {
         actionButton('workflow_back','Back'),div(class='nav-message',textOutput('workflow_reason')),
         conditionalPanel("input.main_tabs !== 'results'",tags$button(id='workflow_next',type='button',
           class='btn btn-primary action-button',disabled='disabled','Next →')))),
-      div(class='footer','RepeatScope · Local research prototype · Your input and uncertainty remain traceable.')
+      div(class='footer',if(public_beta)'RepeatScope · Public research Beta · Your input and uncertainty remain traceable.' else
+        'RepeatScope · Local research prototype · Your input and uncertainty remain traceable.')
     ))
 }
 
