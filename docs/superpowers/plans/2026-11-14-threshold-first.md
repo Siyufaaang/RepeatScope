@@ -98,3 +98,14 @@ frozen trace were unchanged. Screenshots and logs stay in ignored local qa/.
 - Implementation choice: hierarchical experimental assignment uses the same
   eligible input inventory, preserving the application's shared assignment floor.
 - Keep the local branch/worktree and localhost preview. No push or deployment.
+
+## Authorized public release — 2026-11-14
+The user approved publishing the verified threshold-first logic, single-chart
+animation and updated methodology to the existing public website. This supersedes
+the earlier local-only restriction. Runtime source remains the reviewed commits
+15bcbfc and ba6e405; no additional scientific changes are part of publication.
+- [x] Recheck complete R/JS suites and the exact 55-file release bundle.
+- [ ] Integrate the reviewed source with expected-head protection.
+- [ ] Deploy to existing Connect Cloud content and verify public behavior.
+Use the tested application dependency manifest and the existing deployment record;
+retain the previous release bundle for rollback. Publish synthetic assets only.

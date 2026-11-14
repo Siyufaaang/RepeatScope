@@ -28,5 +28,7 @@ do not cut off later eligible candidates. Use automatic playback with 3–4 seco
 per step, pause/replay and previous/next buttons. Manual stepping pauses playback
 until Play is clicked. Respect reduced motion.
 
-Keep public hosting unchanged. Do not copy real research inputs into tracked
-fixtures or browser assets. No website deployment, remote push, or video release.
+Initial implementation stayed local. On 2026-11-14 the user approved publishing
+the verified changes together with the updated methodology to the existing public
+website. Do not copy real research inputs into tracked fixtures or browser assets.
+Video production is outside this release.

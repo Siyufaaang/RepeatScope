@@ -8,12 +8,12 @@ v1.11.1 fixes repeated flashing in Reference & analysis when typing ahead of a s
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 
-Local development change (not published): both methods now exclude peaks below
+Both methods exclude peaks below
 3% of the target's own modal height before seed calibration, spacing updates and
 assignment. Equality is included. Physical peaks, modal and raw search support
 remain available; missing repeat indices are not compressed. A low peak excludes
 only itself, not later eligible candidates. Previously saved
-fits must be rerun under this policy. The local synthetic teaching animation
+fits must be rerun under this policy. The synthetic teaching animation
 shows inventory, the modal and tail, the threshold, exclusion, assignment and EI
 in that order. One chart uses a labelled square-root height scale with ticks in
 thousands of original RFU; thresholding and EI retain untransformed heights.
