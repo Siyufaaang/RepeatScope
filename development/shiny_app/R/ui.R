@@ -28,7 +28,7 @@ rs_ui <- function() {
   public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f5f6f7',fg='#161819',primary='#161819',base_font='Segoe UI'),
     tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=114'),tags$link(rel='stylesheet',href='dashboard.css?v=114'),tags$link(rel='stylesheet',href='visual.css?v=114'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=114'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=114'),tags$script(src='visual.js?v=114')),
-    tags$head(tags$link(rel='stylesheet',href='learning.css?v=114'),tags$script(src='field-help.js?v=114'),tags$script(src='method-learning.js?v=114')),
+    tags$head(tags$link(rel='stylesheet',href='learning.css?v=threshold-first-1'),tags$script(src='field-help.js?v=114'),tags$script(src='method-learning.js?v=threshold-first-1')),
     div(class='app-shell',
       div(class='topbar',tags$a(href='#landing-top','data-home-section'='landing-top',class='brand',brand_mark(),span('RepeatScope'),span(class='version-label','Beta')),
         tags$nav(class='top-actions','aria-label'='Main navigation',

@@ -173,7 +173,7 @@ dashboard_data <- function(p,results,variant='automatic') {
   })
   list(wells=wells,threshold=100*p$threshold,window=p$window,stale=stale,
     gene=p$assay$gene%||%'',synthetic=p$synthetic,
-    filter=paste0('Channel ',if(nzchar(p$assay$channel))p$assay$channel else 'all',' · Size >= ',p$assay$minimum_bp,' bp'))
+    filter=paste0('Assignment floor 3% · Channel ',if(nzchar(p$assay$channel))p$assay$channel else 'all',' · Size >= ',p$assay$minimum_bp,' bp'))
 }
 method_colors <- c(adaptive='#167d9a',bayesian='#cf8051',hierarchical='#8264a5')
 overview_plot <- function(results,synthetic=FALSE) {
@@ -217,7 +217,7 @@ tail_plot <- function(p,record_id,variant='automatic',decisions=NULL) {
     ggplot2::geom_vline(xintercept=f$modal_size,linetype='dotted',color='#50636a')+
     ggplot2::facet_grid(~Method,labeller=ggplot2::labeller(Method=labels))+ggplot2::scale_color_manual(values=c(Included='#167d9a','Not included'='#aebdc2','Method-only included'='#c85a42',Modal='#713b91'))+
     ggplot2::coord_cartesian(xlim=c(f$modal_size-1,f$upper+1),ylim=c(0,maxh*1.08))+
-    ggplot2::labs(title=title,subtitle=paste0('Stick plot from sized peaks · ',100*p$threshold,'% own modal · ',p$window,
+    ggplot2::labs(title=title,subtitle=paste0('Assignment floor 3% · EI filter ',100*p$threshold,'% own modal · ',p$window,
       '\nBayesian shading: ',100*p$assay$predictive_level,'% pointwise position prediction intervals (bp)',
       '\nThese are not peak probabilities or EI uncertainty intervals.'),
       caption=paste(paste(rr$Method,rr$Preview_reason,sep=': '),collapse='\n'),

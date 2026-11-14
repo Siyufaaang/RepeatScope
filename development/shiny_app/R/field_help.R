@@ -92,7 +92,7 @@ add_field_help('control_scope','Required for control pass','Select whole assay/p
 add_field_help('control_batches','Required for batch scope','Comma-separated batch IDs matching sample Batch ID values. Other batches are not cleared by this pass.')
 add_field_help('control_evidence','Required for control pass','Actual control criteria, observed results and review source. No automatic water subtraction.')
 add_field_help('window','Optional','Tail10 uses relative Δ0–10; Extended uses the frozen search support, not total sample repeat count.')
-add_field_help(c('threshold','threshold_number'),'Optional','Percent of this target’s own modal height. 3 means 3%; filtering updates EI without retraining.')
+add_field_help(c('threshold','threshold_number'),'Optional','Additional EI filter, in percent of this target’s own modal height. Both methods already exclude peaks below 3% before calibration and assignment. Lower values cannot restore excluded peaks; changing this reporting filter does not refit the model.')
 add_field_help('variant','Optional','Automatic or an existing reviewed result. Original results remain available.')
 add_field_help('include_originals','Optional','Off by default. Include stored original uploads only if wanted; Save project already includes restoration data.')
 add_field_help(c('loc_name','loc_gene','loc_counting'),'Required for target assignment','State the assay, locus and counted repeat definition. This is independent of Group.')
