@@ -67,7 +67,7 @@ A project stores the profile snapshot it used; reopening does not silently repla
 
 ## Hosted research Beta
 
-Public Beta (verified 2026-11-13): [Open RepeatScope](https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/). Release evidence and rollback details are in [the release plan](docs/superpowers/plans/2026-11-13-public-beta.md#verified-public-release--2026-11-13).
+Public Beta (verified 2026-11-14): [Open RepeatScope](https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/). The latest threshold-first analysis, animation and methodology acceptance is recorded in [the release plan](docs/superpowers/plans/2026-11-14-threshold-first.md#authorized-public-release--2026-11-14). Initial hosting and rollback details remain in [the public Beta plan](docs/superpowers/plans/2026-11-13-public-beta.md#verified-public-release--2026-11-13).
 
 The hosted entry point preserves the original source layout and scientific calculations. Visitors start an empty session or load the labelled synthetic demo. Uploads are processed by the hosting server; use only synthetic or de-identified data you are authorized to upload. Session state is temporary. Download **Save project** before leaving and retain your original inputs. A public website does not make another visitor's session your project, and computational previews are not diagnostic clearance.
 

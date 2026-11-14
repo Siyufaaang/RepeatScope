@@ -105,7 +105,29 @@ animation and updated methodology to the existing public website. This supersede
 the earlier local-only restriction. Runtime source remains the reviewed commits
 15bcbfc and ba6e405; no additional scientific changes are part of publication.
 - [x] Recheck complete R/JS suites and the exact 55-file release bundle.
-- [ ] Integrate the reviewed source with expected-head protection.
-- [ ] Deploy to existing Connect Cloud content and verify public behavior.
+- [x] Integrate the reviewed source with expected-head protection.
+- [x] Deploy to existing Connect Cloud content and verify public behavior.
 Use the tested application dependency manifest and the existing deployment record;
 retain the previous release bundle for rollback. Publish synthetic assets only.
+
+Release evidence:
+- PR #8 merged as `bf2f3351e64d11f05cff9efcc83338273eef129e` with expected head
+  `b6a5df19f2210b69360b9e02a4eeabe4ce58025d`; complete source trees matched.
+- Fresh verification: 27 R suites, six JavaScript files and exact-bundle startup,
+  EI arithmetic, save/restore and session-isolation acceptance passed. The
+  repository manifest contains 118 reviewed files. Existing locale/package
+  version warnings remained; there were no test failures.
+- Published 55 runtime files with 61 frozen dependencies to existing content
+  `01a1d5a3-31ce-5e40-498d-e4d4dc298453`, using account `siyufang` and its retained
+  deployment record. The prior release bundle remains available for rollback.
+- Public URL: https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/
+  Unauthenticated HTTP requests for the animation JS, CSS, methodology HTML and
+  synthetic trace returned 200; all four SHA256 hashes match the released source.
+- Public browser checks confirmed one square-root chart, threshold before
+  individual exclusions, continued later candidates, 15 simultaneous Bayesian
+  intervals, and working Back/Next with playback paused. Browser error logs were
+  empty in the animation and separate synthetic demo sessions.
+- The downloaded cloud synthetic project uses `threshold-first-3pct-v1`. Both
+  windows reproduce all 22 finite local EI values with maximum absolute error 0;
+  independent A04 arithmetic also matches. Screenshots, logs and synthetic
+  downloads remain local and outside the deployed file list.
