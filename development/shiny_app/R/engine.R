@@ -57,6 +57,9 @@ validate_analysis_config <- function(a) {
   if(a$repeat_bp<=0 || a$spacing_low<=0 || a$spacing_high<a$spacing_low || a$tolerance<=0 || a$envelope_fraction<0 || a$envelope_fraction>1 || a$minimum_support<=0 || a$envelope_margin<0)stop('Invalid repeat spacing or search support.')
   invisible(TRUE)
 }
+assignment_candidates <- function(peaks,modal_height) {
+  peaks[peaks$Height>=assignment_policy()$threshold_fraction*modal_height,,drop=FALSE]
+}
 fit_record <- function(peaks,record,assay) {
   env<-load_methods();validate_analysis_config(assay)
   p<-peaks[peaks$Record_ID==record$Source_ID & peaks$Size>=assay$minimum_bp & peaks$Size>=record$ROI_low & peaks$Size<=record$ROI_high,,drop=FALSE]
@@ -79,10 +82,15 @@ fit_record <- function(peaks,record,assay) {
       ix<-which(abs(p$Size-size)<1e-8);if(length(ix)!=1)stop('Modal Size does not uniquely identify a physical peak.')
     }
     m<-p$Size[ix];mh<-p$Height[ix]
+    # Preserve modal and raw physical support; weak peaks cannot affect either model.
+    eligible<-assignment_candidates(p,mh)
+    base$assignment_policy<-assignment_policy()
+    base$assignment_threshold_rfu<-assignment_policy()$threshold_fraction*mh
+    base$assignment_eligible_ids<-eligible$Peak_ID
     cfg<-env$bayes_tail_config(prior_mean=assay$nominal_spacing,prior_kappa=assay$prior_kappa,prior_alpha=assay$prior_alpha,prior_beta=assay$prior_beta,
       seed_gap_low=assay$spacing_low,seed_gap_high=assay$spacing_high,seed_min_rfu=assay$seed_min_rfu,seed_modal_fraction=assay$seed_fraction,
       seed_dominance=assay$seed_dominance,seed_max=as.integer(assay$seed_max),seed_min=as.integer(assay$seed_min),seed_predictive=1,predictive_level=assay$predictive_level)
-    first<-env$assign_bayesian_tail(p,m,mh,cfg)
+    first<-env$assign_bayesian_tail(eligible,m,mh,cfg)
     eligible_sizes<-p$Size[p$Size>m & p$Height>=assay$envelope_fraction*mh]
     upper<-min(max(p$Size),max(c(m+assay$minimum_support,eligible_sizes+assay$envelope_margin)))
     if(is.finite(assay$extended_upper)) {
@@ -92,7 +100,7 @@ fit_record <- function(peaks,record,assay) {
     slope<-if(is.null(first$fit))assay$nominal_spacing else first$fit$mean
     limit<-max(10L,as.integer(ceiling((upper-m)/min(assay$spacing_low,slope))+2L))
     if(!is.finite(limit) || limit>5000)stop('Search support exceeds 5,000 repeat indices; review target or assay spacing.')
-    cfg$max_delta<-limit;inside<-p[p$Size<=upper+1e-8,,drop=FALSE]
+    cfg$max_delta<-limit;inside<-eligible[eligible$Size<=upper+1e-8,,drop=FALSE]
     b<-env$assign_bayesian_tail(inside,m,mh,cfg)
     a<-env$walk_adaptive_tail(inside,m,mh,max_delta=limit,nominal_repeat_size=assay$nominal_spacing,tolerance_bp=assay$tolerance,spacing_bounds_bp=c(assay$spacing_low,assay$spacing_high))
     a$selected$Delta<-a$selected$Delta_CAG;a$status<-'calibrated'
@@ -109,7 +117,8 @@ fit_project <- function(p) {
   if(!is.null(p$localization))fits<-check_target_tail_ownership(p,fits)
   p$fit<-list(id=paste0('run-',format(Sys.time(),'%Y%m%dT%H%M%S'),'-',substr(object_hash(fits),1,8)),time=stamp(),fingerprint=analysis_fingerprint(p),
     assay=p$assay,reference=p$reference,structure=p$structure,record_inputs=p$records,records=fits,
-    versions=list(adaptive='v2.4 Method 02 walk_adaptive_tail (unchanged)',bayesian='benchmark/bayesian/model.R assign_bayesian_tail; seed_predictive=1 (unchanged)',adapter='RepeatScope 1.10; non-normal EI with independent range classification'))
+    assignment_policy=assignment_policy(),
+    versions=list(adaptive='v2.4 Method 02 walk_adaptive_tail; input prefiltered at 3% own modal',bayesian='benchmark/bayesian/model.R assign_bayesian_tail; seed_predictive=1; input prefiltered at 3% own modal',adapter='threshold-first-3pct-v1; non-normal EI with independent range classification'))
   p$audit<-c(p$audit,list(list(time=stamp(),action='fit',run=p$fit$id)))
   p$hierarchical$result<-NULL;p
 }
@@ -149,7 +158,8 @@ seed_failure_reason <- function(f) {
   if(!is.data.frame(b$seed_audit) || !nrow(b$seed_audit))return(why)
   z<-tail(b$seed_audit,1)
   if(!is.finite(z$Low) || !is.finite(z$High))return(why)
-  candidates<-f$peaks[f$peaks$Size>=z$Low-1e-8 & f$peaks$Size<=z$High+1e-8,,drop=FALSE]
+  eligible<-assignment_candidates(f$peaks,f$modal_height)
+  candidates<-eligible[eligible$Size>=z$Low-1e-8 & eligible$Size<=z$High+1e-8,,drop=FALSE]
   peaks<-if(nrow(candidates))paste(sprintf('%.2f bp / %g RFU',candidates$Size,candidates$Height),collapse=', ') else 'no candidate'
   sprintf('%s: seed %s window %.2f–%.2f bp; %s; requires >= %.2f RFU and %s accepted seeds (have %s).',
     why,z$Delta,z$Low,z$High,peaks,b$seed_floor_rfu%||%NA_real_,b$config$seed_min%||%3L,nrow(b$seeds))
@@ -205,6 +215,8 @@ threshold_results <- function(project,p=project$threshold,window=project$window,
         Target_status=target$status,Target_description=target$text,
         N_included=if(is.finite(preview))v$N else 0L,N_tail=if(is.finite(preview))sum(v$Peaks$Delta>0) else 0L,
         Denominator_RFU=if(is.finite(preview))sum(v$Peaks$Height) else NA_real_,Threshold_RFU=p*f$modal_height,
+        Assignment_threshold_fraction=f$assignment_policy$threshold_fraction%||%NA_real_,
+        Assignment_threshold_RFU=f$assignment_threshold_rfu%||%NA_real_,
         Modal_peak_ID=f$modal_id,
         Modal_bp=f$modal_size,Modal_RFU=f$modal_height,Search_upper_bp=f$upper,Computed_max_delta=f$max_delta,Category=rec$Category,
         Representative=isTRUE(rec$Representative) || (rec$Duplicate_status=='unreviewed' && !nzchar(rec$Material_ID)),Duplicate_status=rec$Duplicate_status,Individual_ID=rec$Individual_ID,Material_ID=rec$Material_ID,
@@ -234,8 +246,12 @@ peak_decisions <- function(project,p=project$threshold,window=project$window,var
       z$Analysis_record<-id;z$Method<-method;z$Delta<-if(nrow(s))s$Delta[j] else NA_real_
       z$Assigned<-!is.na(j);z$Included<-z$Assigned & z$Delta>=0 & z$Delta<=kd & z$Height>=p*f$modal_height & is.finite(row$Preview_EI[1])
       z$Modal<-z$Peak_ID%in%f$modal_id;z$Candidate<-z$Peak_ID%in%f$peaks$Peak_ID
+      z$Assignment_eligible<-z$Candidate & z$Peak_ID%in%f$assignment_eligible_ids
       z$In_search_support<-z$Size>=f$modal_size & z$Size<=f$upper;z$Window<-window;z$Threshold<-p;z$Variant<-variant
       z$Decision<-ifelse(z$Included,'included',ifelse(!z$Assigned,'not assigned',ifelse(z$Delta>kd,'outside window','below height threshold')))
+      floor<-f$assignment_threshold_rfu%||%NA_real_
+      z$Decision[z$Candidate & is.finite(floor) & z$Height<floor]<-'below 3% assignment floor'
+      z$Decision[z$Peak_ID%in%f$manual_exclusions]<-'manually excluded from reviewed assignment'
       z$Decision[!z$Candidate]<-'outside candidate filter / target region'
       if(!is.finite(row$Preview_EI[1]))z$Decision<-paste('not used for EI:',row$Preview_status[1])
       if(row$Preview_status[1]=='stale_results'){z$Modal<-FALSE;z$Assigned<-FALSE;z$Delta<-NA_real_}
@@ -283,7 +299,8 @@ fit_hierarchical <- function(project,pool) {
         prior<-env$fit_case_lowo(z,id,'explicit_pool',curve=TRUE,effect_mult=1)
         seeds<-f$bayesian$seeds;fit<-env$condition_well(prior,seeds$Delta,seeds$Size-f$modal_size)
         pred<-env$predict_hier(fit,seq_len(f$max_delta),f$modal_size,project$assay$predictive_level)
-        a<-env$assign_hier(f$peaks[f$peaks$Size<=f$upper+1e-8,,drop=FALSE],f$modal_id,seeds,pred)
+        eligible<-assignment_candidates(f$peaks,f$modal_height)
+        a<-env$assign_hier(eligible[eligible$Size<=f$upper+1e-8,,drop=FALSE],f$modal_id,seeds,pred)
         result$status<-'calibrated';result$reason<-'';result$selected<-a$selected;result$predictions<-a$predictions;result$candidates<-a$candidates
         result$fit<-fit;result$prior<-prior;result$target_seeds<-seeds;result
       },error=function(e){result$status<-'analysis_failed';result$reason<-conditionMessage(e);result})

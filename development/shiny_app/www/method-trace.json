@@ -1,5 +1,11 @@
 {
-  "source": "SYNTHETIC A04 · Extended · 3% · unchanged RepeatScope methods",
+  "source": "SYNTHETIC A04 · Extended · 3% assignment floor before both methods",
+  "assignmentPolicy": {
+    "id": "threshold-first-3pct-v1",
+    "threshold_fraction": 0.029999999999999999,
+    "rule": "Height >= 0.03 * own modal height before seed calibration, spacing updates and peak assignment"
+  },
+  "eligibleIds": ["SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-0", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-1", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-2", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-3", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-4", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-5", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-6", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-7", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-8", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-9", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-10", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-11", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-12", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-13", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-18", "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-19"],
   "modal": 208,
   "modalHeight": 10000,
   "threshold": 0.029999999999999999,
@@ -218,38 +224,17 @@
       "Size": 248.88
     },
     {
-      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15",
-      "Delta": 15,
-      "Expected_size_bp": 251.80000000000001,
-      "Local_repeat_spacing_bp": 2.9200000000000004,
-      "Size": 251.80000000000001
-    },
-    {
-      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16",
-      "Delta": 16,
-      "Expected_size_bp": 254.72,
-      "Local_repeat_spacing_bp": 2.9199999999999999,
-      "Size": 254.72
-    },
-    {
-      "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17",
-      "Delta": 17,
-      "Expected_size_bp": 257.63999999999999,
-      "Local_repeat_spacing_bp": 2.9200000000000004,
-      "Size": 257.63999999999999
-    },
-    {
       "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-18",
       "Delta": 18,
       "Expected_size_bp": 260.56,
-      "Local_repeat_spacing_bp": 2.9199999999999999,
+      "Local_repeat_spacing_bp": 2.9200000000000004,
       "Size": 261.00999999999999
     },
     {
       "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-19",
       "Delta": 19,
-      "Expected_size_bp": 263.55297297297295,
-      "Local_repeat_spacing_bp": 2.9238406827880512,
+      "Expected_size_bp": 263.59493651979091,
+      "Local_repeat_spacing_bp": 2.9260492905153099,
       "Size": 263.93000000000001
     }
   ],
@@ -459,9 +444,9 @@
         "High": 252.0435271922635,
         "Scale": 0.10717083587042642,
         "Level": 0.94999999999999996,
-        "Status": "unique_candidate",
-        "N_candidates": 1,
-        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15"
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
       },
       {
         "Delta": 16,
@@ -470,9 +455,9 @@
         "High": 254.97666599285844,
         "Scale": 0.11294680033159082,
         "Level": 0.94999999999999996,
-        "Status": "unique_candidate",
-        "N_candidates": 1,
-        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16"
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
       },
       {
         "Delta": 17,
@@ -481,9 +466,9 @@
         "High": 257.90995053442941,
         "Scale": 0.11878719045619379,
         "Level": 0.94999999999999996,
-        "Status": "unique_candidate",
-        "N_candidates": 1,
-        "Chosen_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17"
+        "Status": "no_candidate",
+        "N_candidates": 0,
+        "Chosen_ID": null
       },
       {
         "Delta": 18,
@@ -646,18 +631,6 @@
       {
         "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-14",
         "Delta": 14
-      },
-      {
-        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-15",
-        "Delta": 15
-      },
-      {
-        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-16",
-        "Delta": 16
-      },
-      {
-        "Peak_ID": "SYNTHETIC-plate-01|A04|SYNTHETIC-injection-1|SYN-A04-17",
-        "Delta": 17
       }
     ]
   },

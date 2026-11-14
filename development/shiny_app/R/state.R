@@ -2,6 +2,8 @@
 text_value <- function(x) { x<-as.character(x);x[is.na(x)]<-'';x }
 stamp <- function() format(Sys.time(),'%Y-%m-%dT%H:%M:%SZ',tz='UTC')
 object_hash <- function(x) digest::digest(x,algo='sha256',serialize=TRUE)
+assignment_policy <- function() list(id='threshold-first-3pct-v1',threshold_fraction=.03,
+  rule='Height >= 0.03 * own modal height before seed calibration, spacing updates and peak assignment')
 well_coordinates <- function() as.vector(t(outer(LETTERS[1:8],sprintf('%02d',1:12),paste0)))
 normalize_well <- function(x) {
   x<-toupper(trimws(as.character(x)))
@@ -197,7 +199,7 @@ undo_plate <- function(p) {
 analysis_fingerprint <- function(p) {
   rec<-if(nrow(p$records))p$records[,intersect(c('Record_ID','Source_ID','Allele','Modal_rule','Modal_peak_ID','ROI_low','ROI_high'),names(p$records)),drop=FALSE] else NULL
   assay<-p$assay[setdiff(names(p$assay),c('name','gene','organism','source','validation_scope','status','include_intermediate','ranges'))]
-  inputs<-list(policy='non-normal-ei-v1.10',peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
+  inputs<-list(policy=assignment_policy(),peaks=p$peaks,records=rec,assay=assay,reference=p$reference,structure=p$structure,
     disease_profile=p$disease_profile,profile_custom=p$profile_custom,localization=p$localization,prescreen=p$prescreen,target_overrides=p$target_overrides,localization_pending=p$localization_pending)
   # Preview structures supply the active theoretical mapping too. Preserve
   # existing confirmed-structure hashes, but never reuse a changed draft fit.

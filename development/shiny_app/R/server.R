@@ -215,7 +215,7 @@ rs_server <- function(input,output,session) {
     }
     tagList(div(class='plate-grid',cells),div(class='plate-group-key',lapply(groups,function(g)span(tags$i(style=paste0('background:',palette[[g]])),g))))
   })
-  output$threshold_note<-renderText(paste0('Height >= ',format(rv$p$threshold,digits=5),' × own modal height (',100*rv$p$threshold,'%). Seeds, fit and search support stay frozen.'))
+  output$threshold_note<-renderText(paste0('Both methods first exclude peaks below 3% of their own modal before calibration and assignment. EI additionally requires height >= ',format(rv$p$threshold,digits=5),' × own modal (',100*rv$p$threshold,'%). A value below 3% cannot restore excluded peaks. Seeds, fit and search support stay frozen when this EI filter changes.'))
   output$overview_plot<-renderPlot({r<-results();if(nrow(r))r<-r[r$Role%in%c('sample','positive_control'),,drop=FALSE];overview_plot(r,rv$p$synthetic)},res=110)
   output$all_results<-renderTable({r<-results();if(nrow(r)){
     r$Preview_EI[!r$Role%in%c('sample','positive_control')]<-NA_real_

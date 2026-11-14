@@ -110,6 +110,9 @@ development/shiny_app/www/method-learning.js
 development/shiny_app/www/method-trace.json
 development/shiny_app/tests/test_learning_ui.R
 development/shiny_app/tests/test_learning_player.cjs
+development/shiny_app/tests/test_threshold_first.R
+docs/superpowers/specs/2026-11-14-threshold-first.md
+docs/superpowers/plans/2026-11-14-threshold-first.md
 tools/generate_method_trace.R
 docs/superpowers/specs/2026-11-13-visual-method-learning.md
 docs/superpowers/plans/2026-11-13-visual-method-learning.md

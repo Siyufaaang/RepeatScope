@@ -80,7 +80,7 @@ help_detail('loc_uncertainty','Optional','± bp','0.5 gives a ±0.5 bp margin; b
   'A supplied CE length margin, propagated into repeat units. It is not an EI confidence interval. Enter 0 only for an explicit zero-margin assumption.')
 help_detail('loc_mapping_source','Required','Calibration / uncertainty source','CE standards run ID and calibration report version')
 help_detail('window','Required','Relative repeat steps','Tail10 = Δ0–10; Extended = fitted support','Keep or choose an EI reporting window.')
-help_detail(c('threshold','threshold_number'),'Required','Percent of own modal','3 means 3%, not 0.03%','Keep or set a value from 0 to 100.')
+  help_detail(c('threshold','threshold_number'),'Required','Additional EI filter: percent of own modal','3 means 3%, not 0.03%','Both methods first exclude peaks below 3% before assignment. This 0–100 reporting filter cannot restore those peaks.')
 help_detail('record_id','Conditional','Acquisition / target identity','A01 · 001 · injection-1 · expanded-1','Select a record to inspect or review it.')
 help_detail('target_candidate_peak','Conditional','Physical peak, bp / RFU','208.42 bp · 10000 RFU','Required when applying a manual target decision.')
 help_detail('manual_target_kind','Conditional','Research interpretation','Intermediate; Expanded, provisional','Required when applying a manual target decision.')

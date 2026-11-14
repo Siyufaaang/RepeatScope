@@ -8,6 +8,14 @@ v1.11.1 fixes repeated flashing in Reference & analysis when typing ahead of a s
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 
+Local development change (not published): both methods now exclude peaks below
+3% of the target's own modal height before seed calibration, spacing updates and
+assignment. Equality is included. Physical peaks, modal and raw search support
+remain available; missing repeat indices are not compressed. Previously saved
+fits must be rerun under this policy. The local synthetic teaching animation
+shows inventory, tail zoom, the threshold, exclusion, assignment and EI in that
+order, with automatic playback and simultaneous Bayesian tail intervals.
+
 ## Run
 
 Use R 4.5 or a compatible version, with `shiny`, `bslib`, `jsonlite`, `readxl`, `writexl`, `zip`, `curl`, `ggplot2` and `digest` installed. Run from the repository root:
@@ -37,7 +45,7 @@ Leading zeros remain text. Blank pasted cells clear their field; omitted columns
 ## Disease profiles and EI
 Intermediate targets calculate EI. Normal targets are excluded by category; missing or ambiguous physical targets remain unavailable, not zero. The application records provisional range estimates separately from EI and formal evidence/QC. Old v1.9 fits require a rerun under the new allocation policy.
 
-New projects default to **Tail10**, which uses selected peaks at repeat offsets Δ0–10 from the modal peak. **Extended** uses selected peaks throughout the frozen search support. Both apply the chosen height threshold. EI is the peak-height-weighted mean repeat offset within that window; changing the window recalculates EI from the existing fits without refitting either model. If the methods differ only beyond Δ10, their Tail10 EI can be exactly equal while their Extended EI differs. Compare methods using the same window and threshold; the report header records both settings.
+New projects default to **Tail10**, which uses selected peaks at repeat offsets Δ0–10 from the modal peak. **Extended** uses selected peaks throughout the frozen search support. Both methods first enforce the 3% assignment floor. The chosen reporting height threshold then applies an additional EI filter; values below 3% cannot restore excluded peaks. EI is the peak-height-weighted mean repeat offset within that window; changing the reporting window or threshold recalculates EI from existing assignments without refitting either model. If the methods differ only beyond Δ10, their Tail10 EI can be exactly equal while their Extended EI differs. Compare methods using the same window and threshold; exports record the assignment policy separately.
 
 The versioned JSON catalog at `development/shiny_app/profiles/diseases.json` covers ATXN1, ATXN2, ATXN3, CACNA1A/SCA6, ATXN7, TBP/SCA17, HTT, ATN1 and AR. Each profile includes aliases, counting notes, range bands, source URL and reviewed date. Conditional boundaries and interruption dependence are retained. This catalog is not a claim of support for every repeat disease or a clinical diagnostic service.
 
@@ -87,6 +95,8 @@ node development/shiny_app/tests/test_layout_paste.cjs
 node development/shiny_app/tests/test_layout_drafts.cjs
 node development/shiny_app/tests/test_dashboard_identity.cjs
 node development/shiny_app/tests/test_dashboard_compact.cjs
+node development/shiny_app/tests/test_learning_player.cjs
+node development/shiny_app/tests/test_visual_semantics.cjs
 ```
 
 The synthetic suite covers state, import/export, reference handling, methods, eligibility/QC, server navigation, threshold synchronization, v1.9 layout edits, atomic rejection, independent drafts and Undo. An independently summed fixture checks equal Tail10 values, distinct Extended values, separate method peak flags and unchanged fits when the window changes. The local real-data checks are separate from these shareable tests.

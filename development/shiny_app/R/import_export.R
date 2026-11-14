@@ -64,7 +64,9 @@ analysis_manifest <- function(p,variant='automatic') {
   run<-if(variant=='automatic')p$fit else p$reviewed[[variant]]
   if(variant!='automatic' && is.null(run))stop('Reviewed run unavailable.')
   list(product='RepeatScope local prototype',schema=p$schema,project_id=p$id,created=p$created,exported=stamp(),
-  synthetic=p$synthetic,threshold_fraction=p$threshold,threshold_percent=100*p$threshold,threshold_rule='Height >= p * own modal height',window=p$window,
+  synthetic=p$synthetic,threshold_fraction=p$threshold,threshold_percent=100*p$threshold,
+  threshold_rule='Height >= p * own modal height within the frozen assignment; reporting thresholds below the assignment floor cannot restore excluded peaks',
+  assignment_policy=run$assignment_policy,window=p$window,
   EI_definition='sum(own Height * Delta) / sum(own Height), modal included; conditional on selected peaks',
   repeat_definition='Estimated_repeat_number = (current fitted modal bp - selected mapping intercept bp) / selected mapping slope bp per repeat; one shared estimate per acquisition/allele, independent of EI method, threshold and window.',
   repeat_margin='Repeat_margin_low/high propagate only the supplied CE +/- bp margin through the selected mapping; not a confidence interval, sequence-confirmed count or calibration-parameter uncertainty. Unknown margin stays blank. Reported_repeat_low/high are separately entered evidence.',
