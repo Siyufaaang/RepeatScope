@@ -1,10 +1,17 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
-const {learningFrames}=require('../www/method-learning.js');
+const {learningFrames,learningY}=require('../www/method-learning.js');
+assert.equal(typeof learningY,'function','the chart needs a square-root height projection');
+assert.equal(learningY(0,10000,20,220),220,'zero RFU remains on the baseline');
+assert.equal(learningY(10000,10000,20,220),20,'the 10000 RFU modal fits in the chart');
+assert.equal(learningY(2500,10000,20,220),120,'one quarter of modal RFU is half the displayed height');
+assert.ok(Math.abs(learningY(300,10000,20,220)-185.35898384862244)<1e-10,
+  'the 3% line uses the same nonlinear projection as the peaks');
 const trace=JSON.parse(fs.readFileSync('development/shiny_app/www/method-trace.json','utf8'));
 const before=JSON.stringify(trace);
 const eligible=new Set(trace.peaks.filter(p=>p.Height>=trace.threshold*trace.modalHeight).map(p=>p.Peak_ID));
 for(const method of ['adaptive','bayesian','ei']){
   const frames=learningFrames(trace,method);
+  assert.ok(frames.every(f=>f.duration>=3000),'every animation page stays visible for at least three seconds');
   assert.deepEqual(frames.slice(0,4).map(f=>f.phase),['inventory','zoom','threshold','filter'],
     'physical inventory, zoom and 3% filter must precede any assignment');
   assert.equal(frames[2].threshold,true);assert.equal(frames[3].filtered,true);

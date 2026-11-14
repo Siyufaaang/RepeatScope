@@ -55,7 +55,30 @@ The user explicitly authorized local implementation after comparing both orders.
 This plan records that decision; it does not introduce another approval gate.
 Implementation stays in this chat. Repository-required commits remain local.
 
-## Verification record — 2026-11-14
+## Approved animation follow-up — 2026-11-14
+The user selected display mockup A: one square-root height chart, with original
+RFU ticks labelled in thousands and no clipping of the modal. Keep the physical
+inventory first, slow playback to 3–4 seconds, and restore previous/next controls
+that pause playback. Preserve individual peak filtering without tail truncation;
+no scientific model changes or public deployment are part of this follow-up.
+- [x] Verify the new projection test fails, then implement the display transform.
+- [x] Replace the two plots and add slower playback with manual navigation.
+- [x] Verify browser behavior and full R/JS suites.
+- [x] Verify the staged repository manifest; prepare the verified local commit.
+
+Follow-up validation: all 27 shareable R suites and six JavaScript test files
+pass. Existing R startup locale/package-version warnings remain. Browser QA
+confirmed one plot, original RFU scale labels, threshold-before-exclusion,
+unchanged physical coordinates, simultaneous Bayesian intervals (15 visible
+windows), and retained eligible Adaptive peaks after the low-height gap.
+Previous/Next, endpoint disabling, Play resume, and pause persistence across
+method changes and a 760 px responsive layout were exercised. The viewport was
+reset. Reduced-motion handling was reviewed in code, not OS-emulated.
+A read-only reviewer found a pause reset on method-tab selection; the behavior
+was reproduced in the browser, fixed, and checked again. Scientific code and the
+frozen trace were unchanged. Screenshots and logs stay in ignored local qa/.
+
+## Initial threshold-first verification record — 2026-11-14
 - Baseline and final full R runs pass: 27 synthetic suites in the final run.
   Six JavaScript test files pass. Existing R startup locale/package-version
   warnings were present before the change; no test failures remain.
