@@ -27,8 +27,13 @@ context.dashboardPeakInk(peak,208,'Adaptive');
 assert.equal(JSON.stringify(peak),before,'presentation never mutates the original peak');
 console.log('VISUAL COMPARISON AND PEAK SEMANTICS PASS');
 const handlers={}, domCallbacks=[];
+const notificationLayout={height:76,properties:{}};
+const header={getBoundingClientRect:()=>({height:notificationLayout.height})};
 const navigation={
-  document:{addEventListener(type,handler){if(type==='DOMContentLoaded')domCallbacks.push(handler);}},
+  document:{addEventListener(type,handler){if(type==='DOMContentLoaded')domCallbacks.push(handler);},
+    querySelector:selector=>selector==='.site-header'?header:null,
+    documentElement:{style:{setProperty(name,value){notificationLayout.properties[name]=value;}}}},
+  ResizeObserver:class {constructor(callback){notificationLayout.resize=callback;}observe(element){assert.equal(element,header);}},
   Shiny:{addCustomMessageHandler(type,handler){assert.equal(handler.length,1,'Shiny custom message handlers require exactly one argument');handlers[type]=handler;}}
 };
 vm.createContext(navigation);
@@ -36,4 +41,8 @@ vm.runInContext(fs.readFileSync('development/shiny_app/www/visual.js','utf8'),na
 domCallbacks.forEach(fn=>fn());
 assert.equal(typeof handlers['demo-load'],'function');
 assert.equal(typeof handlers['landing-scroll'],'function');
+assert.equal(notificationLayout.properties['--site-header-height'],'76px','notifications clear the desktop header');
+notificationLayout.height=157.3;
+notificationLayout.resize();
+assert.equal(notificationLayout.properties['--site-header-height'],'158px','notification position follows a wrapped responsive header');
 console.log('SHINY NAVIGATION HANDLERS PASS');

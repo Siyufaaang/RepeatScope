@@ -27,7 +27,7 @@ localization_inputs_ui <- function() tagList(
 rs_ui <- function() {
   public_beta<-isTRUE(getOption('repeatscope.public_beta',FALSE))
   shiny::fluidPage(theme=bslib::bs_theme(version=5,bg='#f5f6f7',fg='#161819',primary='#161819',base_font='Segoe UI'),
-    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=114'),tags$link(rel='stylesheet',href='dashboard.css?v=114'),tags$link(rel='stylesheet',href='visual.css?v=114'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=114'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=114'),tags$script(src='visual.js?v=114')),
+    tags$head(tags$title('RepeatScope · Research Beta'),tags$link(rel='stylesheet',href='app.css?v=114'),tags$link(rel='stylesheet',href='dashboard.css?v=114'),tags$link(rel='stylesheet',href='visual.css?v=20261115-2'),tags$script(src='plate.js?v=19'),tags$script(src='layout.js?v=114'),tags$script(src='threshold.js'),tags$script(src='dashboard.js?v=114'),tags$script(src='visual.js?v=20261115-2')),
     tags$head(tags$link(rel='stylesheet',href='learning.css?v=threshold-first-1'),tags$script(src='field-help.js?v=114'),tags$script(src='method-learning.js?v=threshold-first-1'),
       tags$link(rel='stylesheet',href='workflow-polish.css?v=20261115')),
     div(class='site-header',

@@ -1,5 +1,12 @@
 /* Navigation and decoration only; all data actions use existing Shiny bindings. */
 document.addEventListener('DOMContentLoaded', () => {
+  const header=document.querySelector('.site-header');
+  if(header) {
+    const positionNotifications=()=>document.documentElement.style.setProperty('--site-header-height',`${Math.ceil(header.getBoundingClientRect().height)}px`);
+    positionNotifications();
+    if(typeof ResizeObserver==='function')new ResizeObserver(positionNotifications).observe(header);
+    else window.addEventListener('resize',positionNotifications);
+  }
   Shiny.addCustomMessageHandler('demo-load', message => document.getElementById('load_demo')?.click());
   document.addEventListener('click', event => {
     const trigger = event.target.closest('[data-trigger]');
