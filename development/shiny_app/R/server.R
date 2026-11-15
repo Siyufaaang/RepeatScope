@@ -111,6 +111,7 @@ rs_server <- function(input,output,session) {
     if(length(minimum)!=1 || !is.finite(minimum) || minimum<0)stop('Enter a non-negative minimum Size.')
     p<-rv$p
     if(!identical(p$assay$minimum_bp,minimum) || !identical(p$assay$channel,channel)) {
+      if(p$assay$minimum_bp!=minimum)p$analysis_defaults$minimum_manual<-TRUE
       p$assay$minimum_bp<-minimum;p$assay$channel<-channel;p$assay$status<-'unconfigured'
       p$audit<-c(p$audit,list(list(time=stamp(),action='candidate_filter',minimum_bp=minimum,channel=channel)))
       rv$p<-p
@@ -128,6 +129,8 @@ rs_server <- function(input,output,session) {
     if(!is.null(input$minimum_bp) && (!identical(as.numeric(input$minimum_bp),as.numeric(rv$p$assay$minimum_bp)) ||
       !identical(trimws(input$target_channel%||%''),rv$p$assay$channel)))
       stop('Select Apply candidate filter before running analysis.')
+    filter_issue<-candidate_filter_issue(rv$p)
+    if(length(filter_issue))stop(filter_issue)
     withProgress(message='Assigning targets and fitting independent records',value=.4,{rv$p<-fit_project(prepare_localized_project(rv$p))});refresh(rv$p)
   },'Analysis fitted. Height changes now use frozen models.'))
   set_threshold_percent<-function(value) {

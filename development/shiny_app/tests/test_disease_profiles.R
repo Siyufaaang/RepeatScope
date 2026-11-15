@@ -51,3 +51,20 @@ t<-synthetic_project();t$assay$gene<-'ATXN2';t<-apply_disease_profile(t,'ATXN2')
 t$assay$gene<-'SCA2'
 u<-apply_disease_profile(t,'ATXN2')
 check(identical(u$reference,t$reference) && identical(u$structure,t$structure),'alias reset preserves matched reference and structure')
+
+# A first partial primer pair can locate a distant match. The next complete
+# pair must update a filter derived automatically from the reference.
+auto<-synthetic_project();auto$assay$gene<-'ATXN2';auto<-apply_disease_profile(auto,'ATXN2')
+first_min<-auto$assay$minimum_bp
+auto$structure$amplicon$forward_tail<-'AAAA'
+auto$structure$amplicon$expected_bp<-auto$structure$amplicon$expected_bp+4L
+auto$structure$fixed_bp<-auto$structure$fixed_bp+4L
+auto$structure$expected_bp<-auto$structure$expected_bp+4L
+auto<-profile_setup(auto)
+check(auto$assay$minimum_bp==first_min+4,'automatic minimum follows a corrected primer structure')
+auto$assay$minimum_bp<-7
+auto$structure$fixed_bp<-auto$structure$fixed_bp+3L
+auto<-profile_setup(auto)
+check(auto$assay$minimum_bp==7,'an explicit user minimum is not overwritten by later structure updates')
+legacy<-auto;legacy$analysis_defaults<-list(filter_initialized=TRUE)
+check(profile_setup(legacy)$assay$minimum_bp==7,'legacy custom minimum is preserved without inferred provenance')

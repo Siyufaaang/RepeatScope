@@ -61,11 +61,22 @@ profile_setup <- function(p) {
   channels<-unique(trimws(p$peaks$Channel));channels<-channels[!is.na(channels) & nzchar(channels)]
   if(length(channels)==1 && all(nzchar(trimws(p$peaks$Channel))))p$assay$channel<-channels
  }
- if(!is.null(p$disease_profile) && !isTRUE(p$analysis_defaults$filter_initialized)) {
+ if(!is.null(p$disease_profile)) {
   s<-project_structure_view(p)
   if(!is.null(s) && is.finite(s$fixed_bp)) {
-   p$assay$minimum_bp<-max(0,s$fixed_bp)
-   p$analysis_defaults$filter_initialized<-TRUE
+   derived<-max(0,s$fixed_bp)
+   previous<-p$analysis_defaults$minimum_bp
+   same_number<-function(a,b)length(a)==1L && length(b)==1L && is.finite(a) && is.finite(b) && a==b
+   # Follow revised primers/counting only while this remains an automatic value.
+   # Legacy projects have no provenance: adopt only an already matching value.
+   automatic<-!isTRUE(p$analysis_defaults$minimum_manual) && (!isTRUE(p$analysis_defaults$filter_initialized) ||
+     same_number(p$assay$minimum_bp,previous) ||
+     (is.null(previous) && same_number(p$assay$minimum_bp,derived)))
+   if(automatic) {
+    p$assay$minimum_bp<-derived
+    p$analysis_defaults$filter_initialized<-TRUE
+    p$analysis_defaults$minimum_bp<-derived
+   }
   }
  }
  p

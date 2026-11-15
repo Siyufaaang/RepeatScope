@@ -60,6 +60,19 @@ validate_analysis_config <- function(a) {
 assignment_candidates <- function(peaks,modal_height) {
   peaks[peaks$Height>=assignment_policy()$threshold_fraction*modal_height,,drop=FALSE]
 }
+candidate_filter_issue <- function(p) {
+  z<-p$peaks
+  if(!nrow(z))return(character())
+  z<-z[z$Well%in%p$plate$Well[p$plate$Role=='sample'],,drop=FALSE]
+  if(!nrow(z))return(character())
+  selected<-z$Size>=p$assay$minimum_bp
+  channel<-p$assay$channel
+  if(nzchar(channel) && channel!='ALL')selected<-selected & z$Channel==channel
+  if(any(selected,na.rm=TRUE))return(character())
+  minimum<-format(p$assay$minimum_bp,scientific=FALSE,trim=TRUE)
+  sprintf('All sample peaks are excluded by the candidate filter (channel %s; minimum %s bp). Imported sample peaks span %.2f–%.2f bp. Review the minimum size and channel in Analysis settings.',
+    if(nzchar(channel))channel else 'ALL',minimum,min(z$Size),max(z$Size))
+}
 fit_record <- function(peaks,record,assay) {
   env<-load_methods();validate_analysis_config(assay)
   p<-peaks[peaks$Record_ID==record$Source_ID & peaks$Size>=assay$minimum_bp & peaks$Size>=record$ROI_low & peaks$Size<=record$ROI_high,,drop=FALSE]
@@ -189,13 +202,13 @@ threshold_results <- function(project,p=project$threshold,window=project$window,
       status<-'success';reason<-''
       if(f$status!='fitted'){status<-f$status;reason<-f$reason} else if(result$status!='calibrated') {status<-'insufficient_data';reason<-result$reason%||%result$seed_stop%||%'Insufficient calibration seeds.'}
       else if(method_unresolved(f,method,kd)){status<-'unresolved_assignment';reason<-'Competing, overlapping or unsupported prediction windows; partial diagnostic only.'}
-      if(method=='bayesian' && status=='insufficient_data')reason<-seed_failure_reason(f)
+      if(method=='bayesian' && f$status=='fitted' && status=='insufficient_data')reason<-seed_failure_reason(f)
       preview_status<-status;preview_reason<-reason
       if(status=='success') {
         preview_status<-if(is.finite(v$Value) && v$Value==0)'zero_tail' else 'calculated'
         preview_reason<-if(preview_status=='zero_tail')sprintf('EI = 0: only modal remains; no assigned tail peak passes this window and >= %.2f RFU threshold.',p*f$modal_height) else
           sprintf('%s tail peaks + modal; denominator %.0f RFU; height >= %.2f RFU.',sum(v$Peaks$Delta>0),sum(v$Peaks$Height),p*f$modal_height)
-      } else if(method=='bayesian' && status=='insufficient_data')preview_status<-result$seed_stop%||%'insufficient_seeds'
+      } else if(method=='bayesian' && f$status=='fitted' && status=='insufficient_data')preview_status<-result$seed_stop%||%'insufficient_seeds'
       if(f$status!='fitted' && !is.finite(f$modal_size))preview_status<-if(startsWith(f$status,'target_') || f$status=='intermediate_review')f$status else 'missing_target'
       computational<-if(status=='success' && rec$Category!='normal')v$Value else NA_real_
       gate<-eligibility(rec,project)

@@ -64,4 +64,26 @@ testServer(alias_server,{
  session$setInputs(fasta_text='>SYNTHETIC.1\nACGT',use_fasta=1)
  check(rv$p$reference$gene=='HTT','offline reference metadata uses the same canonical gene')
 })
+testServer(rs_server,{
+ fixture<-synthetic_project()
+ p<-apply_disease_profile(new_project(),'ATXN2');p$reference<-fixture$reference
+ rv$p<-p
+ session$setInputs(edit_analysis=1,gene='ATXN2',forward='TTATGCGA',reverse='ACGGTCAA',
+   forward_tail='',reverse_tail='',motif='CAG',tract_start=9,tract_end=59,counting_rule='tract_length',locate_primers=1)
+ check(rv$p$assay$minimum_bp==16,'first primer match supplies automatic minimum')
+ session$setInputs(forward='AAAATTATGCGA',forward_tail='AAAA',locate_primers=2)
+ check(rv$p$assay$minimum_bp==20,'revised primer pair updates the actual server filter')
+ session$setInputs(minimum_bp=7,target_channel='B',apply_preview_filter=1)
+ session$setInputs(forward='TTATGCGA',forward_tail='',locate_primers=3)
+ check(rv$p$assay$minimum_bp==7,'later primer matching respects an applied manual filter')
+})
+testServer(rs_server,{
+ fixture<-synthetic_project()
+ p<-apply_disease_profile(new_project(),'ATXN2');p$reference<-fixture$reference
+ rv$p<-p
+ session$setInputs(edit_analysis=1,gene='ATXN2',minimum_bp=7,target_channel='B',apply_preview_filter=1)
+ session$setInputs(forward='TTATGCGA',reverse='ACGGTCAA',forward_tail='',reverse_tail='',
+   motif='CAG',tract_start=9,tract_end=59,counting_rule='tract_length',locate_primers=1)
+ check(rv$p$assay$minimum_bp==7,'manual minimum applied before the first primer match is preserved')
+})
 cat('PROFILE SERVER SUITE PASS\n')

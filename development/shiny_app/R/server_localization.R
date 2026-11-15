@@ -59,7 +59,11 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
   })
   observeEvent(input$save_localization,attempt({
     p<-ensure_localization(rv$p);p$localization<-localization_input_config(input)
-    if(!is.null(input$minimum_bp)){if(!is.finite(input$minimum_bp) || input$minimum_bp<0)stop('Enter a non-negative candidate size.');p$assay$minimum_bp<-input$minimum_bp}
+    if(!is.null(input$minimum_bp)){
+      if(!is.finite(input$minimum_bp) || input$minimum_bp<0)stop('Enter a non-negative candidate size.')
+      if(p$assay$minimum_bp!=input$minimum_bp)p$analysis_defaults$minimum_manual<-TRUE
+      p$assay$minimum_bp<-input$minimum_bp
+    }
     if(!is.null(input$target_channel))p$assay$channel<-trimws(input$target_channel)
     if(!is.null(p$disease_profile)) {
       d<-p$disease_profile;x<-p$localization
@@ -83,6 +87,7 @@ register_localization_server <- function(input,output,session,rv,attempt,refresh
   },na='Required',striped=TRUE)
   output$localization_status<-renderUI({
     p<-ensure_localization(rv$p);issues<-localization_issues(p)
+    issues<-c(issues,candidate_filter_issue(p))
     s<-project_structure_view(p)
     tagList(if(localization_pending())p(class='status-small','Setup has unapplied edits.'),
       if(length(issues))div(class='notice',tags$ul(lapply(issues,tags$li))) else

@@ -4,6 +4,8 @@ html {scroll-behavior:smooth;scroll-padding-top:18px}
 body {background:var(--canvas);color:var(--ink);font-size:14px}
 .app-shell {max-width:1600px;padding:0 36px;margin:auto}
 .topbar {min-height:76px;margin:0 -36px;padding:15px 36px;background:#111315;color:#f5f6f7;border:0}
+.site-header {width:100%;background:#111315}
+.site-header .topbar {width:100%;max-width:1600px;margin:0 auto}
 .brand {color:#f5f6f7;text-decoration:none;gap:16px;flex-wrap:nowrap}
 .brand:hover {color:#fff;text-decoration:none}
 .brand>span:not(.brand-mark):not(.version-label) {font-size:27px;letter-spacing:-.7px;font-weight:600}

@@ -79,7 +79,8 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
     if(!identical(current_primer_key(rv$p,input),saved_primer_key(rv$p)))stop('Match the current primer inputs before confirming structure.')
     if(is.null(rv$p$reference) || !identical(object_hash(rv$amplicon$sequence),rv$p$reference$sequence_hash))stop('The primer draft belongs to a different reference. Locate primers again on the current reference.')
     s<-confirm_structure(rv$amplicon,input$tract_start,input$tract_end,input$counting_rule,input$counting_basis,input$boundary_reason,input$motif,rv$candidates)
-    p<-rv$p;p$structure<-s;p$assay$motif<-input$motif;p$audit<-c(p$audit,list(list(time=stamp(),action='structure_confirmation',suggested=rv$candidates,start=s$start,end=s$end,basis=s$basis,reason=s$review_reason)));rv$p<-p
+    p<-rv$p;p$structure<-s;p$assay$motif<-input$motif;p$audit<-c(p$audit,list(list(time=stamp(),action='structure_confirmation',suggested=rv$candidates,start=s$start,end=s$end,basis=s$basis,reason=s$review_reason)));p<-profile_setup(p);rv$p<-p
+    updateNumericInput(session,'minimum_bp',value=p$assay$minimum_bp)
   },'Reference structure confirmed. Theoretical fixed length is separate from empirical CE calibration.'))
   observeEvent(list(input$tract_start,input$tract_end,input$counting_rule),{
     if(rv$step!=4L || !identical(current_primer_key(rv$p,input),saved_primer_key(rv$p)))return()
@@ -87,7 +88,8 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
     if(!identical(d$amplicon$status,'located'))return()
     if(identical(as.numeric(d$start),as.numeric(input$tract_start)) && identical(as.numeric(d$end),as.numeric(input$tract_end)) && identical(d$counting_rule,input$counting_rule))return()
     d$start<-input$tract_start;d$end<-input$tract_end;d$counting_rule<-input$counting_rule
-    d$status<-'preview';d$confirmed_at<-NULL;p$reference_draft<-d;p['structure']<-list(NULL);p$assay$status<-'unconfigured';rv$p<-p
+    d$status<-'preview';d$confirmed_at<-NULL;p$reference_draft<-d;p['structure']<-list(NULL);p$assay$status<-'unconfigured';p<-profile_setup(p);rv$p<-p
+    updateNumericInput(session,'minimum_bp',value=p$assay$minimum_bp)
   },ignoreInit=TRUE)
   structure_view<-reactive(project_structure_view(rv$p))
   output$structure_diagram<-renderUI({s<-structure_view();div(class='reference-svg',
@@ -118,6 +120,7 @@ register_reference_server <- function(input,output,session,rv,attempt,refresh) {
       if(nchar(a$motif)!=a$repeat_bp)stop('Motif length and repeat-unit bp disagree.')
       a$status<-'configured'
     } else a$status<-'unconfigured'
+    if(p$assay$minimum_bp!=a$minimum_bp)p$analysis_defaults$minimum_manual<-TRUE
     p$assay<-a;p$audit<-c(p$audit,list(list(time=stamp(),action='assay_save',assay=a)));rv$p<-p
   },'Assay saved. Changed fitting parameters require an explicit analysis run.'))
   observeEvent(input$load_benchmark_config,attempt({p<-rv$p;p$assay<-benchmark_assay();rv$p<-p;refresh(p)},'SCA2 research parameters loaded; incomplete laboratory evidence remains unconfirmed.'))
