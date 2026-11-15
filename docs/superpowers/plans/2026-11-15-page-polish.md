@@ -78,5 +78,30 @@ these specific changes. Private research inputs remain excluded.
 - Publish the exact accepted 56-file bundle, with 61 frozen package dependencies,
   to existing Connect Cloud content `01a1d5a3-31ce-5e40-498d-e4d4dc298453` under
   account `siyufang`. Retain the previous verified bundle for rollback.
-- [ ] Verify the final selected bundle and repository manifest; commit locally.
-- [ ] Deploy to the existing public content and verify hosted behavior.
+- [x] Verify the final selected bundle and repository manifest; commit locally.
+- [x] Deploy to the existing public content and verify hosted behavior.
+
+### Public release evidence
+
+- Runtime checkpoint: `f841d6d`, including the earlier four-page polish and
+  automatic-filter repair. The repository manifest passed for 122 files.
+- The exact `page-polish-release-public` bundle passed startup, both EI windows,
+  independently summed values, saved-project round-trip and session isolation.
+  Its frozen manifest contains 56 runtime files and 61 package dependencies.
+- rsconnect 1.11.2 successfully redeployed to the existing content ID, preserving
+  the public URL:
+  https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/
+- Hosted assets expose cache version `20261115-2`. At 1690 px, the logo, hero and
+  section headings all begin at x=73.5; document width equals viewport width.
+- Hosted synthetic CSV upload produced 168 valid peaks with zero flagged rows.
+  While the success notification was visible at y=88–196, Next at y=579–616
+  remained unobstructed and advanced to Reference & analysis.
+- Hosted Calculate EI produced six Adaptive and five Bayesian preview results.
+  Synthetic A04 Extended values displayed 2.874266 and 2.522163, matching the
+  existing acceptance expectations. Browser error logs were empty.
+- The final narrow-width notification panel spans x=16–359 inside a 375 px
+  content viewport, below the wrapped header. Temporary viewport sizing was
+  reset. The public homepage tab was retained for the user.
+- Real inputs, private saved projects, logs, screenshots and publishing
+  credentials were excluded from the uploaded file list. Retained prior bundles
+  and deployment records support the documented rollback process.
