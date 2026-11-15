@@ -1,10 +1,26 @@
 # RepeatScope
 
-RepeatScope v1.11.1 is an R/Shiny application for plate-based repeat-tail analysis, with local and hosted research Beta entry points. It imports an Excel plate map and already-sized peak tables, records explicit genotype and sample metadata, and compares Adaptive and Bayesian calculations in a 96-well report.
+**Repeat-tail analysis, from your plate to a clear comparison.**
 
-v1.11 unifies typography, controls and group colors across the workflow. The white 96-well report emphasizes sample names and EI, with window/threshold controls and diagnostics available on demand. It preserves v1.10 analysis logic, profiles, precision and project format.
+[**Open RepeatScope — public web app**](https://siyufang-repeatscope.share.connect.posit.cloud/) · [Run locally](#run) · [Workflow](#workflow)
 
-v1.11.1 fixes repeated flashing in Reference & analysis when typing ahead of a server response. Profile loading no longer writes an older gene value back into the active input. Analysis formulas and disease profiles are unchanged.
+RepeatScope is an R/Shiny research application for inspecting tandem-repeat fragment profiles. It connects Excel plate maps and already-sized peak tables with sample metadata, primer and amplicon diagrams, and side-by-side Adaptive and Bayesian tail analysis.
+
+Try the built-in synthetic demo to explore the workflow without uploading files. This public repository contains application source and synthetic examples; private research data are not included.
+
+## What you can do
+
+- Preview an Excel plate map and a sizing table, map input columns, and review format issues before import.
+- Arrange a 96-well plate with explicit sample, genotype, group and control information, including Excel paste and Undo.
+- Inspect reference sequences, primer binding and amplicon structure, with disease-profile notes and counting rules.
+- Compare Adaptive and Bayesian peak assignments, paired tail plots and Expansion Index (EI) values using the same reporting window and threshold.
+- Save and reopen a project, export reports, and explore the peak-selection steps through a synthetic teaching animation.
+
+## Latest public release — 15 November 2026
+
+The source includes the deployed page-polish release: clearer import/preview layouts, a compact plate editor, reference and structure panels, numeric EI threshold controls, and exact nonzero well-role counts. It also updates automatic peak-size filters after primer/counting changes while preserving manual settings, flags filters that exclude every sample peak, aligns the homepage and header, and keeps notifications clear of navigation.
+
+This release builds on v1.11.1. The [release record](docs/superpowers/plans/2026-11-15-page-polish.md#public-release-evidence) documents the deployed runtime checkpoint and hosted acceptance checks. The readable web address above was enabled on 15 November 2026; the original content-ID address remains available.
 
 This is a research prototype. Computational previews and formal evidence/QC are separate; software tests do not establish an experimentally validated assay.
 
@@ -34,7 +50,7 @@ Open <http://127.0.0.1:3838/>. Set `REPEATSCOPE_PORT` to choose another local po
 ./development/shiny_app/run.ps1 -Port 3862
 ```
 
-Use **Save project** to keep a session across server restarts. On the welcome page, **Continue a saved project or try synthetic data** provides the built-in synthetic demonstration.
+Use **Save project** to keep a session across server restarts. Use **Try demo data** or **Demo** for the built-in synthetic demonstration; **Continue a saved project** restores a downloaded project.
 
 ## Workflow
 
@@ -42,7 +58,7 @@ Use **Save project** to keep a session across server restarts. On the welcome pa
 2. In **Arrange plate**, record explicit genotype, Group, Role and optional Individual ID. Group/Individual selectors only select wells. Use **Table / Excel paste** for cell editing or staged clipboard paste; apply edits explicitly, or discard/undo them.
 3. Import an already-sized peak table. Physical peaks, acquisition identities and flagged rows remain available for review.
 4. In **Reference & analysis**, enter a gene or disease alias to load its built-in profile, then match the reference and primers. Disease ranges and provenance are supplied by the profile; filters, custom ranges and CE calibration remain under **Advanced**.
-5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Use **Calculate EI** in the top navigation; expand **EI window & height threshold** to choose which fitted peaks contribute to EI. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
+5. **Results** opens a compact 96-well report: sample names and the selected method's EI. Use **Calculate EI**; expand **EI window & height threshold** to choose which fitted peaks contribute to EI. Switch Adaptive/Bayesian on the plate; open a well for both methods and physical peaks. Comparisons and group summaries are initially collapsed. Input changes hide stale EI until analysis is updated.
 
 Leading zeros remain text. Blank pasted cells clear their field; omitted columns are unchanged. Invalid or stale table patches are rejected atomically. Group and Individual labels alone do not refit models. Genotype is never inferred from group membership.
 
@@ -67,7 +83,7 @@ A project stores the profile snapshot it used; reopening does not silently repla
 
 ## Hosted research Beta
 
-Public Beta (verified 2026-11-15): [Open RepeatScope](https://01a1d5a3-31ce-5e40-498d-e4d4dc298453.share.connect.posit.cloud/). The latest workflow polish, automatic peak-filter repair, aligned homepage and notification placement are recorded in [the release plan](docs/superpowers/plans/2026-11-15-page-polish.md#public-release-evidence). Initial hosting and rollback details remain in [the public Beta plan](docs/superpowers/plans/2026-11-13-public-beta.md#verified-public-release--2026-11-13).
+Public Beta (verified 2026-11-15): [Open RepeatScope](https://siyufang-repeatscope.share.connect.posit.cloud/). The latest workflow polish, automatic peak-filter repair, aligned homepage and notification placement are recorded in [the release plan](docs/superpowers/plans/2026-11-15-page-polish.md#public-release-evidence). Initial hosting and rollback details remain in [the public Beta plan](docs/superpowers/plans/2026-11-13-public-beta.md#verified-public-release--2026-11-13).
 
 The hosted entry point preserves the original source layout and scientific calculations. Visitors start an empty session or load the labelled synthetic demo. Uploads are processed by the hosting server; use only synthetic or de-identified data you are authorized to upload. Session state is temporary. Download **Save project** before leaving and retain your original inputs. A public website does not make another visitor's session your project, and computational previews are not diagnostic clearance.
 
@@ -101,6 +117,7 @@ node development/shiny_app/tests/test_dashboard_identity.cjs
 node development/shiny_app/tests/test_dashboard_compact.cjs
 node development/shiny_app/tests/test_learning_player.cjs
 node development/shiny_app/tests/test_visual_semantics.cjs
+node development/shiny_app/tests/test_page_polish.cjs
 ```
 
 The synthetic suite covers state, import/export, reference handling, methods, eligibility/QC, server navigation, threshold synchronization, v1.9 layout edits, atomic rejection, independent drafts and Undo. An independently summed fixture checks equal Tail10 values, distinct Extended values, separate method peak flags and unchanged fits when the window changes. The local real-data checks are separate from these shareable tests.
