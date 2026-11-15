@@ -6,6 +6,18 @@ register_import_server <- function(input,output,session,rv,attempt,refresh) {
   remember_upload<-function(p,file) {p$originals<-c(p$originals,list(list(name=file$name,bytes=readBin(file$datapath,'raw',n=file$size))));p}
   output$plate_sheet_ui<-renderUI({req(input$plate_file);selectInput('plate_sheet','Sheet',choices=readxl::excel_sheets(input$plate_file$datapath))})
   output$peak_sheet_ui<-renderUI({req(input$peak_file);if(tolower(tools::file_ext(input$peak_file$name))=='xlsx')selectInput('peak_sheet','Sheet',choices=readxl::excel_sheets(input$peak_file$datapath))})
+  output$plate_preview_status<-renderUI({
+    current<-!is.null(rv$plate_preview) && identical(rv$plate_preview_key,upload_source_key(input,'plate'))
+    if(current)div(class='import-preview-status',strong('96 wells'),span(paste(sum(nzchar(rv$plate_preview$Code)),'labelled positions')))
+    else div(class='import-empty',strong('Your plate will appear here'),
+      p(if(is.null(input$plate_file))'Choose an Excel file, check the sheet and range, then select Preview plate.' else 'Select Preview plate to review the current file and settings.'))
+  })
+  output$peak_preview_status<-renderUI({
+    current<-!is.null(rv$raw_peaks) && identical(rv$raw_peaks_key,upload_source_key(input,'peak'))
+    if(current)div(class='import-preview-status',strong(paste(nrow(rv$raw_peaks),'source rows')),span('Preview · first 8 rows'))
+    else div(class='import-empty',strong('Your sizing table will appear here'),
+      p('Choose a file to preview its columns. Existing imported data is retained until a new import succeeds.'))
+  })
   observeEvent(input$preview_plate,attempt({req(input$plate_file)
     rv$plate_preview<-NULL;rv$plate_preview_key<-NULL
     x<-read_source_table(input$plate_file$datapath,tools::file_ext(input$plate_file$name),sheet=input$plate_sheet,range=input$plate_range,header=FALSE)
@@ -30,7 +42,7 @@ register_import_server <- function(input,output,session,rv,attempt,refresh) {
     core<-c('Well','Size','Height')
     mapped<-function(n)selectInput(paste0('map_',n),n,choices=c('Not mapped'='',setNames(cols,cols)),selected=suggested[[n]])
     tagList(textOutput('mapping_summary'),
-      div(h4('Required column mapping'),div(class='mapping-grid',lapply(core,mapped)),
+      tags$details(class='column-mapping',tags$summary('Edit column mapping'),div(class='mapping-grid',lapply(core,mapped)),
         checkboxInput('well_from_filename','Read Well from filename prefix (e.g. A01A01.fsa → A01)',filenames),
         tags$details(tags$summary('Advanced columns'),div(class='mapping-grid',lapply(setdiff(names(suggested),core),mapped)))))
   })

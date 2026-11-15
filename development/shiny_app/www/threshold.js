@@ -13,18 +13,4 @@
   }
   document.addEventListener('input', numberEdited);
   document.addEventListener('change', numberEdited);
-  function bindSlider() {
-    const slider = window.jQuery && jQuery('#threshold').data('ionRangeSlider');
-    if (!slider || slider.repeatScopeThresholdBound) return;
-    slider.repeatScopeThresholdBound = true;
-    const originalFinish = slider.options.onFinish;
-    slider.update({onFinish: function (data) {
-      if (typeof originalFinish === 'function') originalFinish.call(this, data);
-      send(Number(data.from), 'slider');
-    }});
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.jQuery) jQuery(document).on('shiny:bound shiny:connected', bindSlider);
-    bindSlider();
-  });
 })();

@@ -1,0 +1,209 @@
+/* Local workflow polish. All rules exclude the approved landing page. */
+.app-shell:has(>.tab-content>.tab-pane.active:not([data-value="welcome"])) {
+  --work-gap:24px;
+}
+.app-shell:has(.workflow-page-heading) .workflow-page-heading {margin:22px 0 18px}
+.workflow-page-heading h2 {font-size:28px;line-height:1.2;font-weight:650;letter-spacing:-.035em;margin:0 0 8px}
+.workflow-page-heading>p {font-size:14px;color:var(--muted);margin:0;line-height:1.5}
+.workflow-page-heading .layout-completeness {margin:0}
+.workflow-page-heading .layout-completeness p {margin:6px 0 0}
+.tab-pane[data-value]:not([data-value="welcome"]) .field-heading {gap:6px;align-items:baseline;flex-wrap:wrap}
+.tab-pane[data-value]:not([data-value="welcome"]) .field-heading>label {min-width:0;line-height:1.4}
+.tab-pane[data-value]:not([data-value="welcome"]) .field-tools {flex-shrink:0}
+.tab-pane[data-value]:not([data-value="welcome"]) .form-control,
+.tab-pane[data-value]:not([data-value="welcome"]) .form-select {min-height:35px}
+
+/* The source and its preview share one working surface. */
+.import-workspace {display:grid;grid-template-columns:minmax(270px,.36fr) minmax(0,.64fr);gap:28px;align-items:start}
+.import-workspace>.rs-card {min-width:0;padding:20px 0 0;margin:0}
+.import-workspace .import-preview {padding-left:28px;border-left:1px solid var(--border)}
+.import-workspace .card-heading {margin-bottom:18px}
+.import-workspace .card-heading h3 {font-size:20px}
+.import-workspace .card-heading p {line-height:1.5;margin-bottom:0}
+.upload-surface {border:1px dashed #a7adb2;padding:20px 16px;background:#fafbfc;margin-bottom:20px}
+.upload-surface .rs-field {margin-bottom:10px}
+.upload-surface .form-group {width:100%;margin-bottom:0}
+.upload-surface .input-group {flex-wrap:nowrap;max-width:100%}
+.upload-surface .input-group>.form-control {min-width:0;width:1%}
+.upload-surface .status-small {font-size:12px;line-height:1.5;margin:0}
+.upload-surface .progress {margin:8px 0 0;height:3px}
+.import-source .rs-field {margin-bottom:14px}
+.import-source .button-row {gap:8px;margin:18px 0 0}
+.import-source .button-row .btn {font-size:12px}
+.import-source .mapping-grid {grid-template-columns:1fr;gap:0}
+.import-source .column-mapping {margin-top:12px}
+.import-source #mapping_summary {font-size:12px;line-height:1.8;overflow-wrap:anywhere;border-top:1px solid var(--border);padding-top:14px;margin-top:20px}
+.import-source #mapping_summary:empty {display:none}
+.import-preview-status {display:flex;gap:8px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:0 0 16px}
+.import-preview-status strong {font-weight:600;color:var(--ink)}
+.import-empty {min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;border:1px solid var(--border);background:#fafbfc;text-align:center;color:var(--muted);margin:0 0 18px}
+.import-empty strong {font-size:16px;color:var(--ink);font-weight:500}
+.import-empty p {max-width:440px;font-size:13px;line-height:1.6;margin:10px 0 0}
+.import-preview .scroll-table {max-height:420px;border:0}
+.import-preview .table {font-size:13px;font-variant-numeric:tabular-nums;line-height:1.5;margin:0}
+.import-preview .table th {font-size:12px;color:var(--ink);padding:10px 12px;background:#e9ebed;border-bottom:1px solid #bfc4c8}
+.import-preview .table td {padding:10px 12px;border-bottom:1px solid #e0e3e5;white-space:nowrap}
+.plate-preview-table .table th,.plate-preview-table .table td {padding:9px 6px;text-align:center;min-width:38px;font-size:11px}
+.plate-preview-table .table td {white-space:normal;max-width:90px;overflow-wrap:anywhere}
+.import-preview #import_feedback {font-size:12px;line-height:1.7;color:var(--muted);margin:18px 0 14px}
+.import-preview #import_feedback .notice {color:var(--ink)}
+.import-preview #issue_details {margin-top:16px;padding:12px 0;border-bottom:1px solid var(--border)}
+.import-preview #issue_details>summary {font-size:13px}
+.import-commit {padding:20px 0 4px}
+.import-commit .btn {min-width:168px}
+
+/* Arrange: compact tools, all wells, explicit editor. */
+.tab-pane[data-value="layout"] .layout-selection-tools {display:flex;align-items:end;gap:12px 20px;flex-wrap:wrap;padding:12px 0;border-block:1px solid var(--border);margin:16px 0 12px}
+.layout-selection-tools .layout-select-bar {gap:8px;flex-wrap:wrap;margin:0}
+.layout-selection-tools .layout-select-bar .rs-field {min-width:140px;max-width:180px;margin:0}
+.layout-selection-tools .form-group {margin:0}
+.layout-selection-tools .field-heading {margin-bottom:4px}
+.layout-selection-tools .field-requirement {display:none}
+.layout-selection-tools .button-row {margin:0;gap:6px}
+.layout-selection-tools .btn {font-size:12px;padding:8px 10px;white-space:nowrap}
+.tab-pane[data-value="layout"] .nav-pills {margin:0 0 12px}
+.tab-pane[data-value="layout"] .layout-workspace {grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
+.tab-pane[data-value="layout"] .layout-workspace>.rs-card {padding:16px 0 0;min-width:0}
+.tab-pane[data-value="layout"] .layout-workspace>.layout-editor {padding-left:24px;display:block}
+.tab-pane[data-value="layout"] .layout-workspace .card-heading h3 {font-size:19px}
+.tab-pane[data-value="layout"] .layout-workspace .card-heading {margin-bottom:10px}
+.tab-pane[data-value="layout"] #selection_label {font-size:12px;margin:10px 0 6px}
+.tab-pane[data-value="layout"] .plate-grid {min-width:600px;grid-template-columns:20px repeat(12,minmax(40px,1fr));gap:6px;padding:8px 3px 12px}
+.tab-pane[data-value="layout"] .well {aspect-ratio:auto;min-height:62px;padding:5px 3px;gap:3px}
+.tab-pane[data-value="layout"] .well-sample {font-size:11px;line-height:1.15;-webkit-line-clamp:2}
+.tab-pane[data-value="layout"] .well-coordinate {font-size:10px}
+.tab-pane[data-value="layout"] .well-role,.tab-pane[data-value="layout"] .well-genotype {font-size:9px}
+.tab-pane[data-value="layout"] .plate-group-key {gap:10px 18px;margin-top:12px}
+.layout-editor #layout_selection_summary {font-size:12px;line-height:1.6;color:var(--muted);margin-bottom:8px}
+.layout-editor>p {font-size:12px;line-height:1.5;margin-bottom:14px}
+.layout-editor .bulk-field {position:relative;padding:10px 0;border-top:1px solid #e0e3e5}
+.layout-editor .bulk-field>.rs-field {margin:0}
+.layout-editor .bulk-field>.rs-field:first-child .field-tools {display:none}
+.layout-editor .bulk-field .checkbox {margin:0 0 7px}
+.layout-editor .bulk-field .checkbox label {font-size:12px;font-weight:600}
+.layout-editor .bulk-field>.rs-field:last-child .field-heading {position:absolute;top:9px;right:0;margin:0}
+.layout-editor .bulk-field>.rs-field:last-child .field-heading>label {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.layout-editor .bulk-field .field-requirement {display:none}
+.layout-editor .bulk-field .form-group {margin:0;width:100%}
+.layout-editor #layout_apply {width:100%;margin-top:12px;font-size:13px}
+.tab-pane[data-value="layout"] #layout_message {font-size:12px;padding:9px 12px;margin:16px 0 10px}
+.tab-pane[data-value="layout"] #layout_discard {font-size:12px;padding:6px 0;border:0;background:transparent;text-decoration:underline;color:var(--muted)}
+
+/* Reference: inputs left, structure and setup right. */
+.tab-pane[data-value="reference"] .reference-workspace {grid-template-columns:minmax(300px,.36fr) minmax(0,.64fr);gap:28px}
+.reference-workspace>.reference-output {min-width:0;border-left:1px solid var(--border);padding-left:28px}
+.tab-pane[data-value="reference"] .reference-workspace .rs-card {padding:16px 0;margin:0 0 8px}
+.tab-pane[data-value="reference"] .reference-workspace .card-heading h3 {font-size:20px}
+.tab-pane[data-value="reference"] .reference-controls>.rs-card>.rs-field>.form-group {display:block}
+.tab-pane[data-value="reference"] .reference-controls .rs-field {margin-bottom:12px}
+.tab-pane[data-value="reference"] .reference-controls .form-group {width:100%}
+.tab-pane[data-value="reference"] .field-heading {justify-content:space-between;flex-wrap:nowrap;gap:10px;margin-bottom:5px}
+.tab-pane[data-value="reference"] .field-heading>label {white-space:normal}
+.tab-pane[data-value="reference"] .field-requirement {font-size:10px}
+.tab-pane[data-value="reference"] .primer-match-row {display:grid;grid-template-columns:minmax(140px,1fr) auto;align-items:end;gap:12px;margin-top:4px}
+.tab-pane[data-value="reference"] .primer-match-row .rs-field {max-width:none;margin:0}
+.tab-pane[data-value="reference"] .primer-match-row .field-requirement {display:none}
+.tab-pane[data-value="reference"] .primer-match-row .btn {min-height:35px;margin:0}
+.tab-pane[data-value="reference"] #forward,.tab-pane[data-value="reference"] #reverse {font-family:Consolas,monospace;font-size:12px}
+.tab-pane[data-value="reference"] .reference-svg {padding:16px 10px;overflow:auto}
+.tab-pane[data-value="reference"] .reference-svg svg {min-height:0;display:block}
+.reference-output .two-column,.reference-output .three-column {gap:12px 18px}
+.reference-output .target-filter .rs-field {max-width:200px}
+.reference-output #localization_status {font-size:13px;line-height:1.6}
+.reference-output .notice {padding:10px 14px;font-size:12px}
+.reference-output #save_localization {margin-top:12px}
+.reference-report-action {display:flex;justify-content:flex-end;padding-top:14px;border-top:1px solid var(--border);margin-top:12px}
+
+/* Report: a single numeric percentage; plate and selected-well detail. */
+.tab-pane[data-value="results"] .report-navigation {gap:18px;align-items:center;margin:12px 0}
+.tab-pane[data-value="results"] .report-navigation .report-run {margin:0 0 0 auto}
+.tab-pane[data-value="results"] .report-navigation details {margin-left:0}
+.tab-pane[data-value="results"] .report-summary {gap:8px 24px;margin-bottom:8px;font-size:12px}
+.tab-pane[data-value="results"] .report-summary .notice {margin:0;padding:6px 10px;font-size:12px;max-width:650px}
+.report-settings .compact-report-controls {display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;padding:12px 0;margin:0 0 14px;border-block:1px solid var(--border)}
+.compact-report-controls>.rs-field {width:270px;flex:0 1 270px}
+.compact-report-controls .field-requirement {display:none}
+.tab-pane[data-value="results"] .compact-report-controls .field-heading {margin:0;gap:6px;flex-wrap:nowrap}
+.compact-report-controls>.rs-field>.form-group {display:grid;grid-template-columns:90px minmax(0,1fr);align-items:center;gap:10px;width:100%}
+.compact-report-controls .threshold-number-control {display:flex;align-items:center;gap:8px}
+.threshold-number-control>.rs-field {margin:0}
+.threshold-number-control .form-group {display:grid;grid-template-columns:auto 84px;gap:12px;align-items:center;margin:0;width:auto}
+.threshold-number-control .form-control {font-variant-numeric:tabular-nums;text-align:center;width:84px}
+.threshold-number-control .threshold-unit {font-size:14px;color:var(--ink)}
+.compact-report-controls .report-help {flex-basis:100%;margin:0;padding:0;border:0}
+.compact-report-controls .report-help summary {font-size:11px;margin:0}
+.compact-report-controls .report-help[open] .formula-note {margin-top:10px}
+#rs-plate-report-sketch .overview {gap:8px 24px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+#rs-plate-report-sketch .heading {display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+#rs-plate-report-sketch .heading h2 {order:-1;font-size:26px}
+#rs-plate-report-sketch .heading small {font-size:10px}
+#rs-plate-report-sketch .report-meta {font-size:12px;text-align:left;line-height:1.7;color:var(--muted)}
+#rs-plate-report-sketch .report-role-summary::before {content:' · '}
+#rs-plate-report-sketch .body {grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:24px}
+#rs-plate-report-sketch .body:has(dialog:not([open])) {grid-template-columns:1fr}
+#rs-plate-report-sketch .board {min-width:max(570px,var(--board-min));gap:4px}
+#rs-plate-report-sketch .tile {height:60px;padding:5px 3px}
+#rs-plate-report-sketch .tile .name {font-size:11px}
+#rs-plate-report-sketch .tile .value {font-size:14px}
+#rs-plate-report-sketch .tile .value.multiple-values,#rs-plate-report-sketch .tile .value.status-value {font-size:10px}
+#rs-plate-report-sketch dialog {padding:0 0 12px 24px;border-left:1px solid var(--border);border-top:0}
+#rs-plate-report-sketch .detail-top {margin-bottom:10px}
+#rs-plate-report-sketch .detail-top h3 {font-size:24px}
+#rs-plate-report-sketch .repeat-summary {margin:12px 0;padding:10px 0}
+#rs-plate-report-sketch .repeat-summary p {font-size:10px;margin-top:6px;line-height:1.5}
+#rs-plate-report-sketch .detail-plots {gap:14px;margin-top:14px}
+#rs-plate-report-sketch .detail-plots section {min-width:0;padding-top:10px}
+#rs-plate-report-sketch .ei-number {min-height:30px;font-size:24px;margin-bottom:8px}
+#rs-plate-report-sketch .detail-plots svg {max-height:245px;width:100%}
+#rs-plate-report-sketch .comparison-note {margin-top:8px;padding:8px 0}
+#rs-plate-report-sketch .comparisons {margin-top:22px;border-top:1px solid var(--border);padding-top:16px}
+#rs-plate-report-sketch .comparisons>h3 {font-size:19px;margin-bottom:12px}
+#rs-plate-report-sketch .comparisons>.fold {float:right;margin-top:-34px}
+#rs-plate-report-sketch .sidebar {display:grid;grid-template-columns:minmax(180px,.42fr) minmax(0,1fr);gap:24px}
+#rs-plate-report-sketch .scatter {max-width:250px}
+#rs-plate-report-sketch [data-groups] {display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px 20px}
+
+@media(min-width:1251px) {
+  .tab-pane[data-value="layout"] .layout-editor {position:sticky;top:16px}
+}
+@media(max-width:1250px) {
+  #rs-plate-report-sketch .body {grid-template-columns:1fr}
+  #rs-plate-report-sketch dialog {border-left:0;border-top:1px solid var(--border);padding:20px 0 0}
+  #rs-plate-report-sketch .board {min-width:max(620px,var(--board-min))}
+  #rs-plate-report-sketch .detail-plots svg {max-height:280px}
+}
+@media(max-width:1050px) {
+  .tab-pane[data-value="layout"] .layout-workspace {grid-template-columns:minmax(0,1fr)}
+  .tab-pane[data-value="layout"] .layout-workspace>.layout-editor {padding:18px 0 0;border-left:0;display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+  .layout-editor>.card-heading,.layout-editor>#layout_selection_summary,.layout-editor>p,.layout-editor>#layout_apply {grid-column:1/-1}
+  .import-workspace {grid-template-columns:minmax(240px,.38fr) minmax(0,.62fr);gap:20px}
+  .import-workspace .import-preview {padding-left:20px}
+  .tab-pane[data-value="reference"] .reference-workspace {gap:20px;grid-template-columns:minmax(280px,.42fr) minmax(0,.58fr)}
+  .reference-workspace>.reference-output {padding-left:20px}
+  .reference-output .three-column {grid-template-columns:1fr}
+}
+@media(max-width:760px) {
+  .workflow-page-heading {margin:18px 0 14px}
+  .workflow-page-heading h2 {font-size:25px}
+  .import-workspace,.tab-pane[data-value="reference"] .reference-workspace {grid-template-columns:1fr}
+  .import-workspace .import-preview,.reference-workspace>.reference-output {border-left:0;padding-left:0}
+  .import-empty {min-height:130px}
+  .tab-pane[data-value="layout"] .layout-workspace>.layout-editor {display:block}
+  .layout-selection-tools .layout-select-bar .rs-field {max-width:none;min-width:120px;flex:1}
+  .reference-output .three-column {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tab-pane[data-value="results"] .report-navigation {gap:10px 16px}
+  .report-navigation>.btn {font-size:12px}
+  .tab-pane[data-value="results"] .report-navigation .report-run {margin-left:0}
+  .compact-report-controls>.rs-field {flex-basis:100%;width:100%;max-width:340px}
+  #rs-plate-report-sketch .overview {display:block}
+  #rs-plate-report-sketch .report-meta {margin-top:8px}
+  #rs-plate-report-sketch .sidebar {grid-template-columns:1fr}
+  #rs-plate-report-sketch .comparisons>.fold {float:none;margin:0 0 12px}
+}
+@media(max-width:480px) {
+  .tab-pane[data-value="reference"] .primer-match-row {grid-template-columns:1fr}
+  .reference-output .two-column,.reference-output .three-column {grid-template-columns:1fr}
+  .threshold-number-control .form-group {gap:8px;grid-template-columns:auto 75px}
+  .threshold-number-control .form-control {width:75px}
+  #rs-plate-report-sketch .detail-plots {grid-template-columns:1fr}
+}

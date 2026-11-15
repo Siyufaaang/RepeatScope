@@ -53,3 +53,4 @@ development/shiny_app/www/learning.css
 development/shiny_app/www/methodology.html
 development/shiny_app/www/method-learning.js
 development/shiny_app/www/method-trace.json
+development/shiny_app/www/workflow-polish.css

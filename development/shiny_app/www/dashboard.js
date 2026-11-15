@@ -1,3 +1,17 @@
+function dashboardRoleSummary(wells) {
+  const labels = {sample:'Sample',ce_fill:'CE Fill',ntc:'PCR NTC',positive_control:'Positive control',
+    normal_control:'Normal control',extraction_blank:'Extraction blank',other_negative:'Other negative',
+    other:'Other',unused_empty:'Unused',unlabelled:'Pending'};
+  const unique = new Map(wells.map(w => [w.w,w]));
+  const counts = new Map();
+  for (const well of unique.values()) {
+    const role = well.role || 'unlabelled';
+    counts.set(role,(counts.get(role) || 0)+1);
+  }
+  return [...Object.keys(labels),...Array.from(counts.keys()).filter(role => !(role in labels))]
+    .filter(role => counts.has(role))
+    .map(role => ({role,label:labels[role] || role,count:counts.get(role)}));
+}
 function dashboardComparison(record,stale=false) {
   if (stale || !Number.isFinite(record.a) || !Number.isFinite(record.b)) return 'unavailable';
   return record.a.toFixed(3)===record.b.toFixed(3) ? 'equal' : 'different';
@@ -35,8 +49,9 @@ Shiny.addCustomMessageHandler('dashboard-data', payload => {
     return Object.assign(w,rec,{recordList:w.records, status:rec.status || '', all:rec.all || [], chart:{peak:rec.all || [],modal:rec.modal}});
   });
   find('[data-gene]').textContent = payload.gene || 'Plate';
-  find('[data-well-count]').textContent = wells.length;
-  find('[data-role-count]').textContent = wells.filter(w=>w.role==='sample').length+' samples · '+wells.filter(w=>w.role==='ce_fill').length+' CE Fill';
+  const roleSummary = dashboardRoleSummary(wells);
+  find('[data-well-count]').textContent = roleSummary.reduce((total,role)=>total+role.count,0);
+  find('[data-role-count]').textContent = roleSummary.map(role=>role.count+' '+role.label).join(' · ');
   find('[data-threshold]').textContent = payload.threshold+'%';
   find('[data-window]').textContent = payload.window;
   if(payload.stale) find('[data-gene]').textContent += ' · FIT NEEDS UPDATING';
